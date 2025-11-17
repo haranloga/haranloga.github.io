@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' href='/style.css'>
+
+    <title><%= title %></title>
+    <meta name="description" content="<%= description %>" />
+    <meta property="og:title" content="<%= title %>" />
+    <meta property="og:type" content="article" />
+    <meta property="og:description" content="<%= description %>" />
+    <meta property="og:image" content="<%= typeof image !== 'undefined' && image ? image : 'https://mariozechner.at/img/band.png' %>" />
+    <meta property="og:url" content="<%= url %>" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="twitter:domain" content="mariozechner.at" />
+    <meta property="twitter:url" content="<%= url %>" />
+    <meta name="twitter:title" content="<%= title %>" />
+    <meta name="twitter:description" content="<%= description %>" />
+    <meta name="twitter:image" content="<%= typeof image !== 'undefined' && image ? image : 'https://mariozechner.at/img/band.png' %>" />
+    <script src="/components.js"></script>
+</head>
+
+<body>
+    <div class="mx-auto p-6" style="max-width: 640px; width: 100%">
+        <div class="flex flex-row pb-4">
+            <div class="flex flex-col">
+                <a href="/" style="color: var(--text-color); text-decoration: none;">
+                    <h2>&gt; Araharan Loganayagam</h2>
+                    <span class="text-sm">security • development • indiehacking</span>
+                </a>
+                <div class="flex gap-2 mt-1">
+                    <a href="https://www.linkedin.com/in/dream4ip/" title="LinkedIn" aria-label="LinkedIn" style="color: var(--link-color);">
+                        <i class="icon" style="width: 18px; height: 18px;"><%=render("../_icons/linkedin-line.svg")%></i>
+                    </a>
+                    <a href="https://twitter.com/haran_loga" title="Twitter" aria-label="Twitter" style="color: var(--link-color);">
+                        <i class="icon" style="width: 18px; height: 18px;"><%=render("../_icons/twitter-line.svg")%></i>
+                    </a>
+                    <a href="https://github.com/haranloga" title="GitHub" aria-label="GitHub" style="color: var(--link-color);">
+                        <i class="icon" style="width: 18px; height: 18px;"><%=render("../_icons/github-line.svg")%></i>
+                    </a>
+                </div>
+            </div>
+            <theme-toggle class="mb-auto ml-auto"></theme-toggle>
+        </div>
+
+

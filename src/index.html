@@ -1,0 +1,133 @@
+<% meta() %>
+
+<%= render("./_partials/header.html", { title, description, url }) %>
+
+    <color-band class="w-full mt-4 mb-6" style="height: 80px;"></color-band>
+
+    <h4 class="mb-6">Blogging <a href="/rss.xml" class="text-sm"><svg style="width: 18px; color: var(--link-color);" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rss-icon lucide-rss"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></a></h4>
+    <%
+        const posts = metas("./posts").filter((p) => p.meta.published);
+        posts.sort((a, b) => b.meta.date.localeCompare(a.meta.date));
+
+        const channel = {
+            title: "Araharan Loganayagam",
+            description: "Blogging from a security/indie dev.",
+            url: "https://mariozechner.at"
+        }
+        const items = posts.map((p) => {
+            return {
+                title: p.meta.title,
+                description: p.meta.description,
+                pubdate: p.meta.date,
+                url: channel.url + `/posts/${p.directory}`
+            }
+        })
+        rss("./rss.xml", channel, items);
+    %>
+    <div class="post-list flex flex-col gap-4">
+        <% if (posts.length > 0) { %>
+            <% const latest = posts[0]; %>
+            <a href="/posts/<%=latest.directory%>/" class="flex gap-4 items-center">
+                <div class="flex row gap-4 items-baseline">
+                    <span class="text-sm text-muted italic whitespace-nowrap"><%=latest.meta.date%></span>
+                    <span><%=latest.meta.title%></span>
+                </div>
+            </a>
+
+            <% const grouped = posts.slice(1).reduce((acc, post) => {
+                const year = post.meta.date.substring(0, 4);
+                if (!acc[year]) acc[year] = [];
+                acc[year].push(post);
+                return acc;
+            }, {}); %>
+
+            <% const years = Object.keys(grouped).sort((a, b) => b.localeCompare(a)); %>
+            <% for (const year of years) { %>
+                <div class="mt-4">
+                    <h5 class="text-sm text-muted uppercase tracking-wide mb-2">
+                        <%= year %> <span style="font-weight: normal;">(<%= grouped[year].length %>)</span>
+                    </h5>
+                    <div class="flex flex-col gap-2">
+                        <% const yearPosts = grouped[year]; %>
+                        <% for (const post of yearPosts) { %>
+                            <a href="/posts/<%=post.directory%>/" class="flex gap-3 items-center text-sm">
+                                <span class="text-muted italic whitespace-nowrap" style="min-width: 80px;"><%=post.meta.date%></span>
+                                <span><%=post.meta.title%></span>
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+            <% } %>
+        <% } %>
+    </div>
+
+    <h4 class="mt-8 mb-6">Who I am</h4>
+    <p>
+        I'm Araharan Loganayagam - realspaceeagle - a cybersecurity professional focused on penetration testing, cloud security, and
+        DevSecOps. I spend most of my time reverse-engineering attack paths, automating blue-team playbooks, and turning those lessons into
+        long-form write-ups so other practitioners can learn alongside me.
+    </p>
+    <p>
+        My toolkit spans offensive testing, threat emulation, infrastructure automation, and compliance frameworks such as NIST CSF, CIS
+        Controls, ISO 27001, SOC 2, and PCI DSS. I enjoy building detection pipelines that mix ML, scripting, and cloud-native services to
+        shorten response cycles and keep production estates resilient.
+    </p>
+    <p>
+        I hold an MSc in Cyber Security (Distinction) from the University of West London and a BSc (Hons) in Information Technology from the
+        University of Moratuwa. Research projects have ranged from blockchain-backed malware detection engines to NLP-driven learning
+        assistants and agriculture-focused social platforms.
+    </p>
+    <p>
+        Outside paid work I'm a regular on Hack The Box, CTF events, and local community initiatives, mentoring aspiring analysts while I
+        pursue certifications such as OSCP and Practical Ethical Hacking. Expect this space to feature reconnaissance guides, Linux
+        hardening notes, DevSecOps patterns, and incident-response walkthroughs inspired by the problems I encounter in the field.
+    </p>
+
+    <h4 class="mt-8 mb-6">Technical expertise</h4>
+    <div class="mb-6 media-links" style="display: grid; gap: 0.75rem;">
+        <div>
+            <strong>Cloud & DevSecOps:</strong> AWS IAM hardening, GuardDuty, Security Hub, Config, CloudTrail analytics; Azure Sentinel playbooks, Defender for Cloud, Key Vault, Purview; GCP SCC, IAM, Cloud Armor, Binary Authorization; Kubernetes RBAC/network policies with Terraform, GitLab CI, Jenkins security gates.
+        </div>
+        <div>
+            <strong>Threat detection & response:</strong> SIEM engineering (Splunk, Sentinel, Elastic), threat hunting with MITRE ATT&CK plus Sigma/YARA development, incident response for forensics, malware triage, timeline reconstruction.
+        </div>
+        <div>
+            <strong>Offensive toolkit:</strong> Recon (Nmap, Amass, Subfinder, theHarvester, Shodan, Censys), web testing (Burp Suite, OWASP ZAP, SQLMap, Gobuster), exploitation (Metasploit, Cobalt Strike, BloodHound), cloud/container assessments (Prowler, ScoutSuite, Trivy, Falco, Aqua).
+        </div>
+        <div>
+            <strong>Programming & automation:</strong> Python for security automation/ML detection, Go for high-performance scanners, Bash for hardening/log triage, PowerShell for AD and Windows defense.
+        </div>
+        <div>
+            <strong>Frameworks & standards:</strong> MITRE ATT&CK, OWASP Testing Guide, PTES, NIST CSF, CIS Controls, ISO 27001/27002, GDPR, SOC 2, PCI DSS, cloud shared responsibility models.
+        </div>
+    </div>
+    <h4 class="mt-8 mb-6">What I offer</h4>
+    <ul class="mb-6">
+        <li>Penetration testing and adversary emulation tailored to cloud-native estates</li>
+        <li>DevSecOps transformations covering IaC reviews, CI/CD security gates, and automation</li>
+        <li>Threat detection uplift projects: SIEM tuning, hunting runbooks, and incident-response playbooks</li>
+        <li>Workshops, talks, and mentorship for teams entering the cybersecurity domain</li>
+    </ul>
+    <div>Engagements are scoped collaboratively; reach out to shape an engagement that matches your risk profile.</div>
+
+    <h4 class="mt-8 mb-6">Get in touch</h4>
+    <div class="flex flex-col">
+        <div class="flex gap-2 mb-3">
+            <a href="https://www.linkedin.com/in/dream4ip/"><i class="icon w-8 h-8" style="color: var(--link-color);"><%=render("./_icons/linkedin-line.svg")%></i></a>
+            <a href="https://twitter.com/haran_loga"><i class="icon w-8 h-8" style="color: var(--link-color);"><%=render("./_icons/twitter-line.svg")%></i></a>
+            <a href="https://github.com/haranloga"><i class="icon w-8 h-8" style="color: var(--link-color);"><%=render("./_icons/github-line.svg")%></i></a>
+        </div>
+        <a href="mailto:firstname.x.lastname@hotmail.com">firstname.x.lastname@hotmail.com</a>
+
+
+    </div>
+
+    <%= render("./_partials/footer.html") %>
+
+
+
+
+
+
+
+

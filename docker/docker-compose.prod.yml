@@ -1,0 +1,12 @@
+version: "3"
+services:
+    web:
+        labels:
+            caddy: mariozechner.at, www.mariozechner.at
+            caddy.reverse_proxy: "{{upstreams 80}}"
+        networks:
+            - reverse_proxy
+networks:
+    reverse_proxy:
+        external:
+            name: caddy-network

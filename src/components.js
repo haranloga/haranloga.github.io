@@ -51,19 +51,17 @@ class ColorBand extends HTMLElement {
             theme: document.documentElement.getAttribute("data-theme") ?? "dark",
         };
 
-        const bars = Array.from({ length: 56 }, () => ({
+        const bars = Array.from({ length: 48 }, () => ({
             offset: Math.random() * Math.PI * 2,
             speed: 0.3 + Math.random() * 0.9,
             variance: 0.45 + Math.random() * 0.4,
         }));
 
         const rainbowStops = [
-            { pos: 0, color: [79, 172, 254] },
-            { pos: 0.2, color: [67, 233, 123] },
-            { pos: 0.4, color: [248, 255, 174] },
-            { pos: 0.6, color: [253, 160, 133] },
-            { pos: 0.8, color: [253, 101, 133] },
-            { pos: 1, color: [167, 103, 229] },
+            { pos: 0, color: [20, 70, 190] },
+            { pos: 0.4, color: [23, 165, 205] },
+            { pos: 0.7, color: [60, 210, 145] },
+            { pos: 1, color: [160, 245, 130] },
         ];
 
         const getWidth = () => canvas.clientWidth;
@@ -104,24 +102,19 @@ class ColorBand extends HTMLElement {
             const height = getHeight();
             const gradient = ctx.createLinearGradient(0, 0, 0, height);
             if (isDark) {
-                gradient.addColorStop(0, "#03050d");
-                gradient.addColorStop(1, "#071122");
+                gradient.addColorStop(0, "#020307");
+                gradient.addColorStop(1, "#040914");
             } else {
-                gradient.addColorStop(0, "#f5f8ff");
-                gradient.addColorStop(1, "#dde7ff");
+                gradient.addColorStop(0, "#eef4ff");
+                gradient.addColorStop(1, "#cfdaf5");
             }
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, width, height);
 
-            const glowOpacity = isDark ? 0.18 : 0.1;
-            ctx.fillStyle = `rgba(255,255,255,${glowOpacity})`;
-            const centerX = width / 2;
-            const centerY = height / 2;
-            const radial = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, Math.max(width, height));
-            radial.addColorStop(0, isDark ? "rgba(0,180,255,0.25)" : "rgba(0,120,255,0.2)");
-            radial.addColorStop(1, "transparent");
-            ctx.fillStyle = radial;
-            ctx.fillRect(0, 0, width, height);
+            if (isDark) {
+                ctx.fillStyle = "rgba(0,0,0,0.5)";
+                ctx.fillRect(0, height * 0.7, width, height * 0.3);
+            }
         };
 
         const drawParticles = (time) => {
@@ -141,30 +134,44 @@ class ColorBand extends HTMLElement {
         const drawBars = (time) => {
             const width = getWidth();
             const height = getHeight();
-            const barWidth = width / bars.length;
-            const maxBarHeight = height * 0.9;
+            const barWidth = width / (bars.length + 2);
+            const maxBarHeight = height * 0.75;
+            const baseLineY = height * 0.9;
+            const segmentCount = 10;
+            const segmentGap = 2;
+            const segmentHeight = maxBarHeight / segmentCount;
             ctx.save();
-            ctx.globalAlpha = state.theme === "dark" ? 0.95 : 0.85;
-            ctx.shadowBlur = 14;
+            ctx.globalAlpha = state.theme === "dark" ? 0.9 : 0.85;
+            ctx.shadowBlur = 10;
 
             bars.forEach((bar, index) => {
                 const speed = time * 0.0008 * bar.speed + bar.offset;
                 const base = (Math.sin(speed) + 1) / 2;
-                const pulse = (Math.sin(speed * 3) + 1) / 2;
-                const eased = Math.pow(base, 1.5) * bar.variance + pulse * 0.05;
-                const barHeight = Math.max(maxBarHeight * (0.25 + eased), height * 0.15);
-                const x = index * barWidth;
-                const y = (height - barHeight) / 2;
+                const pulse = (Math.sin(speed * 2.8) + 1) / 2;
+                const eased = Math.pow(base, 1.35) * bar.variance + pulse * 0.08;
+                const barHeight = Math.max(maxBarHeight * (0.3 + eased), maxBarHeight * 0.2);
+                const filledSegments = Math.round(barHeight / segmentHeight);
+                const x = (index + 1) * barWidth;
                 const colorPosition = index / (bars.length - 1);
                 const color = getRainbowColor(colorPosition);
                 ctx.shadowColor = color;
-                const gradient = ctx.createLinearGradient(x, y, x, y + barHeight);
-                gradient.addColorStop(0, color);
-                gradient.addColorStop(1, state.theme === "dark" ? "rgba(0,0,0,0.6)" : "rgba(255,255,255,0.4)");
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.roundRect(x + barWidth * 0.15, y, barWidth * 0.7, barHeight, barWidth * 0.4);
-                ctx.fill();
+
+                for (let seg = 0; seg < filledSegments; seg++) {
+                    const y = baseLineY - seg * (segmentHeight + segmentGap) - segmentHeight;
+                    const gradient = ctx.createLinearGradient(x, y, x, y + segmentHeight);
+                    gradient.addColorStop(0, `rgba(255,255,255,${state.theme === "dark" ? 0.15 : 0.25})`);
+                    gradient.addColorStop(1, color);
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.roundRect(x, y, barWidth * 0.6, segmentHeight - segmentGap * 0.3, barWidth * 0.15);
+                    ctx.fill();
+                }
+
+                if (filledSegments > 0) {
+                    const capY = baseLineY - (filledSegments - 0.5) * (segmentHeight + segmentGap);
+                    ctx.fillStyle = `rgba(240,255,255,${state.theme === "dark" ? 0.9 : 0.7})`;
+                    ctx.fillRect(x, capY, barWidth * 0.6, 2);
+                }
             });
 
             ctx.restore();

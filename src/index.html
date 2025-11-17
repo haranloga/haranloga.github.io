@@ -51,9 +51,9 @@
                     <div class="flex flex-col gap-2 mt-2">
                         <% const yearPosts = grouped[year]; %>
                         <% for (const post of yearPosts) { %>
-                            <a href="/posts/<%=post.directory%>/" class="flex gap-3 items-center text-sm">
+                            <a href="/posts/<%=post.directory%>/" class="flex gap-3 items-center text-sm post-link">
                                 <span class="text-muted italic whitespace-nowrap" style="min-width: 80px;"><%=post.meta.date%></span>
-                                <span><%=post.meta.title%></span>
+                                <span class="post-link__title"><%=post.meta.title%></span>
                             </a>
                         <% } %>
                     </div>
@@ -62,7 +62,10 @@
         <% } %>
     </div>
 
-    <h4 class="mt-8 mb-6">Who I am</h4>
+    <h4 id="about-me" class="mt-8 mb-6 section-heading">
+        <i class="icon about-icon"><%= render("./_icons/about-me.svg")%></i>
+        <span>Who I am</span>
+    </h4>
     <p>
         I'm Araharan Loganayagam - realspaceeagle - a cybersecurity professional focused on penetration testing, cloud security, and
         DevSecOps. I spend most of my time reverse-engineering attack paths, automating blue-team playbooks, and turning those lessons into

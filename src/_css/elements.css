@@ -99,6 +99,20 @@ h1, h2, h3, h4 {
     color: var(--link-color);
 }
 
+@media (max-width: 520px) {
+    .header-actions {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.4rem;
+    }
+    .header-actions theme-toggle {
+        order: 1;
+    }
+    .header-actions .about-shortcut {
+        order: 2;
+    }
+}
+
 p {
     margin-bottom: 1.5rem;
     hyphens: auto;

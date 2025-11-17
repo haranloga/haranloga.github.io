@@ -43,11 +43,12 @@
 
             <% const years = Object.keys(grouped).sort((a, b) => b.localeCompare(a)); %>
             <% for (const year of years) { %>
-                <div class="mt-4">
-                    <h5 class="text-sm text-muted uppercase tracking-wide mb-2">
-                        <%= year %> <span style="font-weight: normal;">(<%= grouped[year].length %>)</span>
-                    </h5>
-                    <div class="flex flex-col gap-2">
+                <details class="post-group mt-4" open>
+                    <summary class="year-summary">
+                        <span><%= year %></span>
+                        <span class="year-count">(<%= grouped[year].length %>)</span>
+                    </summary>
+                    <div class="flex flex-col gap-2 mt-2">
                         <% const yearPosts = grouped[year]; %>
                         <% for (const post of yearPosts) { %>
                             <a href="/posts/<%=post.directory%>/" class="flex gap-3 items-center text-sm">
@@ -56,7 +57,7 @@
                             </a>
                         <% } %>
                     </div>
-                </div>
+                </details>
             <% } %>
         <% } %>
     </div>

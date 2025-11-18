@@ -67,6 +67,58 @@ h1, h2, h3, h4 {
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
 }
 
+.brand-carousel {
+    overflow: hidden;
+    width: 100%;
+    margin: 1.5rem 0;
+    position: relative;
+}
+
+.brand-carousel__track {
+    display: flex;
+    gap: 2rem;
+    animation: marquee 20s linear infinite;
+}
+
+.brand-carousel__track img,
+.tech-carousel__track img {
+    height: 52px;
+    width: auto;
+    filter: none;
+    opacity: 0.95;
+    transition: transform 0.25s ease, opacity 0.25s ease, filter 0.25s ease, box-shadow 0.25s ease;
+    border-radius: 0.35rem;
+}
+
+.brand-carousel__track img:hover,
+.tech-carousel__track img:hover {
+    filter: drop-shadow(0 4px 8px rgba(0, 150, 255, 0.35));
+    opacity: 1;
+    transform: scale(1.08);
+    box-shadow: 0 0 25px rgba(64, 169, 255, 0.35);
+}
+
+.tech-carousel {
+    overflow: hidden;
+    width: 100%;
+    margin: 1rem 0 2rem;
+}
+
+.tech-carousel__track {
+    display: flex;
+    gap: 2rem;
+    animation: marquee 18s linear infinite;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
 .about-shortcut {
     display: inline-flex;
     align-items: center;

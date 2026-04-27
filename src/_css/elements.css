@@ -675,3 +675,77 @@ article pre {
 .back-to-top:hover {
     transform: translateY(-2px);
 }
+
+/* ── Homepage: tagline + meta links ──────────────────────────────────────── */
+.blog-tagline {
+    font-size: 0.8rem;
+    color: var(--dimmed-text-color);
+    margin-bottom: 1.25rem;
+    font-style: italic;
+}
+
+.blog-meta-link {
+    font-size: 0.78rem;
+    color: var(--dimmed-text-color);
+    font-family: var(--font-sans);
+    text-decoration: none;
+    border-bottom: none;
+    transition: color 0.15s ease;
+}
+
+.blog-meta-link:hover {
+    color: var(--link-color);
+}
+
+/* ── Search bar ──────────────────────────────────────────────────────────── */
+.search-wrap {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.search-icon {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--dimmed-text-color);
+    pointer-events: none;
+}
+
+#post-search {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    padding: 0.35rem 0 0.35rem 1.5rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+    border-radius: 0;
+}
+
+#post-search:focus {
+    border-bottom-color: var(--link-color);
+}
+
+#post-search::placeholder {
+    color: var(--dimmed-text-color);
+    font-style: italic;
+}
+
+.search-empty {
+    font-size: 0.82rem;
+    color: var(--dimmed-text-color);
+    font-style: italic;
+    padding: 0.5rem 0;
+}
+
+/* ── Featured / pinned indicator ─────────────────────────────────────────── */
+.post-featured {
+    font-size: 0.7rem;
+    color: var(--link-color);
+    line-height: 1;
+    flex-shrink: 0;
+}

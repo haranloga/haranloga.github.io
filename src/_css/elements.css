@@ -355,6 +355,7 @@ article blockquote > p {
 article h1, article h2, article h3, article h4 {
     margin-bottom: 1rem;
     margin-top: 1rem;
+    clear: both;
 }
 
 article pre {

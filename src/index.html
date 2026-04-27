@@ -42,8 +42,8 @@
             <div class="project-card__body">
                 <span class="project-card__title"><%=proj.meta.title%></span>
                 <div class="project-card__meta">
-                    <% const projTags = (Array.isArray(proj.meta.tags) ? proj.meta.tags : []).filter(t => t.toLowerCase() !== 'project').slice(0, 2); %>
-                    <% if (projTags.length) { %><span class="project-card__tag"><%=projTags.join(' · ')%></span><% } %>
+                    <% const projTags = (Array.isArray(proj.meta.tags) ? proj.meta.tags : []).filter(t => t.toLowerCase() !== 'project'); %>
+                    <% if (projTags.length > 0) { %><span class="project-card__tag"><%=projTags[0].charAt(0).toUpperCase() + projTags[0].slice(1)%></span><% } %>
                     <span><%=proj.meta.date%></span>
                 </div>
             </div>

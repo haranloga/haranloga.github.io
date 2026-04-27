@@ -7,7 +7,9 @@
 <h1 style="margin-top: 0rem;"><%= title %></h1>
 <p class="text-xs italic" style="color: var(--dimmed-text-color);"><%= date %></p>
 
+<% if (image) { %>
 <figure>
 <img src="<%= image %>">
 <figcaption><%= caption %></figcaption>
 </figure>
+<% } %>

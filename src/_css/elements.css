@@ -353,6 +353,32 @@ article pre code {
     border-radius: 0.5rem;
 }
 
+article table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+article table th {
+    background: var(--dimmed-bg-color, rgba(128,128,128,0.12));
+    font-weight: 700;
+    text-align: left;
+    padding: 8px 14px;
+    border: 1px solid var(--border-color);
+}
+
+article table td {
+    padding: 6px 14px;
+    border: 1px solid var(--border-color);
+    vertical-align: top;
+    line-height: 1.5;
+}
+
+article table tr:nth-child(even) td {
+    background: var(--dimmed-bg-color, rgba(128,128,128,0.05));
+}
+
 article video {
     max-width: 100%;
     max-height: 70vh;

@@ -4,6 +4,8 @@
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <meta name="theme-color" content="#0e0e11" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
     <link rel='stylesheet' type='text/css' href='/style.css'>
 
     <title><%= title %></title>
@@ -19,7 +21,9 @@
     <meta name="twitter:title" content="<%= title %>" />
     <meta name="twitter:description" content="<%= description %>" />
     <meta name="twitter:image" content="<%= typeof image !== 'undefined' && image ? image : 'https://haranloga.github.io/img/band.png' %>" />
-    <script src="/components.js"></script>
+    <!-- Inline theme init: runs sync before first paint to prevent flash -->
+    <script>!function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);localStorage.getItem('theme')||localStorage.setItem('theme','dark')}();</script>
+    <script src="/components.js" defer></script>
 </head>
 
 <body>

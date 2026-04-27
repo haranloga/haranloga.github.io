@@ -34,10 +34,6 @@ class ThemeToggle extends HTMLElement {
     }
 }
 customElements.define("theme-toggle", ThemeToggle);
-if (!localStorage.getItem("theme")) {
-    localStorage.setItem("theme", "dark");
-}
-document.documentElement.setAttribute("data-theme", localStorage.getItem("theme") ?? "light");
 
 class ColorBand extends HTMLElement {
     connectedCallback() {
@@ -96,6 +92,9 @@ class ColorBand extends HTMLElement {
             return `rgb(${rainbowStops[rainbowStops.length - 1].color.join(",")})`;
         };
 
+        // Precompute bar colors — constant per index, no need to recompute each frame
+        const barColors = bars.map((_, index) => getRainbowColor(index / (bars.length - 1)));
+
         const drawBackground = () => {
             const isDark = state.theme === "dark";
             const width = getWidth();
@@ -152,8 +151,7 @@ class ColorBand extends HTMLElement {
                 const barHeight = Math.max(maxBarHeight * (0.3 + eased), maxBarHeight * 0.2);
                 const filledSegments = Math.round(barHeight / segmentHeight);
                 const x = (index + 1) * barWidth;
-                const colorPosition = index / (bars.length - 1);
-                const color = getRainbowColor(colorPosition);
+                const color = barColors[index];
                 ctx.shadowColor = color;
 
                 for (let seg = 0; seg < filledSegments; seg++) {
@@ -177,14 +175,20 @@ class ColorBand extends HTMLElement {
             ctx.restore();
         };
 
+        let animId = null;
+        let isVisible = false;
+        let isTabVisible = !document.hidden;
+
         const loop = (time = 0) => {
-            resize();
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawBackground();
             drawParticles(time);
             drawBars(time);
-            requestAnimationFrame(loop);
+            animId = requestAnimationFrame(loop);
         };
+
+        const startLoop = () => { if (!animId && isVisible && isTabVisible) animId = requestAnimationFrame(loop); };
+        const stopLoop = () => { if (animId) { cancelAnimationFrame(animId); animId = null; } };
 
         const handleThemeChange = () => {
             state.theme = document.documentElement.getAttribute("data-theme") ?? "dark";
@@ -192,14 +196,25 @@ class ColorBand extends HTMLElement {
 
         const observer = new MutationObserver(handleThemeChange);
         observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-        window.addEventListener("resize", resize);
 
+        // Only run animation when element is on screen
+        const io = new IntersectionObserver(([entry]) => {
+            isVisible = entry.isIntersecting;
+            isVisible && isTabVisible ? startLoop() : stopLoop();
+        }, { threshold: 0 });
+        io.observe(this);
+
+        // Pause when browser tab is hidden
+        document.addEventListener("visibilitychange", () => {
+            isTabVisible = !document.hidden;
+            isVisible && isTabVisible ? startLoop() : stopLoop();
+        });
+
+        window.addEventListener("resize", resize);
         resize();
-        loop();
     }
 }
 customElements.define("color-band", ColorBand);
-
 class QuoteLink extends HTMLElement {
     quotesIcon = `<%= render("./_icons/double-quotes-r.svg")%>`;
 
@@ -262,6 +277,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(backBtn);
     window.addEventListener('scroll', () => {
         backBtn.classList.toggle('visible', window.scrollY > 300);
-    });
+    }, { passive: true });
     backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 });

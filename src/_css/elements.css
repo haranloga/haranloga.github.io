@@ -136,10 +136,6 @@ h1, h2, h3, h4 {
     color: #1f1f1f;
 }
 
-:root[data-theme="light"] .about-shortcut {
-    color: #1f1f1f;
-}
-
 .about-shortcut .icon {
     width: 20px;
     height: 20px;

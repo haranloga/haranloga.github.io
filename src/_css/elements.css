@@ -942,6 +942,61 @@ article pre {
     padding: 0.5rem 0;
 }
 
+/* ── Reading progress bar (post pages) ──────────────────────────────────── */
+.reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--link-color);
+    transform-origin: left center;
+    transform: scaleX(0);
+    z-index: 200;
+    transition: transform 0.08s linear;
+    pointer-events: none;
+}
+
+/* ── Keyboard shortcut hint chip ────────────────────────────────────────── */
+.kbd-hint {
+    font-size: 0.68rem;
+    font-family: var(--font-mono);
+    color: var(--dimmed-text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.25rem;
+    padding: 0.05rem 0.4rem;
+    line-height: 1.5;
+    flex-shrink: 0;
+    background: rgba(128, 128, 128, 0.08);
+}
+
+/* ── View Transitions API (modern browsers) ─────────────────────────────── */
+@view-transition {
+    navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 0.18s;
+    animation-timing-function: ease;
+}
+
+/* ── Honour user's motion preferences ───────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    .brand-carousel__track,
+    .tech-carousel__track {
+        animation: none !important;
+    }
+}
+
 /* ── Featured / pinned indicator ─────────────────────────────────────────── */
 .post-featured {
     font-size: 0.7rem;

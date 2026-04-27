@@ -175,6 +175,8 @@ class ColorBand extends HTMLElement {
             ctx.restore();
         };
 
+        const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+
         let animId = null;
         let isVisible = false;
         let isTabVisible = !document.hidden;
@@ -187,7 +189,17 @@ class ColorBand extends HTMLElement {
             animId = requestAnimationFrame(loop);
         };
 
-        const startLoop = () => { if (!animId && isVisible && isTabVisible) animId = requestAnimationFrame(loop); };
+        const drawOnce = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBackground();
+            drawParticles(0);
+            drawBars(0);
+        };
+        const startLoop = () => {
+            if (animId || !isVisible || !isTabVisible) return;
+            if (prefersReducedMotion) { drawOnce(); return; }
+            animId = requestAnimationFrame(loop);
+        };
         const stopLoop = () => { if (animId) { cancelAnimationFrame(animId); animId = null; } };
 
         const handleThemeChange = () => {
@@ -279,4 +291,34 @@ document.addEventListener('DOMContentLoaded', () => {
         backBtn.classList.toggle('visible', window.scrollY > 300);
     }, { passive: true });
     backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // Reading progress bar (post pages only)
+    const article = document.querySelector('article');
+    if (article) {
+        const bar = document.createElement('div');
+        bar.className = 'reading-progress';
+        document.body.appendChild(bar);
+        const update = () => {
+            const start = article.offsetTop;
+            const total = article.offsetHeight - window.innerHeight + start;
+            const progress = Math.min(1, Math.max(0, (window.scrollY - start) / Math.max(1, total - start)));
+            bar.style.transform = `scaleX(${progress})`;
+        };
+        window.addEventListener('scroll', update, { passive: true });
+        window.addEventListener('resize', update, { passive: true });
+        update();
+    }
+
+    // "/" keyboard shortcut → focus the page's search input
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
+        const tag = document.activeElement?.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement?.isContentEditable) return;
+        const search = document.querySelector('input[id^="search-"]');
+        if (search) {
+            e.preventDefault();
+            search.focus();
+            search.select();
+        }
+    });
 });

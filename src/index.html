@@ -35,13 +35,14 @@
     <div class="search-bar mb-4" style="display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--dimmed-text-color);padding-bottom:6px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--dimmed-text-color);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         <input type="text" id="search-posts" placeholder="Search posts..." style="background:transparent;border:none;outline:none;color:var(--text-color);font-size:0.875rem;width:100%;font-family:inherit;" />
+        <span class="kbd-hint">/</span>
     </div>
 
     <div class="post-list flex flex-col gap-4" id="post-list">
         <% if (posts.length > 0) { %>
             <% const latest = posts[0]; %>
             <a href="/posts/<%=latest.directory%>/" class="flex gap-3 items-baseline post-link" data-slug="<%=latest.directory%>">
-                <span class="text-sm text-muted italic whitespace-nowrap"><%=latest.meta.date%></span>
+                <span class="text-sm text-muted italic whitespace-nowrap"><%=latest.meta.date%><% if (latest.meta.reading_time) { %> · <%=latest.meta.reading_time%>m<% } %></span>
                 <% if (latest.meta.pinned) { %><span class="post-featured" title="Featured">★</span><% } %>
                 <span class="post-link__title"><%=latest.meta.title%></span>
             </a>
@@ -65,6 +66,7 @@
                         <% for (const post of yearPosts) { %>
                             <a href="/posts/<%=post.directory%>/" class="flex gap-3 items-baseline text-sm post-link" data-slug="<%=post.directory%>">
                                 <span class="text-muted italic whitespace-nowrap" style="min-width: 80px;"><%=post.meta.date%></span>
+                                <% if (post.meta.reading_time) { %><span class="text-muted whitespace-nowrap" style="font-size:0.7rem;">· <%=post.meta.reading_time%>m</span><% } %>
                                 <% if (post.meta.pinned) { %><span class="post-featured" title="Featured">★</span><% } %>
                                 <span class="post-link__title"><%=post.meta.title%></span>
                             </a>

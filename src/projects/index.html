@@ -10,10 +10,18 @@
     projectPosts.sort((a, b) => b.meta.date.localeCompare(a.meta.date));
 %>
 
-<div class="flex items-baseline gap-3 mb-6">
+<div class="flex items-baseline gap-3 mb-4">
     <h4 style="margin:0;">Projects</h4>
     <span class="text-sm text-muted"><%= projectPosts.length %> project<%= projectPosts.length !== 1 ? 's' : '' %></span>
 </div>
+
+<div class="search-bar mb-6" style="display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--dimmed-text-color);padding-bottom:6px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--dimmed-text-color);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" id="search-projects" placeholder="Search projects..." style="background:transparent;border:none;outline:none;color:var(--text-color);font-size:0.875rem;width:100%;font-family:inherit;" />
+    <span class="kbd-hint">/</span>
+</div>
+
+<p id="search-empty" style="display:none;font-size:0.85rem;color:var(--dimmed-text-color);font-style:italic;">No projects match your search.</p>
 
 <% if (projectPosts.length === 0) { %>
 <p style="font-size:0.9rem;color:var(--dimmed-text-color);">No projects yet — check back soon.</p>
@@ -44,5 +52,29 @@
     <% _i++; } %>
 </div>
 <% } %>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('search-projects');
+    const grid = document.querySelector('.proj-grid');
+    const empty = document.getElementById('search-empty');
+    if (!input || !grid) return;
+    input.addEventListener('input', function() {
+        const q = this.value.toLowerCase().trim();
+        const cards = grid.querySelectorAll('.proj-card');
+        let visible = 0;
+        cards.forEach(c => {
+            const title = c.querySelector('.proj-card__title');
+            const desc = c.querySelector('.proj-card__desc');
+            const tag = c.querySelector('.proj-card__tag');
+            const text = ((title?.textContent || '') + ' ' + (desc?.textContent || '') + ' ' + (tag?.textContent || '')).toLowerCase();
+            const match = !q || text.includes(q);
+            c.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+        if (empty) empty.style.display = visible === 0 ? '' : 'none';
+    });
+});
+</script>
 
 <%= render("../_partials/footer.html") %>

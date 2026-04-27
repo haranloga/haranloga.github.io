@@ -23,32 +23,7 @@
         })
         rss("./rss.xml", channel, items);
 
-        const projectPosts = posts.filter(p => Array.isArray(p.meta.tags) && p.meta.tags.map(t => t.toLowerCase()).includes('project'));
 
-    %>
-
-    <% if (projectPosts.length > 0) { %>
-    <h4 class="mb-4" id="projects">Projects</h4>
-    <div class="project-grid mb-6">
-        <% for (const proj of projectPosts) { %>
-        <a href="/posts/<%=proj.directory%>/" class="project-card">
-            <% if (proj.meta.image) { %>
-            <img class="project-card__img" src="/posts/<%=proj.directory%>/<%=proj.meta.image%>" alt="<%=proj.meta.title%>" loading="lazy">
-            <% } else { %>
-            <img class="project-card__img" src="/img/band.png" alt="<%=proj.meta.title%>" loading="lazy">
-            <% } %>
-            <div class="project-card__body">
-                <span class="project-card__title"><%=proj.meta.title%></span>
-                <div class="project-card__meta">
-                    <% const projTags = (Array.isArray(proj.meta.tags) ? proj.meta.tags : []).filter(t => t.toLowerCase() !== 'project'); %>
-                    <% if (projTags.length > 0) { %><span class="project-card__tag"><%=projTags[0].charAt(0).toUpperCase() + projTags[0].slice(1)%></span><% } %>
-                    <span><%=proj.meta.date%></span>
-                </div>
-            </div>
-        </a>
-        <% } %>
-    </div>
-    <% } %>
 
     <div class="flex items-baseline gap-2 mb-4">
         <h4>Blogging</h4>

@@ -8,21 +8,25 @@
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
     <link rel='stylesheet' type='text/css' href='/style.css'>
 
-    <title><%= title %></title>
+    <title>
+        <%= title %>
+    </title>
     <meta name="description" content="<%= description %>" />
     <meta property="og:title" content="<%= title %>" />
     <meta property="og:type" content="article" />
     <meta property="og:description" content="<%= description %>" />
-    <meta property="og:image" content="<%= typeof image !== 'undefined' && image ? image : 'https://haranloga.github.io/img/band.png' %>" />
+    <meta property="og:image"
+        content="<%= typeof image !== 'undefined' && image ? image : 'https://haranloga.github.io/img/band.png' %>" />
     <meta property="og:url" content="<%= url %>" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="twitter:domain" content="haranloga.github.io" />
     <meta property="twitter:url" content="<%= url %>" />
     <meta name="twitter:title" content="<%= title %>" />
     <meta name="twitter:description" content="<%= description %>" />
-    <meta name="twitter:image" content="<%= typeof image !== 'undefined' && image ? image : 'https://haranloga.github.io/img/band.png' %>" />
+    <meta name="twitter:image"
+        content="<%= typeof image !== 'undefined' && image ? image : 'https://haranloga.github.io/img/band.png' %>" />
     <!-- Inline theme init: runs sync before first paint to prevent flash -->
-    <script>!function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);localStorage.getItem('theme')||localStorage.setItem('theme','dark')}();</script>
+    <script>!function () { var t = localStorage.getItem('theme') || 'dark'; document.documentElement.setAttribute('data-theme', t); localStorage.getItem('theme') || localStorage.setItem('theme', 'dark') }();</script>
     <script src="/components.js" defer></script>
 </head>
 
@@ -34,11 +38,17 @@
                     <h2 style="margin:0;">/&gt; Araharan Loganayagam</h2>
                 </a>
                 <div class="flex gap-2" style="align-items:center;">
-                    <a href="/#projects" class="about-shortcut" aria-label="Projects" title="Projects" style="width:18px;height:18px;color: var(--link-color);">
-                        <i class="icon" style="width:18px;height:18px;"><%=render("../_icons/projects-line.svg")%></i>
+                    <a href="/#projects" class="about-shortcut" aria-label="Projects" title="Projects"
+                        style="width:18px;height:18px;color: var(--link-color);">
+                        <i class="icon" style="width:18px;height:18px;">
+                            <%=render(".. /_icons/projects-line.svg")%>
+                        </i>
                     </a>
-                    <a href="/posts/2020-11-22-about/" class="about-shortcut" aria-label="About" title="About me" style="width:18px;height:18px;color: var(--link-color);">
-                        <i class="icon" style="width:18px;height:18px;"><%=render("../_icons/about-me.svg")%></i>
+                    <a href="/posts/2020-11-22-about/" class="about-shortcut" aria-label="About" title="About me"
+                        style="width:18px;height:18px;color: var(--link-color);">
+                        <i class="icon" style="width:18px;height:18px;">
+                            <%=render(".. /_icons/about-me.svg")%>
+                        </i>
                     </a>
                     <theme-toggle style="display:inline-flex;align-items:center;"></theme-toggle>
                 </div>
@@ -47,18 +57,23 @@
                 <span class="text-sm">Product building • AI Safety • Cybersecurity</span>
             </a>
             <div class="flex gap-2 mt-1" style="align-items:center;">
-                <a href="https://www.linkedin.com/in/dream4ip/" title="LinkedIn" aria-label="LinkedIn" style="color: var(--link-color);">
-                    <i class="icon" style="width: 18px; height: 18px;"><%=render("../_icons/linkedin-line.svg")%></i>
+                <a href="https://www.linkedin.com/in/dream4ip/" title="LinkedIn" aria-label="LinkedIn"
+                    style="color: var(--link-color);">
+                    <i class="icon" style="width: 18px; height: 18px;">
+                        <%=render(".. /_icons/linkedin-line.svg")%>
+                    </i>
                 </a>
-                <a href="https://twitter.com/haran_loga" title="Twitter" aria-label="Twitter" style="color: var(--link-color);">
-                    <i class="icon" style="width: 18px; height: 18px;"><%=render("../_icons/twitter-line.svg")%></i>
+                <a href="https://twitter.com/haran_loga" title="Twitter" aria-label="Twitter"
+                    style="color: var(--link-color);">
+                    <i class="icon" style="width: 18px; height: 18px;">
+                        <%=render(".. /_icons/twitter-line.svg")%>
+                    </i>
                 </a>
-                <a href="https://github.com/haranloga" title="GitHub" aria-label="GitHub" style="color: var(--link-color);">
-                    <i class="icon" style="width: 18px; height: 18px;"><%=render("../_icons/github-line.svg")%></i>
+                <a href="https://github.com/haranloga" title="GitHub" aria-label="GitHub"
+                    style="color: var(--link-color);">
+                    <i class="icon" style="width: 18px; height: 18px;">
+                        <%=render(".. /_icons/github-line.svg")%>
+                    </i>
                 </a>
             </div>
         </div>
-
-
-
-

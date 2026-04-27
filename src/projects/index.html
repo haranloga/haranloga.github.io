@@ -1,0 +1,76 @@
+<% meta() %>
+
+<%= render("../_partials/header.html", { title: "Projects - Araharan Loganayagam", description: "My projects", url: "https://haranloga.github.io/projects/" }) %>
+
+    <color-band class="w-full mt-4 mb-6" style="height: 80px;"></color-band>
+
+    <%
+        const posts = metas("../posts").filter((p) => p.meta.published && p.meta.listed !== false);
+        posts.sort((a, b) => b.meta.date.localeCompare(a.meta.date));
+        const projectPosts = posts.filter(p => Array.isArray(p.meta.tags) && p.meta.tags.map(t => t.toLowerCase()).includes('project'));
+    %>
+
+    <div class="flex items-baseline gap-2 mb-4" style="justify-content: space-between;">
+        <h4 id="projects" style="margin-bottom: 0;">Projects</h4>
+        <div class="search-bar" style="display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--dimmed-text-color);padding-bottom:6px;width: 250px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--dimmed-text-color);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" id="search-projects" placeholder="Search projects..." style="background:transparent;border:none;outline:none;color:var(--text-color);font-size:0.875rem;width:100%;font-family:inherit;" />
+        </div>
+    </div>
+
+    <% if (projectPosts.length > 0) { %>
+    <div class="project-grid mb-6" id="project-list">
+        <% for (const proj of projectPosts) { %>
+        <a href="/posts/<%=proj.directory%>/" class="project-card">
+            <% if (proj.meta.image) { %>
+            <img class="project-card__img" src="/posts/<%=proj.directory%>/<%=proj.meta.image%>" alt="<%=proj.meta.title%>" loading="lazy">
+            <% } else { %>
+            <img class="project-card__img" src="/img/band.png" alt="<%=proj.meta.title%>" loading="lazy">
+            <% } %>
+            <div class="project-card__body">
+                <span class="project-card__title"><%=proj.meta.title%></span>
+                <div class="project-card__meta">
+                    <% const projTags = (Array.isArray(proj.meta.tags) ? proj.meta.tags : []).filter(t => t.toLowerCase() !== 'project'); %>
+                    <% if (projTags.length > 0) { %><span class="project-card__tag"><%=projTags[0].charAt(0).toUpperCase() + projTags[0].slice(1)%></span><% } %>
+                    <span><%=proj.meta.date%></span>
+                </div>
+            </div>
+        </a>
+        <% } %>
+    </div>
+    <div id="no-projects-msg" style="display: none;" class="text-sm text-muted italic">No projects found matching your search.</div>
+    <% } else { %>
+    <div class="text-sm text-muted italic">No projects found.</div>
+    <% } %>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search-projects');
+        const projectList = document.getElementById('project-list');
+        const noProjectsMsg = document.getElementById('no-projects-msg');
+        if (!searchInput || !projectList) return;
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+            const allCards = projectList.querySelectorAll('.project-card');
+            let visibleCount = 0;
+
+            allCards.forEach(function(card) {
+                const title = card.querySelector('.project-card__title');
+                const text = title ? title.textContent.toLowerCase() : '';
+                if (!query || text.includes(query)) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (noProjectsMsg) {
+                noProjectsMsg.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+        });
+    });
+    </script>
+
+<%= render("../_partials/footer.html") %>

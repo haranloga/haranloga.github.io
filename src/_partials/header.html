@@ -24,7 +24,7 @@
 
 <body>
     <div class="mx-auto p-6" style="max-width: 640px; width: 100%">
-        <div class="flex flex-row pb-4 justify-between items-start">
+        <div class="flex flex-row pb-4">
             <div class="flex flex-col">
                 <a href="/" style="color: var(--text-color); text-decoration: none;">
                     <h2>/&gt; Araharan Loganayagam</h2>
@@ -40,16 +40,14 @@
                     <a href="https://github.com/haranloga" title="GitHub" aria-label="GitHub" style="color: var(--link-color);">
                         <i class="icon" style="width: 18px; height: 18px;"><%=render("../_icons/github-line.svg")%></i>
                     </a>
+                    <a href="/#projects" class="about-shortcut" aria-label="Projects" title="Projects" style="width:18px;height:18px;">
+                        <i class="icon" style="width:18px;height:18px;"><%=render("../_icons/projects-line.svg")%></i>
+                    </a>
+                    <a href="/posts/2020-11-22-about/" class="about-shortcut" aria-label="About" title="About me" style="width:18px;height:18px;">
+                        <i class="icon" style="width:18px;height:18px;"><%=render("../_icons/about-me.svg")%></i>
+                    </a>
+                    <theme-toggle style="display:inline-flex;align-items:center;"></theme-toggle>
                 </div>
-            </div>
-            <div class="flex gap-2" style="align-items:center; margin-top: 5px;">
-                <a href="/#projects" class="about-shortcut" aria-label="Projects" title="Projects" style="width:18px;height:18px;color: var(--link-color);">
-                    <i class="icon" style="width:18px;height:18px;"><%=render("../_icons/projects-line.svg")%></i>
-                </a>
-                <a href="/posts/2020-11-22-about/" class="about-shortcut" aria-label="About" title="About me" style="width:18px;height:18px;color: var(--link-color);">
-                    <i class="icon" style="width:18px;height:18px;"><%=render("../_icons/about-me.svg")%></i>
-                </a>
-                <theme-toggle style="display:inline-flex;align-items:center;"></theme-toggle>
             </div>
         </div>
 

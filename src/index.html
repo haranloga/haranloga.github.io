@@ -25,18 +25,10 @@
 
         const projectPosts = posts.filter(p => Array.isArray(p.meta.tags) && p.meta.tags.map(t => t.toLowerCase()).includes('project'));
 
-        const searchIndex = posts.map(p => ({
-            slug: p.directory,
-            title: p.meta.title || '',
-            tags: Array.isArray(p.meta.tags) ? p.meta.tags : [],
-            description: p.meta.description || '',
-        }));
     %>
 
-    <script>window.__SEARCH__ = <%= JSON.stringify(searchIndex) %>;</script>
-
     <% if (projectPosts.length > 0) { %>
-    <h4 class="mb-4">Projects</h4>
+    <h4 class="mb-4" id="projects">Projects</h4>
     <div class="project-grid mb-6">
         <% for (const proj of projectPosts) { %>
         <a href="/posts/<%=proj.directory%>/" class="project-card">
@@ -66,14 +58,6 @@
         <a href="/rss.xml" class="blog-meta-link" title="RSS" style="display:inline-flex;align-items:center;line-height:1;">
             <svg style="width:14px;color:var(--link-color);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
         </a>
-        <button id="search-toggle" class="blog-meta-link search-toggle-btn" title="Search posts" aria-label="Toggle search">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        </button>
-    </div>
-
-    <div id="search-wrap" class="search-wrap">
-        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <input type="text" id="post-search" placeholder="Search posts…" autocomplete="off" spellcheck="false">
     </div>
 
     <div class="post-list flex flex-col gap-4" id="post-list">
@@ -114,64 +98,5 @@
         <% } %>
     </div>
 
-    <div id="search-empty" class="search-empty" style="display:none;">No posts match your search.</div>
-
-    <script>
-    (function () {
-        var toggleBtn = document.getElementById('search-toggle');
-        var searchWrap = document.getElementById('search-wrap');
-        var input = document.getElementById('post-search');
-        if (toggleBtn && searchWrap) {
-            toggleBtn.addEventListener('click', function () {
-                var isOpen = searchWrap.classList.contains('open');
-                if (isOpen) {
-                    searchWrap.classList.remove('open');
-                    if (input) { input.value = ''; input.dispatchEvent(new Event('input')); }
-                } else {
-                    searchWrap.classList.add('open');
-                    setTimeout(function () { if (input) input.focus(); }, 50);
-                }
-            });
-        }
-
-        if (input) {
-            var index = window.__SEARCH__ || [];
-            function norm(s) { return s.toLowerCase().replace(/[^a-z0-9\s]/g, ' '); }
-            input.addEventListener('input', function () {
-                var q = norm(this.value.trim());
-                var tokens = q.split(/\s+/).filter(Boolean);
-                var empty = document.getElementById('search-empty');
-                if (!tokens.length) {
-                    document.querySelectorAll('[data-slug]').forEach(function (el) { el.style.display = ''; });
-                    document.querySelectorAll('.post-group').forEach(function (el) { el.style.display = ''; });
-                    if (empty) empty.style.display = 'none';
-                    return;
-                }
-                var matchSlugs = new Set();
-                index.forEach(function (item) {
-                    var text = norm(item.title + ' ' + item.description + ' ' + item.tags.join(' '));
-                    if (tokens.every(function (t) { return text.indexOf(t) !== -1; })) matchSlugs.add(item.slug);
-                });
-                document.querySelectorAll('[data-slug]').forEach(function (el) {
-                    el.style.display = matchSlugs.has(el.dataset.slug) ? '' : 'none';
-                });
-                document.querySelectorAll('.post-group').forEach(function (group) {
-                    var any = false;
-                    group.querySelectorAll('[data-slug]').forEach(function (el) { if (el.style.display !== 'none') any = true; });
-                    group.style.display = any ? '' : 'none';
-                    if (any) group.open = true;
-                });
-                if (empty) empty.style.display = matchSlugs.size === 0 ? '' : 'none';
-            });
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape' && searchWrap && searchWrap.classList.contains('open')) {
-                    searchWrap.classList.remove('open');
-                    input.value = '';
-                    input.dispatchEvent(new Event('input'));
-                }
-            });
-        }
-    })();
-    </script>
 
     <%= render("./_partials/footer.html") %>

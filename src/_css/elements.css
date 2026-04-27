@@ -750,6 +750,123 @@ article pre {
     font-weight: 600;
 }
 
+/* ── Projects page ───────────────────────────────────────────────────────── */
+.proj-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+}
+
+@media (max-width: 560px) {
+    .proj-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 561px) and (max-width: 760px) {
+    .proj-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.proj-card {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    transition: transform 0.18s ease;
+}
+
+.proj-card:hover {
+    transform: translateY(-3px);
+}
+
+.proj-card__media {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.proj-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.28s ease;
+}
+
+.proj-card:hover .proj-card__img {
+    transform: scale(1.04);
+}
+
+.proj-card__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.proj-card__placeholder--1 {
+    background: linear-gradient(135deg, #1446be 0%, #17a5cd 100%);
+}
+
+.proj-card__placeholder--2 {
+    background: linear-gradient(135deg, #17a5cd 0%, #3cd291 100%);
+}
+
+.proj-card__placeholder--3 {
+    background: linear-gradient(135deg, #7c3aed 0%, #1446be 100%);
+}
+
+.proj-card__body {
+    padding: 0.75rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.proj-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+    color: var(--dimmed-text-color);
+    font-family: var(--font-sans);
+}
+
+.proj-card__tag {
+    color: var(--link-color);
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.proj-card__title {
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-color);
+    line-height: 1.35;
+    transition: color 0.15s ease;
+}
+
+.proj-card:hover .proj-card__title {
+    color: var(--link-color);
+}
+
+.proj-card__desc {
+    font-size: 0.75rem;
+    color: var(--dimmed-text-color);
+    line-height: 1.45;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 /* ── Homepage: meta links ────────────────────────────────────────────────── */
 .blog-meta-link {
     font-size: 0.78rem;

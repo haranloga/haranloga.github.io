@@ -1,0 +1,44 @@
+<% meta() %>
+
+<%= render("../_partials/header.html", { title, description, url }) %>
+
+<color-band class="w-full mt-4 mb-6" style="height: 80px;"></color-band>
+
+<h4 class="mb-6">Tags</h4>
+
+<%
+    const allPosts = metas("../posts").filter(p => p.meta.published);
+    const tagMap = {};
+    allPosts.forEach(p => {
+        const postTags = Array.isArray(p.meta.tags) ? p.meta.tags : [];
+        postTags.forEach(tag => {
+            if (!tagMap[tag]) tagMap[tag] = [];
+            tagMap[tag].push(p);
+        });
+    });
+    const sortedTags = Object.keys(tagMap).sort();
+%>
+
+<% if (sortedTags.length === 0) { %>
+<p class="text-sm" style="color: var(--dimmed-text-color);">No tags yet — publish a post with tags to see them here.</p>
+<% } else { %>
+<div class="flex flex-col gap-8">
+    <% for (const tag of sortedTags) { %>
+    <div>
+        <h5 id="<%= tag.toLowerCase().replace(/[\s/]+/g, '-') %>" style="font-size: 0.9rem; font-family: var(--font-sans); font-weight: 700; color: var(--link-color); margin-bottom: 0.5rem;">
+            #<%= tag %> <span style="font-weight: 400; color: var(--dimmed-text-color); font-size: 0.78rem;">(<%= tagMap[tag].length %>)</span>
+        </h5>
+        <div class="flex flex-col gap-2">
+            <% for (const post of tagMap[tag].sort((a, b) => b.meta.date.localeCompare(a.meta.date))) { %>
+            <a href="/posts/<%= post.directory %>/" class="flex gap-3 items-baseline text-sm post-link">
+                <span class="text-muted italic whitespace-nowrap" style="min-width: 80px;"><%= post.meta.date %></span>
+                <span class="post-link__title"><%= post.meta.title %></span>
+            </a>
+            <% } %>
+        </div>
+    </div>
+    <% } %>
+</div>
+<% } %>
+
+<%= render("../_partials/footer.html") %>

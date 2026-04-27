@@ -4,7 +4,7 @@
 
     <color-band class="w-full mt-4 mb-6" style="height: 80px;"></color-band>
 
-    <h4 class="mb-6">Blogging <a href="/rss.xml" class="text-sm"><svg style="width: 18px; color: var(--link-color);" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rss-icon lucide-rss"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></a></h4>
+    <h4 class="mb-6">Blogging <a href="/tags/" style="font-size: 0.8rem; color: var(--dimmed-text-color); margin-right: 0.5rem; font-family: var(--font-sans); text-decoration: none;">tags</a><a href="/rss.xml" class="text-sm"><svg style="width: 18px; color: var(--link-color);" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rss-icon lucide-rss"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></a></h4>
     <%
         const posts = metas("./posts").filter((p) => p.meta.published);
         posts.sort((a, b) => b.meta.date.localeCompare(a.meta.date));
@@ -12,7 +12,7 @@
         const channel = {
             title: "Araharan Loganayagam",
             description: "Blogging from a security/indie dev.",
-            url: "https://mariozechner.at"
+            url: "https://haranloga.github.io"
         }
         const items = posts.map((p) => {
             return {

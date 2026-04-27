@@ -1,4 +1,38 @@
-<div class="mt-8 mt-auto text-xs text-center text-muted">
+<% const _shareUrl = encodeURIComponent(typeof url !== 'undefined' ? url : ''); %>
+<% const _shareTitle = encodeURIComponent(typeof title !== 'undefined' ? title : ''); %>
+
+<div class="post-share">
+    <span class="post-share__label">Share</span>
+    <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=<%= _shareUrl %>" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+    </a>
+    <a class="share-btn" href="https://twitter.com/intent/tweet?url=<%= _shareUrl %>&text=<%= _shareTitle %>" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.734l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        Twitter
+    </a>
+</div>
+
+<% const _hasPrev = typeof prevPost !== 'undefined' && prevPost; %>
+<% const _hasNext = typeof nextPost !== 'undefined' && nextPost; %>
+<% if (_hasPrev || _hasNext) { %>
+<nav class="post-nav">
+    <% if (_hasNext) { %>
+    <div class="post-nav__prev">
+        <span class="post-nav__label">← Older</span>
+        <a href="/posts/<%= nextPost.directory %>/" class="post-nav__title"><%= nextPost.meta.title %></a>
+    </div>
+    <% } %>
+    <% if (_hasPrev) { %>
+    <div class="post-nav__next">
+        <span class="post-nav__label">Newer →</span>
+        <a href="/posts/<%= prevPost.directory %>/" class="post-nav__title"><%= prevPost.meta.title %></a>
+    </div>
+    <% } %>
+</nav>
+<% } %>
+
+<div class="mt-8 text-xs text-center text-muted">
     This page respects your privacy by not using cookies or similar technologies and by not collecting any personally identifiable information.
 </div>
 

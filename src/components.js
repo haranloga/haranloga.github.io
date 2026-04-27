@@ -236,3 +236,32 @@ class QuoteLink extends HTMLElement {
 }
 
 customElements.define("q-l", QuoteLink);
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Code copy buttons
+    document.querySelectorAll('pre').forEach(pre => {
+        const code = pre.querySelector('code');
+        if (!code) return;
+        const btn = document.createElement('button');
+        btn.className = 'code-copy-btn';
+        btn.textContent = 'copy';
+        btn.addEventListener('click', () => {
+            navigator.clipboard.writeText(code.innerText).then(() => {
+                btn.textContent = 'copied!';
+                setTimeout(() => { btn.textContent = 'copy'; }, 1500);
+            });
+        });
+        pre.appendChild(btn);
+    });
+
+    // Back to top button
+    const backBtn = document.createElement('button');
+    backBtn.className = 'back-to-top';
+    backBtn.setAttribute('aria-label', 'Back to top');
+    backBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>';
+    document.body.appendChild(backBtn);
+    window.addEventListener('scroll', () => {
+        backBtn.classList.toggle('visible', window.scrollY > 300);
+    });
+    backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+});

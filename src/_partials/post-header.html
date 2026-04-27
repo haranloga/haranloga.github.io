@@ -5,11 +5,19 @@
 <color-band class="w-full mt-4" style="height: 80px;"></color-band>
 
 <h1 style="margin-top: 0rem;"><%= title %></h1>
-<p class="text-xs italic" style="color: var(--dimmed-text-color);"><%= date %></p>
+<p class="text-xs italic" style="color: var(--dimmed-text-color);"><%= date %><% if (typeof reading_time !== 'undefined' && reading_time) { %> &nbsp;·&nbsp; ~<%= reading_time %> min read<% } %></p>
+
+<% if (typeof tags !== 'undefined' && Array.isArray(tags) && tags.length > 0) { %>
+<div class="post-tags">
+<% for (const tag of tags) { %>
+<a href="/tags/#<%= tag.toLowerCase().replace(/[\s/]+/g, '-') %>" class="post-tag"><%= tag %></a>
+<% } %>
+</div>
+<% } %>
 
 <% if (image) { %>
 <figure>
 <img src="<%= image %>">
-<figcaption><%= caption %></figcaption>
+<% if (typeof caption !== 'undefined' && caption) { %><figcaption><%= caption %></figcaption><% } %>
 </figure>
 <% } %>

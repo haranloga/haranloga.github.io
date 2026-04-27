@@ -60,6 +60,11 @@
         </a>
     </div>
 
+    <div class="search-bar mb-4" style="display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--dimmed-text-color);padding-bottom:6px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--dimmed-text-color);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="search-posts" placeholder="Search posts..." style="background:transparent;border:none;outline:none;color:var(--text-color);font-size:0.875rem;width:100%;font-family:inherit;" />
+    </div>
+
     <div class="post-list flex flex-col gap-4" id="post-list">
         <% if (posts.length > 0) { %>
             <% const latest = posts[0]; %>
@@ -98,5 +103,30 @@
         <% } %>
     </div>
 
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search-posts');
+        const postList = document.getElementById('post-list');
+        if (!searchInput || !postList) return;
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+            const allLinks = postList.querySelectorAll('.post-link');
+            const allGroups = postList.querySelectorAll('.post-group');
+
+            allLinks.forEach(function(link) {
+                const title = link.querySelector('.post-link__title');
+                const text = title ? title.textContent.toLowerCase() : '';
+                link.style.display = (!query || text.includes(query)) ? '' : 'none';
+            });
+
+            allGroups.forEach(function(group) {
+                const visibleLinks = group.querySelectorAll('.post-link:not([style*="display: none"])');
+                group.style.display = visibleLinks.length === 0 ? 'none' : '';
+                if (query && visibleLinks.length > 0) group.open = true;
+            });
+        });
+    });
+    </script>
 
     <%= render("./_partials/footer.html") %>

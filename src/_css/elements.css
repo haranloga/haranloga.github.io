@@ -288,10 +288,19 @@ article a {
 }
 
 article img {
-    width: 100%;
-    margin-bottom: 1.5rem;
+    max-width: 65%;
+    width: auto;
+    display: block;
+    margin: 0 auto 1.5rem;
     border-radius: 0.5rem;
     border: 1px solid var(--border-color);
+}
+
+/* Inside figures, let the figure's max-width control the size */
+article figure img {
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
 }
 
 article > figure {

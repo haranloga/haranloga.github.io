@@ -6,7 +6,12 @@
 
 <color-band class="w-full mt-4 mb-6" style="height: 80px;"></color-band>
 
-<h4 class="mb-6">Tags</h4>
+<h4 class="mb-4">Tags</h4>
+
+<div class="search-bar mb-4" style="display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--dimmed-text-color);padding-bottom:6px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--dimmed-text-color);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" id="search-tags" placeholder="Search tags..." style="background:transparent;border:none;outline:none;color:var(--text-color);font-size:0.875rem;width:100%;font-family:inherit;" />
+</div>
 
 <%
     const allPosts = metas("../posts").filter(p => p.meta.published);
@@ -26,7 +31,7 @@
 <% } else { %>
 <div class="flex flex-col gap-8">
     <% for (const tag of sortedTags) { %>
-    <div>
+    <div class="tag-group" data-tag="<%= tag.toLowerCase() %>">
         <h5 id="<%= tag.toLowerCase().replace(/[\s/]+/g, '-') %>" style="font-size: 0.9rem; font-family: var(--font-sans); font-weight: 700; color: var(--link-color); margin-bottom: 0.5rem;">
             #<%= tag %> <span style="font-weight: 400; color: var(--dimmed-text-color); font-size: 0.78rem;">(<%= tagMap[tag].length %>)</span>
         </h5>
@@ -42,5 +47,22 @@
     <% } %>
 </div>
 <% } %>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-tags');
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase().trim().replace(/^#/, '');
+        const tagGroups = document.querySelectorAll('.tag-group');
+
+        tagGroups.forEach(function(group) {
+            const tagName = group.getAttribute('data-tag') || '';
+            group.style.display = (!query || tagName.includes(query)) ? '' : 'none';
+        });
+    });
+});
+</script>
 
 <%= render("../_partials/footer.html") %>

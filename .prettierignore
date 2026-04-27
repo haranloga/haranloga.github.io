@@ -1,0 +1,4 @@
+# Blargh EJS templates — Prettier breaks render() paths by inserting spaces
+src/**/*.html
+src/**/*.js
+src/**/*.css

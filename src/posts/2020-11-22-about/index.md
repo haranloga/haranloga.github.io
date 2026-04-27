@@ -14,21 +14,35 @@
 
 # Who I am
 
-I'm Araharan Loganayagam - realspaceeagle - a cybersecurity professional focused on penetration testing, cloud security, and DevSecOps. I spend most of my time reverse-engineering attack paths, automating blue-team playbooks, and turning those lessons into long-form write-ups so other practitioners can learn alongside me.
+I'm Araharan Loganayagam — realspaceeagle — a cybersecurity practitioner, builder, and researcher working at the intersection of offensive security, cloud-native infrastructure, and AI systems security. My work spans adversary emulation, cloud security engineering, DevSecOps, and the fast-moving attack surface that autonomous AI agents are introducing into production environments.
 
-My toolkit spans offensive testing, threat emulation, infrastructure automation, and compliance frameworks such as NIST CSF, CIS Controls, ISO 27001, SOC 2, and PCI DSS. I enjoy building detection pipelines that mix ML, scripting, and cloud-native services to shorten response cycles and keep production estates resilient.
+Over the past few years I've watched agentic AI systems — LLM orchestrators, tool-using agents, RAG pipelines, and multi-agent frameworks — open up attack classes that traditional security tooling largely ignores. Prompt injection, indirect injection through retrieval, principal-hierarchy confusion, tool misuse, and data exfiltration via benign-looking function calls are not theoretical. I research these patterns, red-team deployed AI applications, and build detection and hardening playbooks that engineering teams can actually use.
 
-I hold an MSc in Cyber Security (Distinction) from the University of West London and a BSc (Hons) in Information Technology from the University of Moratuwa. Research projects have ranged from blockchain-backed malware detection engines to NLP-driven learning assistants and agriculture-focused social platforms.
+On the classical side I work across cloud security architecture, SIEM engineering, threat hunting, and red-team operations against hybrid and containerised estates. I hold an **MSc in Cyber Security (Distinction)** from the University of West London and a **BSc (Hons) in Information Technology** from the University of Moratuwa. Research projects have ranged from blockchain-backed malware detection engines to NLP-driven learning assistants.
 
-Outside paid work I'm a regular on Hack The Box, CTF events, and local community initiatives, mentoring aspiring analysts while I pursue certifications such as OSCP and Practical Ethical Hacking. Expect this space to feature reconnaissance guides, Linux hardening notes, DevSecOps patterns, and incident-response walkthroughs inspired by the problems I encounter in the field.
+Outside paid work I compete on Hack The Box, contribute to CTF events, and mentor analysts breaking into the field. I'm pursuing OSCP and practical AI red-team certifications. This blog is where I publish reconnaissance guides, Linux hardening notes, AI/LLM security research, cloud attack-path analyses, and incident-response walkthroughs.
+
+## AI & Agentic Security
+
+The agentic turn in AI — where models call tools, browse the web, write and execute code, and chain decisions across long context windows — has created a security discipline that barely existed three years ago. My focus areas:
+
+- **Prompt injection & indirect injection** — attacker-controlled content reaching an agent through tool outputs, retrieved documents, email bodies, or web pages, hijacking its actions
+- **Tool misuse & privilege escalation** — agents with over-permissioned tool access being manipulated into SSRF, data reads, or lateral movement through connected services
+- **Principal hierarchy confusion** — multi-agent pipelines where a compromised or malicious sub-agent can escalate permissions or forge instructions to an orchestrator
+- **RAG poisoning & retrieval manipulation** — corrupting knowledge bases so retrieved context steers model outputs toward attacker goals
+- **Model supply-chain risks** — malicious weights, backdoored fine-tunes, unsafe serialisation formats (Pickle, SafeTensors boundary cases)
+- **Data exfiltration via inference** — covert channels through token counts, timing, or benign-looking tool call parameters
+
+I map findings against the **OWASP Top 10 for LLM Applications** and the **MITRE ATLAS** framework, and I build test harnesses that let teams continuously probe their pipelines as models and prompts change.
 
 ## Technical expertise
 
-- **Cloud & DevSecOps:** AWS IAM hardening, GuardDuty, Security Hub, Config, CloudTrail analytics; Azure Sentinel playbooks, Defender for Cloud, Key Vault, Purview; GCP SCC, IAM, Cloud Armor, Binary Authorization; Kubernetes RBAC/network policies with Terraform, GitLab CI, Jenkins security gates.
-- **Threat detection & response:** SIEM engineering (Splunk, Sentinel, Elastic), threat hunting with MITRE ATT&CK plus Sigma/YARA development, incident response for forensics, malware triage, timeline reconstruction.
-- **Offensive toolkit:** Recon (Nmap, Amass, Subfinder, theHarvester, Shodan, Censys), web testing (Burp Suite, OWASP ZAP, SQLMap, Gobuster), exploitation (Metasploit, Cobalt Strike, BloodHound), cloud/container assessments (Prowler, ScoutSuite, Trivy, Falco, Aqua).
-- **Programming & automation:** Python for security automation/ML detection, Go for high-performance scanners, Bash for hardening/log triage, PowerShell for AD and Windows defense.
-- **Frameworks & standards:** MITRE ATT&CK, OWASP Testing Guide, PTES, NIST CSF, CIS Controls, ISO 27001/27002, GDPR, SOC 2, PCI DSS, cloud shared responsibility models.
+- **AI & Agentic Security:** LLM red-teaming, prompt injection (direct & indirect), agentic pipeline threat modelling, RAG security, tool-call security analysis, OWASP LLM Top 10, MITRE ATLAS, AI supply-chain risk, model behaviour auditing
+- **Cloud & DevSecOps:** AWS IAM hardening, GuardDuty, Security Hub, Config, CloudTrail analytics; Azure Sentinel playbooks, Defender for Cloud, Key Vault, Purview; GCP SCC, IAM, Cloud Armor, Binary Authorization; Kubernetes RBAC/network policies; Terraform, GitLab CI, Jenkins security gates
+- **Threat detection & response:** SIEM engineering (Splunk, Sentinel, Elastic), threat hunting with MITRE ATT&CK, Sigma/YARA development, incident response, malware triage, timeline reconstruction
+- **Offensive toolkit:** Recon (Nmap, Amass, Subfinder, theHarvester, Shodan, Censys), web testing (Burp Suite, OWASP ZAP, SQLMap, Gobuster), exploitation (Metasploit, Cobalt Strike, BloodHound), cloud/container assessments (Prowler, ScoutSuite, Trivy, Falco, Aqua)
+- **Programming & automation:** Python for security automation and ML-based detection, Go for high-performance scanners, Bash for hardening and log triage, PowerShell for AD and Windows defence
+- **Frameworks & standards:** MITRE ATT&CK, OWASP Testing Guide & LLM Top 10, PTES, NIST CSF, CIS Controls, ISO 27001/27002, GDPR, SOC 2, PCI DSS
 
 <div class="tech-carousel">
 <div class="tech-carousel__track">
@@ -55,12 +69,15 @@ Outside paid work I'm a regular on Hack The Box, CTF events, and local community
 
 ## What I offer
 
-- Penetration testing and adversary emulation tailored to cloud-native estates
-- DevSecOps transformations covering IaC reviews, CI/CD security gates, and automation
-- Threat detection uplift projects: SIEM tuning, hunting runbooks, and incident-response playbooks
-- Workshops, talks, and mentorship for teams entering the cybersecurity domain
+- **AI/LLM security assessments** — threat modelling, red-teaming, and hardening for agentic pipelines, RAG systems, MCP servers, and LLM-integrated applications
+- **Penetration testing & adversary emulation** tailored to cloud-native and hybrid estates
+- **DevSecOps transformations** covering IaC reviews, CI/CD security gates, secrets management, and supply-chain hardening
+- **Threat detection uplift** — SIEM tuning, hunting runbooks, Sigma/YARA rule development, and incident-response playbooks
+- **Workshops, talks, and mentorship** for teams entering cybersecurity or integrating AI responsibly
 
-## Worked in
+Engagements are scoped collaboratively — reach out to shape something that matches your risk profile.
+
+## Worked with
 
 <div class="brand-carousel">
 <div class="brand-carousel__track">
@@ -75,4 +92,8 @@ Outside paid work I'm a regular on Hack The Box, CTF events, and local community
 </div>
 </div>
 
-<%= render("../../_partials/post-footer.html") %>
+## Get in touch
+
+Reach me on [LinkedIn](https://www.linkedin.com/in/dream4ip/) or [Twitter/X](https://twitter.com/haran_loga). I'm open to consulting engagements, conference talks, and collaborative research — particularly anything at the boundary of AI systems and offensive security.
+
+<%= render("../../_partials/post-footer.html", { url, title }) %>

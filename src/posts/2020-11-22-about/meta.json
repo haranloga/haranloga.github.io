@@ -4,5 +4,6 @@
     "image": "media/circuit-3.jpg",
     "caption": "",
     "description": "Cybersecurity practitioner specialising in offensive security, cloud security, AI/agentic security, and DevSecOps.",
-    "published": true
+    "published": true,
+    "listed": false
 }

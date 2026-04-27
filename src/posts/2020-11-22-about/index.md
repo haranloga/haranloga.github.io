@@ -14,7 +14,7 @@
 
 # Who I am
 
-I'm Araharan Loganayagam — realspaceeagle — a cybersecurity practitioner, builder, and researcher working at the intersection of offensive security, cloud-native infrastructure, and AI systems security. My work spans adversary emulation, cloud security engineering, DevSecOps, and the fast-moving attack surface that autonomous AI agents are introducing into production environments.
+I'm Araharan Loganayagam, a cybersecurity practitioner, builder, and researcher working at the intersection of offensive security, cloud-native infrastructure, and AI systems security. My work spans adversary emulation, cloud security engineering, DevSecOps, and the fast-moving attack surface that autonomous AI agents are introducing into production environments.
 
 Over the past few years I've watched agentic AI systems — LLM orchestrators, tool-using agents, RAG pipelines, and multi-agent frameworks — open up attack classes that traditional security tooling largely ignores. Prompt injection, indirect injection through retrieval, principal-hierarchy confusion, tool misuse, and data exfiltration via benign-looking function calls are not theoretical. I research these patterns, red-team deployed AI applications, and build detection and hardening playbooks that engineering teams can actually use.
 

@@ -3,8 +3,14 @@
 	meta()
 	const path = require('path');
 	url = url + "/posts/" + path.basename(path.dirname(outputPath)) + "/";
+	const _allPosts = metas("../../posts").filter(p => p.meta.published);
+	_allPosts.sort((a, b) => b.meta.date.localeCompare(a.meta.date));
+	const _mySlug = path.basename(path.dirname(outputPath));
+	const _myIdx = _allPosts.findIndex(p => p.directory === _mySlug);
+	const prevPost = _myIdx < _allPosts.length - 1 ? _allPosts[_myIdx + 1] : null;
+	const nextPost = _myIdx > 0 ? _allPosts[_myIdx - 1] : null;
 %>
-<%= render("../../_partials/post-header.html", { title, image, url, description, caption, date }) %>
+<%= render("../../_partials/post-header.html", { title, image, url, description, caption, date, tags, reading_time }) %>
 
 # The Complete Markdown Guide
 
@@ -74,25 +80,25 @@ npm install
 npm run dev
 ```
 ## size only render 
-<figure style="width:28%;margin:1.5rem 0;">
+<figure style="width:28%;margin:1.5rem 0;clear:both;">
 <img src="media/img_1777275979375_762.png" alt="screenshot" style="width:100%;">
 </figure>
-<figure style="width:52%;margin:1.5rem 0;">
+<figure style="width:52%;margin:1.5rem 0;clear:both;">
 <img src="media/img_1777275979375_762.png" alt="screenshot" style="width:100%;">
 </figure>
-<figure style="width:78%;margin:1.5rem 0;">
+<figure style="width:78%;margin:1.5rem 0;clear:both;">
 <img src="media/img_1777275979375_762.png" alt="screenshot" style="width:100%;">
 </figure>
-<figure style="width:100%;margin:1.5rem 0;">
+<figure style="width:100%;margin:1.5rem 0;clear:both;">
 <img src="media/img_1777275979375_762.png" alt="screenshot" style="width:100%;">
 </figure>
 
 ## Size + alignment:
 
-<figure style="width:28%;margin:1.5rem auto;display:block;text-align:center;">
+<figure style="width:28%;margin:1.5rem auto;display:block;text-align:center;clear:both;">
 <img src="media/img_1777275979375_762.png" alt="screenshot" style="width:100%;">
 </figure>
-<figure style="width:52%;margin:1.5rem auto;display:block;text-align:center;">
+<figure style="width:52%;margin:1.5rem auto;display:block;text-align:center;clear:both;">
 <img src="media/img_1777275979375_762.png" alt="screenshot" style="width:100%;">
 </figure>
 <figure style="float:right;width:28%;margin:0 0 1.5rem 1.5rem;clear:right;">
@@ -104,7 +110,7 @@ npm run dev
 
 ## size + alignment + caption
 
-<figure style="width:28%;margin:1.5rem auto;display:block;text-align:center;">
+<figure style="width:28%;margin:1.5rem auto;display:block;text-align:center;clear:both;">
 <img src="media/img_1777275979375_762.png" alt="screenshot" style="width:100%;">
 <figcaption>Figure 1: Overview</figcaption>
 </figure>
@@ -116,3 +122,5 @@ npm run dev
 
 And this text continues after the image, wrapping naturally below it.
 
+
+<%= render("../../_partials/post-footer.html", { url, title, prevPost, nextPost }) %>

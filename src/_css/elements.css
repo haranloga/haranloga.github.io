@@ -298,14 +298,28 @@ article > figure {
     margin-bottom: 1.5rem;
 }
 
-article > figure > img {
-    margin-bottom: 0rem;
+article figure {
+    margin-bottom: 1.5rem;
 }
 
-article > figure > figcaption {
-    font-size: 0.75rem; /* 12px */
-    line-height: 1rem; /* 16px */
+article figure img {
+    margin-bottom: 0;
+    width: 100%;
+    display: block;
+}
+
+article figure figcaption {
+    font-size: 0.75rem;
+    line-height: 1rem;
     text-align: center;
+    margin-top: 0.35rem;
+    color: var(--dimmed-text-color, #888);
+    font-style: italic;
+}
+
+/* clearfix so content after a floated figure resets properly */
+article figure[style*="float"] + * {
+    clear: right;
 }
 
 article canvas {

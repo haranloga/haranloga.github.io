@@ -12,6 +12,10 @@
 %>
 <%= render("../../_partials/post-header.html", { title, image, url, description, caption, date, tags, reading_time }) %>
 
+
+
+![video](/uploads/videos/vid_1777347915300_560.mp4)
+
 # The Complete Markdown Guide
 
 A reference post showing every supported format in the Blog Writer.

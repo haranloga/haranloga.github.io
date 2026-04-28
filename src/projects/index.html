@@ -52,11 +52,11 @@
         </div>
         <div class="proj-card__body">
             <% const ptags = (Array.isArray(proj.meta.tags) ? proj.meta.tags : []).filter(t => t.toLowerCase() !== 'project'); %>
+            <span class="proj-card__title"><%=proj.meta.title%></span>
             <div class="proj-card__meta">
                 <% if (ptags.length) { %><span class="proj-card__tag"><%=ptags[0]%></span><span class="proj-card__meta-dot">·</span><% } %>
                 <span class="proj-card__date"><%=fmtDate(proj.meta.date)%></span>
             </div>
-            <span class="proj-card__title"><%=proj.meta.title%></span>
             <% if (proj.meta.description) { %><p class="proj-card__desc"><%=proj.meta.description%></p><% } %>
         </div>
     </a>

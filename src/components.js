@@ -101,8 +101,8 @@ class ColorBand extends HTMLElement {
             const height = getHeight();
             const gradient = ctx.createLinearGradient(0, 0, 0, height);
             if (isDark) {
-                gradient.addColorStop(0, "#020307");
-                gradient.addColorStop(1, "#040914");
+                gradient.addColorStop(0, "#000000");
+                gradient.addColorStop(1, "#000000");
             } else {
                 gradient.addColorStop(0, "#eef4ff");
                 gradient.addColorStop(1, "#cfdaf5");
@@ -111,8 +111,8 @@ class ColorBand extends HTMLElement {
             ctx.fillRect(0, 0, width, height);
 
             if (isDark) {
-                ctx.fillStyle = "rgba(0,0,0,0.5)";
-                ctx.fillRect(0, height * 0.7, width, height * 0.3);
+                ctx.fillStyle = "rgba(0,0,0,0.35)";
+                ctx.fillRect(0, height * 0.8, width, height * 0.2);
             }
         };
 

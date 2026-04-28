@@ -1,16 +1,14 @@
 <%
-	meta("../../meta.json")
-	meta()
-	const path = require('path');
-	url = url + "/posts/" + path.basename(path.dirname(outputPath)) + "/";
+    meta("../meta.json")
+    meta()
+    url = url + "/about/"
 %>
-<%= render("../../_partials/post-header.html", { title, image, url, description, caption, date }) %>
+<%= render("../_partials/header.html", { title, description, url }) %>
 
 <h1 class="toc-header">Table of contents</h1>
 <div class="toc">
 %%toc%%
 </div>
-
 
 # Who I am
 
@@ -96,4 +94,4 @@ Engagements are scoped collaboratively — reach out to shape something that mat
 
 Reach me on [LinkedIn](https://www.linkedin.com/in/dream4ip/) or [Twitter/X](https://twitter.com/haran_loga). I'm open to consulting engagements, conference talks, and collaborative research — particularly anything at the boundary of AI systems and offensive security.
 
-<%= render("../../_partials/post-footer.html", { url, title }) %>
+<%= render("../_partials/footer.html") %>

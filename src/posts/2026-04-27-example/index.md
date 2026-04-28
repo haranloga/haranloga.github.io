@@ -23,7 +23,9 @@ Your browser does not support the video tag.
 
 # The Complete Markdown Guide
 
-A reference post showing every supported format in the Blog Writer.
+A reference post showing every supported format in the 
+[1110ef19-bea9-490f-b2f4-785cb6aed547_Untitled.pdf](media/1777360071278_1110ef19-bea9-490f-b2f4-785cb6aed547_Untitled.pdf)
+Blog Writer.
 
 ---
 
@@ -127,6 +129,8 @@ npm run dev
 <img src="media/img_1777275979375_762.png" alt="screenshot" style="width:100%;">
 <figcaption>Source: 2024</figcaption>
 </figure>
+
+[Exam Security Engineer_CUPA_JD.pdf](media/1777360100692_Exam_Security_Engineer_CUPA_JD.pdf)
 
 
 And this text continues after the image, wrapping naturally below it.

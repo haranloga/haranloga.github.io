@@ -8,6 +8,11 @@
     const allPosts = metas("../posts").filter(p => p.meta.published && p.meta.listed !== false);
     const projectPosts = allPosts.filter(p => Array.isArray(p.meta.tags) && p.meta.tags.map(t => t.toLowerCase()).includes('project'));
     projectPosts.sort((a, b) => b.meta.date.localeCompare(a.meta.date));
+    const fmtDate = d => {
+        const [y, m, day] = d.split('-');
+        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        return months[+m-1] + ' ' + +day + ', ' + y;
+    };
 %>
 
 <div class="flex items-baseline gap-3 mb-4">
@@ -48,8 +53,8 @@
         <div class="proj-card__body">
             <% const ptags = (Array.isArray(proj.meta.tags) ? proj.meta.tags : []).filter(t => t.toLowerCase() !== 'project'); %>
             <div class="proj-card__meta">
-                <% if (ptags.length) { %><span class="proj-card__tag"><%=ptags.slice(0,2).join(' · ')%></span><% } %>
-                <span><%=proj.meta.date%></span>
+                <% if (ptags.length) { %><span class="proj-card__tag"><%=ptags[0]%></span><span class="proj-card__meta-dot">·</span><% } %>
+                <span class="proj-card__date"><%=fmtDate(proj.meta.date)%></span>
             </div>
             <span class="proj-card__title"><%=proj.meta.title%></span>
             <% if (proj.meta.description) { %><p class="proj-card__desc"><%=proj.meta.description%></p><% } %>

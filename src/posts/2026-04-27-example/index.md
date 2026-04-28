@@ -14,7 +14,12 @@
 
 
 
-![video](/uploads/videos/vid_1777347915300_560.mp4)
+<figure style="width:100%;margin:1.5rem 0;clear:both;">
+<video controls style="width:100%;border-radius:8px;">
+<source src="media/vid_1777347915300_560.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</figure>
 
 # The Complete Markdown Guide
 

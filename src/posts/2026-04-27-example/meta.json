@@ -1,14 +1,13 @@
 {
     "title": "Example ",
-    "date": "2026-04-27",
-    "image": "",
+    "date": "2026-04-28",
+    "image": "media/img_1777345011788_874.png",
     "caption": "",
     "description": "A reference post showing every supported format in the Blog Writer.",
     "tags": [
         "sample",
         "security",
-        "offensive",
-        "project"
+        "offensive"
     ],
     "reading_time": 2,
     "published": true

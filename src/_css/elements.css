@@ -997,6 +997,18 @@ article pre {
     }
 }
 
+/* ── About page standalone article sections ─────────────────────────────── */
+.about-article {
+    display: block;
+    margin-bottom: 0;
+}
+
+/* Carousels sit outside article tags; give them a consistent vertical rhythm */
+.about-article + .tech-carousel,
+.about-article + .brand-carousel {
+    margin-top: 0;
+}
+
 /* ── Featured / pinned indicator ─────────────────────────────────────────── */
 .post-featured {
     font-size: 0.7rem;

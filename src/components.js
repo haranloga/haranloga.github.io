@@ -265,6 +265,15 @@ class QuoteLink extends HTMLElement {
 customElements.define("q-l", QuoteLink);
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Duplicate carousel tracks so the marquee loop is seamless (-50% trick)
+    document.querySelectorAll('.brand-carousel__track, .tech-carousel__track').forEach(track => {
+        Array.from(track.children).forEach(item => {
+            const clone = item.cloneNode(true);
+            clone.setAttribute('aria-hidden', 'true');
+            track.appendChild(clone);
+        });
+    });
+
     // Code copy buttons
     document.querySelectorAll('pre').forEach(pre => {
         const code = pre.querySelector('code');

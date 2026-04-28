@@ -32,7 +32,13 @@
     <a href="/posts/<%=proj.directory%>/" class="proj-card">
         <div class="proj-card__media">
             <% if (proj.meta.image) { %>
+            <% if (/\.(mp4|webm|ogg|mov|mkv)(\?|$)/i.test(proj.meta.image)) { %>
+            <video autoplay muted loop playsinline class="proj-card__img" style="object-fit:cover;width:100%;height:100%;">
+              <source src="/posts/<%=proj.directory%>/<%=proj.meta.image%>" type="video/<%= proj.meta.image.split('.').pop().split('?')[0] %>">
+            </video>
+            <% } else { %>
             <img src="/posts/<%=proj.directory%>/<%=proj.meta.image%>" alt="<%=proj.meta.title%>" loading="lazy" class="proj-card__img">
+            <% } %>
             <% } else { %>
             <div class="proj-card__placeholder proj-card__placeholder--<%=(_i % 3) + 1%>">
                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.35;color:#fff"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>

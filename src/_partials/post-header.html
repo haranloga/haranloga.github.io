@@ -17,7 +17,13 @@
 
 <% if (image) { %>
 <figure>
+<% if (/\.(mp4|webm|ogg|mov|mkv)(\?|$)/i.test(image)) { %>
+<video autoplay muted loop playsinline style="width:100%;border-radius:0.5rem;display:block;">
+  <source src="<%= image %>" type="video/<%= image.split('.').pop().split('?')[0].replace('mov','mp4') %>">
+</video>
+<% } else { %>
 <img src="<%= image %>">
+<% } %>
 <% if (typeof caption !== 'undefined' && caption) { %><figcaption><%= caption %></figcaption><% } %>
 </figure>
 <% } %>

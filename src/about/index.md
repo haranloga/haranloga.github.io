@@ -327,17 +327,18 @@ Reach me on [LinkedIn](https://www.linkedin.com/in/dream4ip/) or [Twitter/X](htt
 
 <script>
 (function() {
-  const toc = document.getElementById('about-toc');
+  var toc = document.getElementById('about-toc');
   if (!toc || window.innerWidth < 1100) return;
-  const links = toc.querySelectorAll('.about-toc__link');
-  const ids = Array.from(links).map(a => a.getAttribute('href').slice(1));
+  var links = toc.querySelectorAll('.about-toc__link');
+  var ids = [];
+  links.forEach(function(a) { ids.push(a.getAttribute('href').slice(1)); });
   function update() {
-    let current = '';
-    for (const id of ids) {
-      const el = document.getElementById(id);
+    var current = '';
+    ids.forEach(function(id) {
+      var el = document.getElementById(id);
       if (el && el.getBoundingClientRect().top <= 120) current = id;
-    }
-    links.forEach(a => {
+    });
+    links.forEach(function(a) {
       a.classList.toggle('active', a.getAttribute('href') === '#' + current);
     });
   }

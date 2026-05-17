@@ -330,4 +330,80 @@ document.addEventListener('DOMContentLoaded', () => {
             search.select();
         }
     });
+
+    // Auto-generated floating TOC for post pages (desktop only)
+    // Skips pages that already have a manual TOC (.about-toc)
+    if (window.innerWidth >= 1100 && article && !document.querySelector('.about-toc')) {
+        const headings = article.querySelectorAll('h2, h3');
+        if (headings.length >= 3) {
+            // Ensure all headings have IDs
+            headings.forEach((h, i) => {
+                if (!h.id) {
+                    h.id = 'section-' + h.textContent.trim()
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]+/g, '-')
+                        .replace(/^-|-$/g, '')
+                        .substring(0, 50) || ('heading-' + i);
+                }
+            });
+
+            // Build the TOC nav
+            const nav = document.createElement('nav');
+            nav.className = 'about-toc';
+            nav.id = 'auto-toc';
+
+            const heading = document.createElement('p');
+            heading.className = 'about-toc__heading';
+            heading.textContent = 'On this page';
+            nav.appendChild(heading);
+
+            const list = document.createElement('ul');
+            list.className = 'about-toc__list';
+
+            let currentH2Li = null;
+            let subList = null;
+
+            headings.forEach(h => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.className = 'about-toc__link';
+                a.href = '#' + h.id;
+                a.textContent = h.textContent.trim();
+                li.appendChild(a);
+
+                if (h.tagName === 'H2') {
+                    list.appendChild(li);
+                    currentH2Li = li;
+                    subList = null;
+                } else if (h.tagName === 'H3' && currentH2Li) {
+                    if (!subList) {
+                        subList = document.createElement('ul');
+                        currentH2Li.appendChild(subList);
+                    }
+                    subList.appendChild(li);
+                } else {
+                    list.appendChild(li);
+                }
+            });
+
+            nav.appendChild(list);
+            document.body.appendChild(nav);
+
+            // Scroll-spy: highlight active section
+            const links = nav.querySelectorAll('.about-toc__link');
+            const ids = Array.from(links).map(a => a.getAttribute('href').slice(1));
+            function updateSpy() {
+                let current = '';
+                for (const id of ids) {
+                    const el = document.getElementById(id);
+                    if (el && el.getBoundingClientRect().top <= 120) current = id;
+                }
+                links.forEach(a => {
+                    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+                });
+            }
+            window.addEventListener('scroll', updateSpy, { passive: true });
+            updateSpy();
+        }
+    }
 });

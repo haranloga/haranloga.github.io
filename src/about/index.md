@@ -5,6 +5,30 @@
 %>
 <%= render("../_partials/header.html", { title, description, url }) %>
 
+<nav class="about-toc" id="about-toc">
+<p class="about-toc__heading">On this page</p>
+<ul class="about-toc__list">
+<li><a href="#who-i-am" class="about-toc__link">Who I am</a></li>
+<li><a href="#ai--agentic-security" class="about-toc__link">AI & Agentic Security</a>
+<ul>
+<li><a href="#ai-supply-chain-security" class="about-toc__link">AI supply chain</a></li>
+<li><a href="#ai-threat-modelling" class="about-toc__link">AI threat modelling</a></li>
+</ul>
+</li>
+<li><a href="#distributed-systems--microservice-security" class="about-toc__link">Distributed Systems</a></li>
+<li><a href="#application-security--secure-sdlc" class="about-toc__link">Application Security</a></li>
+<li><a href="#cloud-devops--infrastructure-security" class="about-toc__link">Cloud & Infrastructure</a>
+<ul>
+<li><a href="#kubernetes--container-security" class="about-toc__link">Kubernetes & Containers</a></li>
+</ul>
+</li>
+<li><a href="#technical-areas" class="about-toc__link">Technical Areas</a></li>
+<li><a href="#what-i-offer" class="about-toc__link">What I Offer</a></li>
+<li><a href="#worked-with" class="about-toc__link">Worked With</a></li>
+<li><a href="#get-in-touch" class="about-toc__link">Get in Touch</a></li>
+</ul>
+</nav>
+
 <article class="about-article">
 
 # Who I am
@@ -20,18 +44,18 @@ Outside paid work I compete on Hack The Box, contribute to CTF events, and mento
 <p class="about-label">THIS BLOG COVERS</p>
 
 <div class="about-grid">
-<div class="about-card about-card--icon"><span class="about-card__icon">🔬</span><div class="about-card__text"><p class="about-card__title">AI & LLM security research</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">🤖</span><div class="about-card__text"><p class="about-card__title">Agentic AI attack surfaces</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">🗡️</span><div class="about-card__text"><p class="about-card__title">Offensive security and adversary simulation</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">🔗</span><div class="about-card__text"><p class="about-card__title">Distributed systems and microservice security</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">🏗️</span><div class="about-card__text"><p class="about-card__title">Application security and secure SDLC</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">☁️</span><div class="about-card__text"><p class="about-card__title">Cloud and Kubernetes security</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">🐧</span><div class="about-card__text"><p class="about-card__title">Linux hardening and infrastructure defence</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">🔍</span><div class="about-card__text"><p class="about-card__title">Threat detection and incident response</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">⚙️</span><div class="about-card__text"><p class="about-card__title">DevSecOps engineering and automation</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">🗺️</span><div class="about-card__text"><p class="about-card__title">Reconnaissance methodologies and tooling</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">🏰</span><div class="about-card__text"><p class="about-card__title">Security architecture and real-world attack paths</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">🌐</span><div class="about-card__text"><p class="about-card__title">API gateway and service mesh security</p></div></div>
+<div class="about-card"><p class="about-card__title">AI & LLM security research</p></div>
+<div class="about-card"><p class="about-card__title">Agentic AI attack surfaces</p></div>
+<div class="about-card"><p class="about-card__title">Offensive security and adversary simulation</p></div>
+<div class="about-card"><p class="about-card__title">Distributed systems and microservice security</p></div>
+<div class="about-card"><p class="about-card__title">Application security and secure SDLC</p></div>
+<div class="about-card"><p class="about-card__title">Cloud and Kubernetes security</p></div>
+<div class="about-card"><p class="about-card__title">Linux hardening and infrastructure defence</p></div>
+<div class="about-card"><p class="about-card__title">Threat detection and incident response</p></div>
+<div class="about-card"><p class="about-card__title">DevSecOps engineering and automation</p></div>
+<div class="about-card"><p class="about-card__title">Reconnaissance methodologies and tooling</p></div>
+<div class="about-card"><p class="about-card__title">Security architecture and real-world attack paths</p></div>
+<div class="about-card"><p class="about-card__title">API gateway and service mesh security</p></div>
 </div>
 
 ---
@@ -258,18 +282,18 @@ Cloud-native environments require security that moves at deployment speed. My wo
 <p class="about-tagline">Every engagement is scoped collaboratively based on business risk, engineering maturity, and operational realities.</p>
 
 <div class="about-grid">
-<div class="about-card about-card--icon"><span class="about-card__icon">🧠</span><div class="about-card__text"><p class="about-card__title">AI / LLM security assessments and red-teaming</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">🤖</span><div class="about-card__text"><p class="about-card__title">Agentic AI threat modelling</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">📦</span><div class="about-card__text"><p class="about-card__title">AI supply chain security and MLBOM programmes</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">🔗</span><div class="about-card__text"><p class="about-card__title">Distributed system and microservice security reviews</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">☸️</span><div class="about-card__text"><p class="about-card__title">Kubernetes and container security</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">🏗️</span><div class="about-card__text"><p class="about-card__title">Application security programme development</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">⚙️</span><div class="about-card__text"><p class="about-card__title">DevSecOps transformations</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">🌐</span><div class="about-card__text"><p class="about-card__title">API and microservice security</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">☁️</span><div class="about-card__text"><p class="about-card__title">Cloud security reviews and remediation</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">🗡️</span><div class="about-card__text"><p class="about-card__title">Penetration testing and adversary emulation</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">🔍</span><div class="about-card__text"><p class="about-card__title">Threat detection engineering and incident response</p></div></div>
-<div class="about-card about-card--icon"><span class="about-card__icon">🎓</span><div class="about-card__text"><p class="about-card__title">Security workshops, mentoring, and training</p></div></div>
+<div class="about-card"><p class="about-card__title">AI / LLM security assessments and red-teaming</p></div>
+<div class="about-card"><p class="about-card__title">Agentic AI threat modelling</p></div>
+<div class="about-card"><p class="about-card__title">AI supply chain security and MLBOM programmes</p></div>
+<div class="about-card"><p class="about-card__title">Distributed system and microservice security reviews</p></div>
+<div class="about-card"><p class="about-card__title">Kubernetes and container security</p></div>
+<div class="about-card"><p class="about-card__title">Application security programme development</p></div>
+<div class="about-card"><p class="about-card__title">DevSecOps transformations</p></div>
+<div class="about-card"><p class="about-card__title">API and microservice security</p></div>
+<div class="about-card"><p class="about-card__title">Cloud security reviews and remediation</p></div>
+<div class="about-card"><p class="about-card__title">Penetration testing and adversary emulation</p></div>
+<div class="about-card"><p class="about-card__title">Threat detection engineering and incident response</p></div>
+<div class="about-card"><p class="about-card__title">Security workshops, mentoring, and training</p></div>
 </div>
 
 ---
@@ -300,5 +324,26 @@ Cloud-native environments require security that moves at deployment speed. My wo
 Reach me on [LinkedIn](https://www.linkedin.com/in/dream4ip/) or [Twitter/X](https://twitter.com/haran_loga). I'm open to consulting engagements, conference talks, and collaborative research, particularly anything at the boundary of AI systems, distributed infrastructure, and offensive security.
 
 </article>
+
+<script>
+(function() {
+  const toc = document.getElementById('about-toc');
+  if (!toc || window.innerWidth < 1100) return;
+  const links = toc.querySelectorAll('.about-toc__link');
+  const ids = Array.from(links).map(a => a.getAttribute('href').slice(1));
+  function update() {
+    let current = '';
+    for (const id of ids) {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= 120) current = id;
+    }
+    links.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+</script>
 
 <%= render("../_partials/footer.html") %>

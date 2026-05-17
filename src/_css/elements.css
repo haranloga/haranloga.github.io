@@ -1082,6 +1082,81 @@ article pre {
     flex-shrink: 0;
 }
 
+/* ── About page: floating TOC (desktop only) ───────────────────────────── */
+.about-toc {
+    display: none;
+}
+
+@media (min-width: 1100px) {
+    .about-toc {
+        display: block;
+        position: fixed;
+        top: 6rem;
+        right: max(1.5rem, calc((100vw - 720px) / 2 - 260px));
+        width: 200px;
+        max-height: calc(100vh - 8rem);
+        overflow-y: auto;
+        z-index: 50;
+    }
+
+    .about-toc__heading {
+        font-size: 0.68rem;
+        font-family: var(--font-sans);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--dimmed-text-color);
+        margin-bottom: 0.75rem;
+    }
+
+    .about-toc__list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border-left: 1px solid var(--border-color);
+        padding-left: 0.75rem;
+    }
+
+    .about-toc__list ul {
+        list-style: none;
+        padding: 0;
+        padding-left: 0.65rem;
+        margin: 0.15rem 0;
+    }
+
+    .about-toc__list li {
+        margin-bottom: 0.2rem;
+    }
+
+    .about-toc__link {
+        font-size: 0.72rem;
+        font-family: var(--font-sans);
+        color: var(--dimmed-text-color);
+        text-decoration: none;
+        border-bottom: none !important;
+        display: block;
+        padding: 0.15rem 0;
+        transition: color 0.15s ease;
+        line-height: 1.35;
+    }
+
+    .about-toc__link:hover {
+        color: var(--text-color);
+        border-bottom: none !important;
+    }
+
+    .about-toc__link.active {
+        color: var(--link-color);
+        font-weight: 600;
+        border-bottom: none !important;
+    }
+
+    /* Hide scrollbar on TOC */
+    .about-toc::-webkit-scrollbar {
+        width: 0;
+    }
+}
+
 /* ── About page: section label ─────────────────────────────────────────── */
 .about-label {
     font-size: 0.7rem;

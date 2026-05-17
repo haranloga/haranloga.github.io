@@ -1123,6 +1123,16 @@ article pre {
     }
 }
 
+.about-grid--2col {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 400px) {
+    .about-grid--2col {
+        grid-template-columns: 1fr;
+    }
+}
+
 .about-card {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid var(--border-color);

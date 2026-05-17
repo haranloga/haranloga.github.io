@@ -137,21 +137,17 @@ Threat modelling AI systems requires thinking beyond traditional STRIDE applicat
 
 Modern production systems are rarely monolithic. Microservice architectures, event-driven pipelines, and service meshes introduce attack surfaces that sit between services rather than at the perimeter. I focus on securing the entire distributed communication layer.
 
-**Service-to-Service Authentication:** Implementing and auditing mTLS, SPIFFE/SPIRE identity frameworks, and certificate rotation strategies. I assess workload identity configurations to ensure services authenticate each other correctly and that compromised credentials cannot propagate laterally.
-
-**API Gateway Security:** Hardening API gateways against bypass techniques, misconfigured routing, header injection, and authorisation enforcement gaps. I review rate limiting, schema validation, and anti-abuse controls at the gateway layer.
-
-**Service Mesh Hardening:** Security reviews of Istio, Linkerd, and Envoy configurations including sidecar proxy policies, traffic encryption enforcement, access control lists, and observability for security signals within the mesh.
-
-**Event-Driven Security:** Securing message brokers and event pipelines including Kafka ACL configurations, message queue poisoning prevention, schema registry integrity, and consumer group isolation. I assess event-driven architectures for replay attacks, message tampering, and unauthorised subscription risks.
-
-**Lateral Movement and Confused Deputy:** Identifying lateral movement risks in microservice topologies including confused deputy attacks, internal SSRF chaining across services, and trust boundary violations where one service's permissions are exploited through another.
-
-**gRPC and Async Protocol Attack Surfaces:** Reviewing gRPC service definitions, protobuf schema security, bidirectional streaming risks, and async protocol implementations for injection, deserialisation, and access control weaknesses.
-
-**Secrets Sprawl in Distributed Manifests:** Detecting and remediating secrets embedded in Kubernetes manifests, Helm charts, environment variables, and configuration files across distributed deployments. I design centralised secrets management patterns using Vault injection, Sealed Secrets, and Mozilla SOPS.
-
-**Zero-Trust Architecture:** Designing and reviewing zero-trust implementations where every service call is authenticated, authorised, and encrypted regardless of network position. I assess trust boundaries, identity propagation, and policy enforcement points across the service topology.
+<div class="about-grid">
+<div class="about-card"><p class="about-card__title">Service-to-service auth</p><p class="about-card__desc">mTLS, SPIFFE/SPIRE, workload identity, JWT validation at the mesh layer</p></div>
+<div class="about-card"><p class="about-card__title">API gateway security</p><p class="about-card__desc">Rate limiting, schema validation, auth delegation, OWASP API Top 10, gateway bypass</p></div>
+<div class="about-card"><p class="about-card__title">Service mesh hardening</p><p class="about-card__desc">Istio, Linkerd, Envoy, Consul Connect — policy enforcement, traffic interception, egress control</p></div>
+<div class="about-card"><p class="about-card__title">Event-driven security</p><p class="about-card__desc">Kafka ACLs, message queue poisoning, schema registry integrity, event replay attacks</p></div>
+<div class="about-card"><p class="about-card__title">Lateral movement paths</p><p class="about-card__desc">Over-privileged service accounts, confused deputy, internal SSRF chaining across services</p></div>
+<div class="about-card"><p class="about-card__title">gRPC & async protocols</p><p class="about-card__desc">Proto schema enforcement, streaming attack surfaces, bi-directional stream security</p></div>
+<div class="about-card"><p class="about-card__title">Secrets in distributed envs</p><p class="about-card__desc">Vault dynamic secrets, sidecar injection, secret sprawl across service manifests</p></div>
+<div class="about-card"><p class="about-card__title">Zero-trust architecture</p><p class="about-card__desc">Identity-first networking, microsegmentation, continuous verification in service graphs</p></div>
+<div class="about-card"><p class="about-card__title">REST API security</p><p class="about-card__desc">OWASP API Top 10, SAST/DAST of APIs, SCA for API dependencies, auth review</p></div>
+</div>
 
 ---
 
@@ -161,59 +157,71 @@ Modern production systems are rarely monolithic. Microservice architectures, eve
 
 Security that lives only at the perimeter fails. My application security work is anchored in owning the full software development lifecycle so that security is designed in from the start.
 
-**Secure SDLC Ownership:** I help teams define lightweight, measurable SSDLC programmes: requirements gates, design checks, release criteria, and paved roads including reference architectures, secure templates, and approved library lists. The goal is a security baseline engineers can actually follow rather than a checklist that gets skipped under deadline pressure.
-
-**CI/CD Security Automation (Shift-Left):** I own and operate AppSec toolchains integrated directly into pipelines: SAST (SonarQube, Semgrep, Checkmarx), DAST (OWASP ZAP, Burp Suite Enterprise), SCA and dependency scanning, secrets detection (Gitleaks, TruffleHog, Detect-Secrets), and IaC/container scanning. This includes risk-based gating with clear developer feedback, tuned rules, minimised false positives, and standardised triage with SLAs.
-
-**Code Review & Secure Engineering Support:** Security-focused code reviews for critical areas: authentication and authorisation, session management, cryptography, data protection, input validation, and business logic. I write concise remediation guidance and secure-by-default code examples in Java, Python, Go, and TypeScript.
-
-**API & Service Security:** I lead API security programmes covering OAuth 2.0/OIDC flows, token lifecycle, rate limiting, schema validation, anti-abuse controls, secure error handling, and audit logging. I drive API testing through contract testing combined with targeted DAST and partner with platform teams on service-to-service authentication and mTLS.
-
-**Secure Design Reviews & Threat Modelling:** Pragmatic threat modelling and design reviews for new features and major changes, producing actionable outputs: mitigations, prioritised backlog items, acceptance criteria, and test cases.
-
-**Supply Chain Security (SCA/SBOM):** I manage dependency risk through triage, upgrade strategies, deprecation guardrails, and automated policy enforcement. I establish SBOM generation pipelines and assess third-party components, SDKs, and provenance/attestation risks including NPM and PyPI supply-chain attack patterns.
-
-**Vulnerability Lifecycle, SLAs & Metrics:** End-to-end ownership of findings from SAST, DAST, SCA, penetration tests, VDP/bug bounty programmes, and internal audits. I define remediation SLAs calibrated to severity, exploitability, and asset criticality. I manage exceptions, verify fixes, and report metrics that matter: MTTD, MTTF, reopen rate, recurring vulnerability classes, coverage, and control effectiveness.
-
-**Hands-on Testing:** Focused testing on high-risk areas: web applications, APIs, authentication flows, and mobile backends. The purpose is to validate exploitability rather than rely solely on scanner output. I coordinate third-party penetration tests and ensure findings translate into prioritised engineering outcomes.
+<div class="about-grid about-grid--2col">
+<div class="about-card"><p class="about-card__title">Secure SDLC programme design</p></div>
+<div class="about-card"><p class="about-card__title">CI/CD security automation and shift-left</p></div>
+<div class="about-card"><p class="about-card__title">SAST, DAST, SCA, secrets scanning, IaC scanning</p></div>
+<div class="about-card"><p class="about-card__title">Secure code review — Java, Python, Go, TypeScript</p></div>
+<div class="about-card"><p class="about-card__title">OAuth2 / OIDC and API security reviews</p></div>
+<div class="about-card"><p class="about-card__title">Threat modelling and secure design assessments</p></div>
+<div class="about-card"><p class="about-card__title">Dependency risk management and SBOM pipelines</p></div>
+<div class="about-card"><p class="about-card__title">Vulnerability lifecycle management and remediation SLAs</p></div>
+</div>
 
 ---
 
-## Cloud, DevOps & Site Reliability Security
+## Cloud, DevOps & infrastructure security
 
-<p class="about-tagline">Embedding security across the 4C model: Cloud, Cluster, Container, Code.</p>
+<p class="about-tagline">Security that moves at deployment speed.</p>
 
-Cloud-native and containerised estates require security that moves at the speed of deployment. I embed security across the entire delivery pipeline and infrastructure lifecycle.
-
-**AWS** (primary): IAM hardening and least-privilege design at scale, GuardDuty, Security Hub, Config, CloudTrail analytics, EKS (Kubernetes) RBAC and network policies, container scanning with Trivy, Falco, and Aqua, Binary Authorization, and secure Terraform/Helm patterns.
-
-**Azure:** Sentinel playbooks and SIEM engineering, Defender for Cloud, Key Vault, Purview, Azure Pipelines security gates, and Entra ID hardening.
-
-**GCP:** Security Command Center, IAM, Cloud Armor, Binary Authorization, and GKE security posture management.
-
-**Kubernetes & Container Security:** Deep expertise across the Kubernetes security lifecycle. Container fundamentals including namespaces, cgroups, capabilities, Seccomp profiles, and distroless image hardening. Kubernetes-specific assessments covering Kubelet API exploitation, privileged container abuse, dashboard attack vectors, kube-hunter reconnaissance, secret extraction, and network sniffing. RBAC auditing with KubiScan and Krane, admission controller enforcement via OPA Gatekeeper, Kube-mgmt, Pod Security Admission, and LimitRanger. Data protection through Vault injection, Sealed Secrets, Mozilla SOPS, and KMS-backed secrets at rest encryption. Network segmentation using Calico, Istio mTLS, Linkerd, Consul Connect zero-trust, and NGINX ingress policies. Runtime security and compliance monitoring with Falco, gVisor, Wazuh, CIS benchmarks via Kubebench, and audit log threat hunting.
-
-**DevOps & Site Reliability Security:** Security integrated into GitOps workflows, deployment pipelines, and SRE practice. This includes observability for security signals (anomaly detection in SLO/SLI data), runbook security, chaos engineering guardrails, and blameless post-mortem processes that surface security findings.
-
-**Secrets Management:** HashiCorp Vault, AWS Secrets Manager, and Azure Key Vault, covering secret rotation, dynamic credentials, audit trails, and eliminating long-lived credentials from codebases and CI pipelines.
-
-**IaC & Container Security:** Terraform and Helm security reviews, Kubernetes admission controllers, pod security standards, image signing (Cosign, Notary), and container registry policy enforcement.
-
----
-
-## Technical Expertise
+Cloud-native environments require security that moves at deployment speed. My work spans AWS, Azure, GCP, Kubernetes, Terraform, CI/CD systems, secrets management, GitOps security, and container security engineering across the full cloud-native stack.
 
 <div class="about-grid">
-<div class="about-card"><p class="about-card__title">AI & Agentic Security</p><p class="about-card__desc">LLM red-teaming, prompt injection, agentic pipeline threat modelling, RAG security, MCP server security, tool-call analysis, OWASP LLM Top 10, MITRE ATLAS, AI supply chain, model behaviour auditing, LangChain, LangGraph</p></div>
-<div class="about-card"><p class="about-card__title">AI Governance</p><p class="about-card__desc">NIST AI RMF, ISO/IEC 42001, SLSA, SCVS, EU AI Act, US AI legislation</p></div>
-<div class="about-card"><p class="about-card__title">Distributed Systems Security</p><p class="about-card__desc">mTLS, SPIFFE/SPIRE, Istio, Linkerd, Envoy, API gateway hardening, Kafka ACLs, gRPC security, zero-trust architecture</p></div>
-<div class="about-card"><p class="about-card__title">Application Security</p><p class="about-card__desc">SAST (SonarQube, Semgrep, Checkmarx), DAST (ZAP, Burp Suite), SCA/SBOM (Dependabot, Snyk, Syft, Grype), secrets scanning, secure code review across Java, Python, Go, TypeScript</p></div>
-<div class="about-card"><p class="about-card__title">Cloud & DevSecOps</p><p class="about-card__desc">AWS IAM, GuardDuty, Security Hub, CloudTrail, EKS; Azure Sentinel, Defender, Key Vault; GCP SCC, Cloud Armor; Terraform, Helm, GitHub Actions security gates</p></div>
-<div class="about-card"><p class="about-card__title">Kubernetes & Container Security</p><p class="about-card__desc">Kubelet exploitation, kube-hunter, KubiScan, OPA Gatekeeper, Pod Security Admission, Trivy, Falco, gVisor, Aqua, Cosign/Notary, Calico, CIS benchmarks, Kubebench</p></div>
-<div class="about-card"><p class="about-card__title">Threat Detection & Response</p><p class="about-card__desc">SIEM engineering (Splunk, Sentinel, Elastic), MITRE ATT&CK, Sigma/YARA development, incident response, malware triage, timeline reconstruction</p></div>
-<div class="about-card"><p class="about-card__title">Offensive Toolkit</p><p class="about-card__desc">Nmap, Amass, Subfinder, Shodan, Censys, Burp Suite, SQLMap, Gobuster, Metasploit, Cobalt Strike, BloodHound, Prowler, ScoutSuite</p></div>
-<div class="about-card"><p class="about-card__title">Programming & Automation</p><p class="about-card__desc">Java/Spring Boot, Python, Go, TypeScript/React, Bash, PowerShell</p></div>
-<div class="about-card"><p class="about-card__title">Frameworks & Standards</p><p class="about-card__desc">MITRE ATT&CK, MITRE ATLAS, OWASP Testing Guide, OWASP LLM Top 10, PTES, NIST CSF, NIST AI RMF, CIS Controls, ISO 27001/27002, ISO/IEC 42001, SLSA, SCVS, GDPR, SOC 2, PCI DSS</p></div>
+<div class="about-card"><p class="about-card__title">AWS IAM hardening and least-privilege architecture</p></div>
+<div class="about-card"><p class="about-card__title">EKS and Kubernetes RBAC / network policy security</p></div>
+<div class="about-card"><p class="about-card__title">Azure Sentinel and Defender engineering</p></div>
+<div class="about-card"><p class="about-card__title">GCP posture management and Binary Authorization</p></div>
+<div class="about-card"><p class="about-card__title">Infrastructure-as-Code security reviews (Terraform, Helm)</p></div>
+<div class="about-card"><p class="about-card__title">GitOps and deployment pipeline hardening</p></div>
+<div class="about-card"><p class="about-card__title">Container and image security</p></div>
+<div class="about-card"><p class="about-card__title">Secrets management and credential lifecycle control</p></div>
+<div class="about-card"><p class="about-card__title">Observability and security telemetry engineering</p></div>
+</div>
+
+<p class="about-note">Tools include Trivy, Falco, Aqua, Prowler, ScoutSuite, Cosign, Notary, admission controllers, GitHub Actions, GitLab CI, Jenkins, and HashiCorp Vault.</p>
+
+---
+
+### Kubernetes & container security
+
+<p class="about-tagline">Securing the 4C model: Cloud, Cluster, Container, Code.</p>
+
+<div class="about-grid">
+<div class="about-card"><p class="about-card__title">Container fundamentals & attacks</p><p class="about-card__desc">Namespaces, cgroups, capabilities, privilege escalation, container breakout techniques</p></div>
+<div class="about-card"><p class="about-card__title">Secure image engineering</p><p class="about-card__desc">Distroless images, Dockerfile hardening, Trivy scanning, Seccomp profiles, image signing</p></div>
+<div class="about-card"><p class="about-card__title">Kubernetes hacking</p><p class="about-card__desc">Kubelet API exploitation, privileged container abuse, secret extraction, dashboard attacks, kube-hunter</p></div>
+<div class="about-card"><p class="about-card__title">Kubernetes auth & RBAC</p><p class="about-card__desc">Client cert auth, bearer tokens, RBAC misconfiguration with KubiScan, Krane static analysis</p></div>
+<div class="about-card"><p class="about-card__title">Admission controllers</p><p class="about-card__desc">OPA Gatekeeper, Kube-mgmt, Pod Security Admission, LimitRanger, custom webhook policies</p></div>
+<div class="about-card"><p class="about-card__title">Kubernetes data security</p><p class="about-card__desc">Secrets at rest encryption, HashiCorp Vault injection, Sealed Secrets, Mozilla SOPS, KMS integration</p></div>
+<div class="about-card"><p class="about-card__title">Network security</p><p class="about-card__desc">Network policies, Calico, Istio mTLS, Linkerd, Consul Connect zero-trust networking</p></div>
+<div class="about-card"><p class="about-card__title">Runtime & compliance</p><p class="about-card__desc">Falco threat detection, gVisor sandboxing, Wazuh SIEM, CIS benchmarks, Kubebench</p></div>
+<div class="about-card"><p class="about-card__title">Supply chain in k8s</p><p class="about-card__desc">Poisoned image attacks, malicious Helm chart supply chain, Binary Authorization, Cosign</p></div>
+</div>
+
+---
+
+## Technical areas
+
+<div class="about-grid">
+<div class="about-card"><p class="about-card__title">AI & LLM security</p><p class="about-card__desc">LLM red-teaming, prompt injection, agentic pipelines, MCP server security, RAG security, AI supply chain, behavioural auditing, OWASP LLM Top 10, MITRE ATLAS, BIML</p></div>
+<div class="about-card"><p class="about-card__title">Distributed systems security</p><p class="about-card__desc">Microservice security, service mesh hardening, mTLS, API gateway, event-driven security, zero-trust, SPIFFE/SPIRE, gRPC security</p></div>
+<div class="about-card"><p class="about-card__title">Container & Kubernetes</p><p class="about-card__desc">Container breakout, Kubernetes hacking, RBAC, OPA Gatekeeper, Falco, Trivy, CIS benchmarks, runtime security, network policies</p></div>
+<div class="about-card"><p class="about-card__title">Application security</p><p class="about-card__desc">Secure SDLC, SAST, DAST, SCA/SBOM, secure code review, API security, OAuth/OIDC, dependency governance</p></div>
+<div class="about-card"><p class="about-card__title">Offensive security</p><p class="about-card__desc">Reconnaissance, web exploitation, cloud assessments, adversary emulation, attack path analysis, privilege escalation, red-team tooling</p></div>
+<div class="about-card"><p class="about-card__title">Cloud & DevSecOps</p><p class="about-card__desc">AWS, Azure, GCP, Kubernetes, Terraform, CI/CD security, GitOps, secrets management, infrastructure hardening</p></div>
+<div class="about-card"><p class="about-card__title">Threat detection & IR</p><p class="about-card__desc">SIEM engineering, threat hunting, Sigma/YARA, ATT&CK mapping, malware triage, forensic analysis, timeline reconstruction, Kubernetes audit logs</p></div>
+<div class="about-card"><p class="about-card__title">Programming & automation</p><p class="about-card__desc">Java, Python, Go, TypeScript, Bash, PowerShell, automation tooling, detection engineering, secure engineering utilities</p></div>
+<div class="about-card"><p class="about-card__title">AI governance & compliance</p><p class="about-card__desc">NIST RMF, ISO/IEC 42001, SLSA, SCVS, EU AI Act, US AI legislation, model provenance and attestation</p></div>
 </div>
 
 </article>
@@ -245,23 +253,24 @@ Cloud-native and containerised estates require security that moves at the speed 
 
 ---
 
-## What I Offer
+## What I offer
+
+<p class="about-tagline">Every engagement is scoped collaboratively based on business risk, engineering maturity, and operational realities.</p>
 
 <div class="about-grid">
-<div class="about-card"><p class="about-card__title">AI/LLM security assessments</p><p class="about-card__desc">Threat modelling, red-teaming, and hardening for agentic pipelines, RAG systems, MCP servers, and LLM-integrated applications</p></div>
-<div class="about-card"><p class="about-card__title">Application security programmes</p><p class="about-card__desc">SAST/DAST/SCA toolchain setup, secure SDLC design, shift-left CI/CD gates, and developer-facing remediation guidance</p></div>
-<div class="about-card"><p class="about-card__title">API and service security</p><p class="about-card__desc">OAuth/OIDC reviews, token lifecycle hardening, API threat modelling, and service-to-service security design</p></div>
-<div class="about-card"><p class="about-card__title">Distributed system reviews</p><p class="about-card__desc">mTLS and identity framework audits, service mesh hardening, event-driven pipeline security, zero-trust assessments</p></div>
-<div class="about-card"><p class="about-card__title">Supply chain security</p><p class="about-card__desc">SCA/SBOM programmes, MLBOM for AI models, dependency risk management, provenance and attestation controls</p></div>
-<div class="about-card"><p class="about-card__title">Penetration testing</p><p class="about-card__desc">Adversary emulation tailored to cloud-native, containerised, and hybrid estates</p></div>
-<div class="about-card"><p class="about-card__title">DevSecOps transformations</p><p class="about-card__desc">IaC reviews, CI/CD security gates, secrets management, container and image scanning, pipeline hardening</p></div>
-<div class="about-card"><p class="about-card__title">Cloud and Kubernetes security</p><p class="about-card__desc">AWS, Azure, and GCP posture reviews, Kubernetes hardening, and remediation roadmaps</p></div>
-<div class="about-card"><p class="about-card__title">Threat detection uplift</p><p class="about-card__desc">SIEM tuning, hunting runbooks, Sigma/YARA rule development, and incident-response playbooks</p></div>
-<div class="about-card"><p class="about-card__title">Site reliability security</p><p class="about-card__desc">Observability for security signals, runbook security, SLO/SLI anomaly detection, reliability/security trade-offs</p></div>
-<div class="about-card"><p class="about-card__title">Workshops and mentorship</p><p class="about-card__desc">For teams entering cybersecurity, building secure AI systems, or integrating security into DevOps practices</p></div>
+<div class="about-card about-card--icon"><span class="about-card__icon">🧠</span><div class="about-card__text"><p class="about-card__title">AI / LLM security assessments and red-teaming</p></div></div>
+<div class="about-card about-card--icon"><span class="about-card__icon">🤖</span><div class="about-card__text"><p class="about-card__title">Agentic AI threat modelling</p></div></div>
+<div class="about-card about-card--icon"><span class="about-card__icon">📦</span><div class="about-card__text"><p class="about-card__title">AI supply chain security and MLBOM programmes</p></div></div>
+<div class="about-card about-card--icon"><span class="about-card__icon">🔗</span><div class="about-card__text"><p class="about-card__title">Distributed system and microservice security reviews</p></div></div>
+<div class="about-card about-card--icon"><span class="about-card__icon">☸️</span><div class="about-card__text"><p class="about-card__title">Kubernetes and container security</p></div></div>
+<div class="about-card about-card--icon"><span class="about-card__icon">🏗️</span><div class="about-card__text"><p class="about-card__title">Application security programme development</p></div></div>
+<div class="about-card about-card--icon"><span class="about-card__icon">⚙️</span><div class="about-card__text"><p class="about-card__title">DevSecOps transformations</p></div></div>
+<div class="about-card about-card--icon"><span class="about-card__icon">🌐</span><div class="about-card__text"><p class="about-card__title">API and microservice security</p></div></div>
+<div class="about-card about-card--icon"><span class="about-card__icon">☁️</span><div class="about-card__text"><p class="about-card__title">Cloud security reviews and remediation</p></div></div>
+<div class="about-card about-card--icon"><span class="about-card__icon">🗡️</span><div class="about-card__text"><p class="about-card__title">Penetration testing and adversary emulation</p></div></div>
+<div class="about-card about-card--icon"><span class="about-card__icon">🔍</span><div class="about-card__text"><p class="about-card__title">Threat detection engineering and incident response</p></div></div>
+<div class="about-card about-card--icon"><span class="about-card__icon">🎓</span><div class="about-card__text"><p class="about-card__title">Security workshops, mentoring, and training</p></div></div>
 </div>
-
-Engagements are scoped collaboratively. Reach out to shape something that matches your risk profile.
 
 ---
 

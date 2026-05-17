@@ -1081,3 +1081,156 @@ article pre {
     line-height: 1;
     flex-shrink: 0;
 }
+
+/* ── About page: section label ─────────────────────────────────────────── */
+.about-label {
+    font-size: 0.7rem;
+    font-family: var(--font-sans);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dimmed-text-color);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+/* ── About page: card grids ────────────────────────────────────────────── */
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 600px) {
+    .about-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 400px) {
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.about-grid--4col {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 600px) {
+    .about-grid--4col {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.about-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.about-card:hover {
+    border-color: rgba(128, 128, 128, 0.5);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+:root[data-theme="light"] .about-card {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+:root[data-theme="light"] .about-card:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.about-card__title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-family: var(--font-sans);
+    color: var(--text-color);
+    line-height: 1.3;
+    margin: 0;
+}
+
+.about-card__desc {
+    font-size: 0.75rem;
+    color: var(--dimmed-text-color);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Card with icon prefix */
+.about-card--icon {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.65rem;
+}
+
+.about-card__icon {
+    font-size: 1rem;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+    opacity: 0.7;
+}
+
+.about-card__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+/* ── About page: tag pills ─────────────────────────────────────────────── */
+.about-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.about-tag {
+    font-size: 0.75rem;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    padding: 0.35rem 0.85rem;
+    border-radius: 0.35rem;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    white-space: nowrap;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.about-tag:hover {
+    border-color: rgba(128, 128, 128, 0.5);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="light"] .about-tag {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+:root[data-theme="light"] .about-tag:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+/* ── About page: sub-tagline ───────────────────────────────────────────── */
+.about-tagline {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--dimmed-text-color);
+    margin-bottom: 1.25rem;
+    margin-top: -0.5rem;
+}
+
+/* ── About page: inline note ───────────────────────────────────────────── */
+.about-note {
+    font-size: 0.82rem;
+    color: var(--dimmed-text-color);
+    line-height: 1.65;
+    margin-bottom: 1.5rem;
+}

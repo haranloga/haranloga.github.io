@@ -33,11 +33,13 @@
 
 <h1 id="who-i-am">Who I am</h1>
 
-I'm **Araharan Loganayagam**, a cybersecurity practitioner, researcher, and builder working at the intersection of offensive security, application security, cloud-native infrastructure, and AI systems security. My work spans adversary emulation, secure software development, DevSecOps, cloud security architecture, distributed systems hardening, and the emerging attack surface that autonomous AI agents are introducing into production environments.
+I'm **Araharan Loganayagam**, a cybersecurity practitioner, researcher, and builder focused on offensive security, application security, cloud-native infrastructure, AI security, and distributed systems.
 
-I hold an **MSc in Cyber Security (Distinction)** from the University of West London and a **BSc (Hons) in Information Technology** from the University of Moratuwa. I read and write production code in **Java, Python, Go, and TypeScript**, and I work hands-on with agentic AI frameworks including **LangChain, LangGraph**, and **MCP server** patterns. This shapes how I approach code review, architectural threat modelling, and security assessments across the full stack. I am currently pursuing **OSCP** and **CAISP** certifications alongside practical AI red-team training.
+My work sits at the intersection of security engineering, adversary emulation, secure software delivery, DevSecOps, and modern AI systems. Over the years I've worked across application security, cloud environments, detection engineering, infrastructure hardening, microservice and distributed system security, and the rapidly expanding attack surface introduced by autonomous and agentic AI systems.
 
-Outside paid work I compete on Hack The Box, contribute to CTF events, and mentor analysts breaking into the field. This blog is where I publish reconnaissance guides, Linux hardening notes, AI/LLM security research, cloud attack-path analyses, application security findings, and incident-response walkthroughs.
+I hold an **MSc in Cyber Security (Distinction)** from the University of West London and a **BSc (Hons) in Information Technology** from the University of Moratuwa. I work hands-on with **Java, Python, Go, and TypeScript**, and regularly build and review systems using **LangChain, LangGraph, MCP server architectures**, agentic AI orchestration frameworks, and distributed service meshes.
+
+Outside of professional work, I spend time on Hack The Box labs, CTF challenges, research projects, and mentoring people entering cybersecurity. I'm currently pursuing advanced offensive security and AI red-team focused certifications including the **OSCP**.
 
 ---
 
@@ -64,7 +66,9 @@ Outside paid work I compete on Hack The Box, contribute to CTF events, and mento
 
 <p class="about-tagline">Securing intelligent systems from prompt to production.</p>
 
-Agentic AI systems, where models call tools, browse the web, write and execute code, and chain decisions across long context windows, have created a security discipline that barely existed three years ago. I research, red-team, and build hardening playbooks for these systems.
+Modern AI systems are no longer isolated models responding to prompts. Today's agentic systems browse the web, call external tools, execute code, access APIs, retrieve documents from vector stores, and make chained decisions: often without a human in the loop. That introduces an entirely new security landscape, one where traditional perimeter and application security models are fundamentally insufficient.
+
+My research spans LLM internals: how transformers process tokens, how foundational models differ from fine-tuned variants, and how retrieval-augmented generation (RAG) pipelines introduce retrieval-layer attack surfaces. This extends through to full agentic pipeline exploitation and red-teaming at scale.
 
 ---
 
@@ -123,7 +127,7 @@ Agentic AI systems, where models call tools, browse the web, write and execute c
 
 <p class="about-tagline">Tracking provenance from training data to deployed model.</p>
 
-AI supply chains introduce risks at every layer: datasets, pre-trained weights, fine-tuning pipelines, and inference infrastructure. I assess and harden these layers against targeted and opportunistic attacks.
+The AI supply chain is one of the most underexplored attack surfaces in enterprise security. Compromises don't always require touching a running model: attackers target datasets, pre-trained weights, dependency packages, and model-serving infrastructure. I work on vetting, hardening, and attesting every stage of the AI delivery lifecycle.
 
 <div class="about-grid">
 <div class="about-card"><p class="about-card__title">Data, model & infra attacks</p><p class="about-card__desc">Dataset poisoning, compromised weights, infrastructure-layer supply chain compromise</p></div>
@@ -142,7 +146,7 @@ AI supply chains introduce risks at every layer: datasets, pre-trained weights, 
 
 <p class="about-tagline">Structured thinking about AI system attack surfaces.</p>
 
-Threat modelling AI systems requires thinking beyond traditional STRIDE applications. LLM architectures introduce unique asset types: training data, model weights, embedding stores, tool registries. These adversary goals don't map cleanly to conventional threat libraries. I apply structured threat modelling using data flow diagrams tuned for LLM architectures, then map findings across multiple AI-specific threat frameworks.
+Threat modelling AI systems requires thinking beyond traditional STRIDE applications. LLM architectures introduce unique asset types: training data, model weights, embedding stores, and tool registries. The adversary goals don't map cleanly to conventional threat libraries. I apply structured threat modelling using data flow diagrams tuned for LLM architectures, then map findings across multiple AI-specific threat frameworks.
 
 <div class="about-tags">
 <span class="about-tag">STRIDE — Applied to LLM DFDs</span>
@@ -159,7 +163,9 @@ Threat modelling AI systems requires thinking beyond traditional STRIDE applicat
 
 <p class="about-tagline">Securing the communication fabric between services.</p>
 
-Modern production systems are rarely monolithic. Microservice architectures, event-driven pipelines, and service meshes introduce attack surfaces that sit between services rather than at the perimeter. I focus on securing the entire distributed communication layer.
+Modern software architectures have moved decisively toward distributed systems: microservices, event-driven platforms, API gateways, service meshes, and asynchronous message queues. These architectures introduce powerful scalability properties and fundamentally different security challenges from monolithic systems. In a monolith, a single authentication check at the boundary may be sufficient. In a distributed system, every service-to-service call is a potential trust boundary that can be exploited.
+
+Lateral movement, confused deputy attacks, internal SSRF chaining, and service impersonation are real and underappreciated risks in microservice environments. They sit adjacent to cloud-native threats in ways that require security thinking across both layers simultaneously.
 
 <div class="about-grid">
 <div class="about-card"><p class="about-card__title">Service-to-service auth</p><p class="about-card__desc">mTLS, SPIFFE/SPIRE, workload identity, JWT validation at the mesh layer</p></div>
@@ -179,7 +185,7 @@ Modern production systems are rarely monolithic. Microservice architectures, eve
 
 <p class="about-tagline">Building security into the development lifecycle, not bolting it on after.</p>
 
-Security that lives only at the perimeter fails. My application security work is anchored in owning the full software development lifecycle so that security is designed in from the start.
+I believe security should exist throughout the entire software development lifecycle, not only at the perimeter. My application security work focuses on building practical, scalable security programmes that engineering teams can realistically adopt without slowing delivery.
 
 <div class="about-grid about-grid--2col">
 <div class="about-card"><p class="about-card__title">Secure SDLC programme design</p></div>
@@ -219,6 +225,8 @@ Cloud-native environments require security that moves at deployment speed. My wo
 <h3 id="kubernetes--container-security">Kubernetes & container security</h3>
 
 <p class="about-tagline">Securing the 4C model: Cloud, Cluster, Container, Code.</p>
+
+Container and Kubernetes security is a discipline that spans low-level Linux primitives: namespaces, cgroups, and capabilities, all the way to cluster-wide admission control, RBAC misconfigurations, and supply chain attacks via malicious Helm charts. I work across the full 4C stack of cloud-native security: Cloud, Cluster, Container, and Code.
 
 <div class="about-grid">
 <div class="about-card"><p class="about-card__title">Container fundamentals & attacks</p><p class="about-card__desc">Namespaces, cgroups, capabilities, privilege escalation, container breakout techniques</p></div>

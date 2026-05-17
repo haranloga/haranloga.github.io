@@ -31,7 +31,7 @@
 
 <article class="about-article">
 
-# Who I am
+<h1 id="who-i-am">Who I am</h1>
 
 I'm **Araharan Loganayagam**, a cybersecurity practitioner, researcher, and builder working at the intersection of offensive security, application security, cloud-native infrastructure, and AI systems security. My work spans adversary emulation, secure software development, DevSecOps, cloud security architecture, distributed systems hardening, and the emerging attack surface that autonomous AI agents are introducing into production environments.
 
@@ -60,7 +60,7 @@ Outside paid work I compete on Hack The Box, contribute to CTF events, and mento
 
 ---
 
-## AI & Agentic Security
+<h2 id="ai--agentic-security">AI & Agentic Security</h2>
 
 <p class="about-tagline">Securing intelligent systems from prompt to production.</p>
 
@@ -119,7 +119,7 @@ Agentic AI systems, where models call tools, browse the web, write and execute c
 
 ---
 
-### AI supply chain security
+<h3 id="ai-supply-chain-security">AI supply chain security</h3>
 
 <p class="about-tagline">Tracking provenance from training data to deployed model.</p>
 
@@ -138,7 +138,7 @@ AI supply chains introduce risks at every layer: datasets, pre-trained weights, 
 
 ---
 
-### AI threat modelling
+<h3 id="ai-threat-modelling">AI threat modelling</h3>
 
 <p class="about-tagline">Structured thinking about AI system attack surfaces.</p>
 
@@ -155,7 +155,7 @@ Threat modelling AI systems requires thinking beyond traditional STRIDE applicat
 
 ---
 
-## Distributed Systems & Microservice Security
+<h2 id="distributed-systems--microservice-security">Distributed Systems & Microservice Security</h2>
 
 <p class="about-tagline">Securing the communication fabric between services.</p>
 
@@ -175,7 +175,7 @@ Modern production systems are rarely monolithic. Microservice architectures, eve
 
 ---
 
-## Application Security & Secure SDLC
+<h2 id="application-security--secure-sdlc">Application Security & Secure SDLC</h2>
 
 <p class="about-tagline">Building security into the development lifecycle, not bolting it on after.</p>
 
@@ -194,7 +194,7 @@ Security that lives only at the perimeter fails. My application security work is
 
 ---
 
-## Cloud, DevOps & infrastructure security
+<h2 id="cloud-devops--infrastructure-security">Cloud, DevOps & infrastructure security</h2>
 
 <p class="about-tagline">Security that moves at deployment speed.</p>
 
@@ -216,7 +216,7 @@ Cloud-native environments require security that moves at deployment speed. My wo
 
 ---
 
-### Kubernetes & container security
+<h3 id="kubernetes--container-security">Kubernetes & container security</h3>
 
 <p class="about-tagline">Securing the 4C model: Cloud, Cluster, Container, Code.</p>
 
@@ -234,7 +234,7 @@ Cloud-native environments require security that moves at deployment speed. My wo
 
 ---
 
-## Technical areas
+<h2 id="technical-areas">Technical areas</h2>
 
 <div class="about-grid">
 <div class="about-card"><p class="about-card__title">AI & LLM security</p><p class="about-card__desc">LLM red-teaming, prompt injection, agentic pipelines, MCP server security, RAG security, AI supply chain, behavioural auditing, OWASP LLM Top 10, MITRE ATLAS, BIML</p></div>
@@ -277,7 +277,7 @@ Cloud-native environments require security that moves at deployment speed. My wo
 
 ---
 
-## What I offer
+<h2 id="what-i-offer">What I offer</h2>
 
 <p class="about-tagline">Every engagement is scoped collaboratively based on business risk, engineering maturity, and operational realities.</p>
 
@@ -298,7 +298,7 @@ Cloud-native environments require security that moves at deployment speed. My wo
 
 ---
 
-## Worked With
+<h2 id="worked-with">Worked With</h2>
 
 </article>
 
@@ -319,7 +319,7 @@ Cloud-native environments require security that moves at deployment speed. My wo
 
 ---
 
-## Get in Touch
+<h2 id="get-in-touch">Get in Touch</h2>
 
 Reach me on [LinkedIn](https://www.linkedin.com/in/dream4ip/) or [Twitter/X](https://twitter.com/haran_loga). I'm open to consulting engagements, conference talks, and collaborative research, particularly anything at the boundary of AI systems, distributed infrastructure, and offensive security.
 

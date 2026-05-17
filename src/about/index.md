@@ -72,7 +72,7 @@ My research spans LLM internals: how transformers process tokens, how foundation
 
 ---
 
-<p class="about-label">OWASP TOP 10 FOR LLMS — AREAS I RESEARCH AND TEST</p>
+<p class="about-label">OWASP TOP 10 FOR LLMS: AREAS I RESEARCH AND TEST</p>
 
 <div class="about-grid">
 <div class="about-card"><p class="about-card__title">Prompt injection</p><p class="about-card__desc">Direct & indirect injection, system vs user prompt exploitation, cross-context leakage, tool-call manipulation</p></div>
@@ -89,7 +89,7 @@ My research spans LLM internals: how transformers process tokens, how foundation
 
 ---
 
-<p class="about-label">MITRE ATLAS — TACTICS I MAP AND TEST AGAINST</p>
+<p class="about-label">MITRE ATLAS: TACTICS I MAP AND TEST AGAINST</p>
 
 <div class="about-tags">
 <span class="about-tag">Reconnaissance</span>
@@ -149,12 +149,12 @@ The AI supply chain is one of the most underexplored attack surfaces in enterpri
 Threat modelling AI systems requires thinking beyond traditional STRIDE applications. LLM architectures introduce unique asset types: training data, model weights, embedding stores, and tool registries. The adversary goals don't map cleanly to conventional threat libraries. I apply structured threat modelling using data flow diagrams tuned for LLM architectures, then map findings across multiple AI-specific threat frameworks.
 
 <div class="about-tags">
-<span class="about-tag">STRIDE — Applied to LLM DFDs</span>
-<span class="about-tag">OWASP LLM Top 10 — Vulnerability mapping</span>
-<span class="about-tag">MITRE ATLAS — Tactic-level mapping</span>
-<span class="about-tag">BIML Risk Framework — ML-specific risks</span>
-<span class="about-tag">AI Risk Repository — Emerging risk catalogue</span>
-<span class="about-tag">AI Incident Database — Real-world case grounding</span>
+<span class="about-tag">STRIDE: Applied to LLM DFDs</span>
+<span class="about-tag">OWASP LLM Top 10: Vulnerability mapping</span>
+<span class="about-tag">MITRE ATLAS: Tactic-level mapping</span>
+<span class="about-tag">BIML Risk Framework: ML-specific risks</span>
+<span class="about-tag">AI Risk Repository: Emerging risk catalogue</span>
+<span class="about-tag">AI Incident Database: Real-world case grounding</span>
 </div>
 
 ---
@@ -170,7 +170,7 @@ Lateral movement, confused deputy attacks, internal SSRF chaining, and service i
 <div class="about-grid">
 <div class="about-card"><p class="about-card__title">Service-to-service auth</p><p class="about-card__desc">mTLS, SPIFFE/SPIRE, workload identity, JWT validation at the mesh layer</p></div>
 <div class="about-card"><p class="about-card__title">API gateway security</p><p class="about-card__desc">Rate limiting, schema validation, auth delegation, OWASP API Top 10, gateway bypass</p></div>
-<div class="about-card"><p class="about-card__title">Service mesh hardening</p><p class="about-card__desc">Istio, Linkerd, Envoy, Consul Connect — policy enforcement, traffic interception, egress control</p></div>
+<div class="about-card"><p class="about-card__title">Service mesh hardening</p><p class="about-card__desc">Istio, Linkerd, Envoy, Consul Connect: policy enforcement, traffic interception, egress control</p></div>
 <div class="about-card"><p class="about-card__title">Event-driven security</p><p class="about-card__desc">Kafka ACLs, message queue poisoning, schema registry integrity, event replay attacks</p></div>
 <div class="about-card"><p class="about-card__title">Lateral movement paths</p><p class="about-card__desc">Over-privileged service accounts, confused deputy, internal SSRF chaining across services</p></div>
 <div class="about-card"><p class="about-card__title">gRPC & async protocols</p><p class="about-card__desc">Proto schema enforcement, streaming attack surfaces, bi-directional stream security</p></div>
@@ -191,7 +191,7 @@ I believe security should exist throughout the entire software development lifec
 <div class="about-card"><p class="about-card__title">Secure SDLC programme design</p></div>
 <div class="about-card"><p class="about-card__title">CI/CD security automation and shift-left</p></div>
 <div class="about-card"><p class="about-card__title">SAST, DAST, SCA, secrets scanning, IaC scanning</p></div>
-<div class="about-card"><p class="about-card__title">Secure code review — Java, Python, Go, TypeScript</p></div>
+<div class="about-card"><p class="about-card__title">Secure code review: Java, Python, Go, TypeScript</p></div>
 <div class="about-card"><p class="about-card__title">OAuth2 / OIDC and API security reviews</p></div>
 <div class="about-card"><p class="about-card__title">Threat modelling and secure design assessments</p></div>
 <div class="about-card"><p class="about-card__title">Dependency risk management and SBOM pipelines</p></div>

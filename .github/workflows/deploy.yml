@@ -6,9 +6,11 @@ on:
       - main
   workflow_dispatch:
 
+# Queue deployments instead of cancelling in-flight ones — cancelling a
+# Pages deploy mid-run leaves the environment locked and fails the next run
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -20,12 +22,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Install blargh
         run: npm install -g @mariozechner/blargh

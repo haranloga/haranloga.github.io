@@ -318,6 +318,53 @@ document.addEventListener('DOMContentLoaded', () => {
         update();
     }
 
+    // Typewriter: rotate words inside .type-rotate with a terminal cursor
+    document.querySelectorAll('.type-rotate').forEach(el => {
+        let words;
+        try { words = JSON.parse(el.dataset.words); } catch { return; }
+        if (!Array.isArray(words) || words.length < 2) return;
+
+        if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) {
+            el.textContent = words[0];
+            return;
+        }
+
+        const cursor = document.createElement('span');
+        cursor.className = 'type-cursor';
+        el.textContent = words[0];
+        el.after(cursor);
+        const syncCursor = () => { cursor.style.height = '1em'; };
+        syncCursor();
+
+        let wordIdx = 0, charIdx = words[0].length, deleting = false;
+        const TYPE_MS = 55, DELETE_MS = 30, HOLD_MS = 2200, GAP_MS = 350;
+
+        const tick = () => {
+            const word = words[wordIdx];
+            if (!deleting) {
+                charIdx++;
+                el.textContent = word.slice(0, charIdx);
+                if (charIdx >= word.length) {
+                    deleting = true;
+                    setTimeout(tick, HOLD_MS);
+                    return;
+                }
+                setTimeout(tick, TYPE_MS);
+            } else {
+                charIdx--;
+                el.textContent = word.slice(0, charIdx);
+                if (charIdx <= 0) {
+                    deleting = false;
+                    wordIdx = (wordIdx + 1) % words.length;
+                    setTimeout(tick, GAP_MS);
+                    return;
+                }
+                setTimeout(tick, DELETE_MS);
+            }
+        };
+        setTimeout(() => { deleting = true; tick(); }, HOLD_MS);
+    });
+
     // "/" keyboard shortcut → focus the page's search input
     document.addEventListener('keydown', (e) => {
         if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
@@ -334,7 +381,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Auto-generated floating TOC for post pages (desktop only)
     // Skips pages that already have a manual TOC (.about-toc)
     if (window.innerWidth >= 1100 && article && !document.querySelector('.about-toc')) {
-        const headings = article.querySelectorAll('h2, h3');
+        // Collect from ALL article blocks — pages like /about/ split content
+        // across several <article> elements with carousels in between
+        const headings = document.querySelectorAll('article h2, article h3');
         if (headings.length >= 3) {
             // Ensure all headings have IDs
             headings.forEach((h, i) => {

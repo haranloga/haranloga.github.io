@@ -39,30 +39,20 @@
 <body>
     <div class="mx-auto p-6" style="max-width: 640px; width: 100%">
         <div class="flex flex-col pb-4">
-            <div class="flex flex-row" style="justify-content:space-between;align-items:center;">
+            <div class="flex flex-row reveal" style="justify-content:space-between;align-items:center;">
                 <a href="/" style="color: var(--text-color); text-decoration: none;">
                     <h2 style="margin:0;">/&gt; Araharan Loganayagam</h2>
                 </a>
-                <div class="flex gap-2" style="align-items:center;">
-                    <a href="/projects/" class="about-shortcut" aria-label="Projects" title="Projects"
-                        style="width:18px;height:18px;color: var(--link-color);">
-                        <i class="icon" style="width:18px;height:18px;">
-                            <%=render("../_icons/projects-line.svg")%>
-                        </i>
-                    </a>
-                    <a href="/about/" class="about-shortcut" aria-label="About" title="About me"
-                        style="width:18px;height:18px;color: var(--link-color);">
-                        <i class="icon" style="width:18px;height:18px;">
-                            <%=render("../_icons/about-me.svg")%>
-                        </i>
-                    </a>
+                <div class="flex gap-3" style="align-items:center;">
+                    <a href="/projects/" class="nav-link">Projects</a>
+                    <a href="/about/" class="nav-link">About</a>
                     <theme-toggle style="display:inline-flex;align-items:center;"></theme-toggle>
                 </div>
             </div>
-            <a href="/" style="color: var(--text-color); text-decoration: none;">
+            <a href="/" class="reveal-1" style="color: var(--text-color); text-decoration: none;">
                 <span class="text-sm">Product building • AI Safety • Cybersecurity</span>
             </a>
-            <div class="flex gap-2 mt-1" style="align-items:center;">
+            <div class="flex gap-2 mt-1 reveal-1" style="align-items:center;">
                 <a href="https://www.linkedin.com/in/dream4ip/" title="LinkedIn" aria-label="LinkedIn"
                     style="color: var(--link-color);">
                     <i class="icon" style="width: 18px; height: 18px;">

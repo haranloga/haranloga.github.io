@@ -2,7 +2,7 @@
 
 <%= render("./_partials/header.html", { title, description, url }) %>
 
-    <color-band class="w-full mt-4 mb-6" style="height: 80px;"></color-band>
+    <p class="home-intro reveal-2">I build, break, and secure <span class="type-rotate" data-words='["modern systems","cloud estates","microservices","AI agent pipelines","CI/CD pipelines"]'>modern systems</span>.</p>
 
     <%
         const posts = metas("./posts").filter((p) => p.meta.published && p.meta.listed !== false);
@@ -24,7 +24,7 @@
         rss("./rss.xml", channel, items);
     %>
 
-    <div class="flex items-baseline gap-2 mb-4">
+    <div class="flex items-baseline gap-2 mb-4 reveal-3">
         <h4>Blogging</h4>
         <a href="/tags/" class="blog-meta-link">tags</a>
         <a href="/rss.xml" class="blog-meta-link" title="RSS" style="display:inline-flex;align-items:center;line-height:1;">

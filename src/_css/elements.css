@@ -85,25 +85,28 @@ h1, h2, h3, h4 {
 .brand-carousel__track {
     display: flex;
     gap: 2rem;
-    animation: marquee 20s linear infinite;
+    animation: marquee 55s linear infinite;
+}
+
+.brand-carousel:hover .brand-carousel__track,
+.tech-carousel:hover .tech-carousel__track {
+    animation-play-state: paused;
 }
 
 .brand-carousel__track img,
 .tech-carousel__track img {
-    height: 52px;
+    height: 44px;
     width: auto;
-    filter: none;
-    opacity: 0.95;
-    transition: transform 0.25s ease, opacity 0.25s ease, filter 0.25s ease, box-shadow 0.25s ease;
+    filter: grayscale(1);
+    opacity: 0.55;
+    transition: opacity 0.25s ease, filter 0.25s ease;
     border-radius: 0.35rem;
 }
 
 .brand-carousel__track img:hover,
 .tech-carousel__track img:hover {
-    filter: drop-shadow(0 4px 8px rgba(0, 150, 255, 0.35));
+    filter: grayscale(0);
     opacity: 1;
-    transform: scale(1.08);
-    box-shadow: 0 0 25px rgba(64, 169, 255, 0.35);
 }
 
 .tech-carousel {
@@ -115,7 +118,7 @@ h1, h2, h3, h4 {
 .tech-carousel__track {
     display: flex;
     gap: 2rem;
-    animation: marquee 18s linear infinite;
+    animation: marquee 50s linear infinite;
 }
 
 @keyframes marquee {
@@ -125,6 +128,68 @@ h1, h2, h3, h4 {
     100% {
         transform: translateX(-50%);
     }
+}
+
+/* ── Header text navigation ─────────────────────────────────────────────── */
+.nav-link {
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--dimmed-text-color);
+    text-decoration: none;
+    transition: color 0.15s ease;
+    line-height: 1;
+}
+
+.nav-link:hover {
+    color: var(--text-color);
+}
+
+/* ── Homepage intro ─────────────────────────────────────────────────────── */
+.home-intro {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--dimmed-text-color);
+    margin: 1.25rem 0 2rem;
+    max-width: 56ch;
+}
+
+/* ── Entrance animations (staggered fade-up) ────────────────────────────── */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reveal   { animation: fadeUp 0.55s ease both; }
+.reveal-1 { animation: fadeUp 0.55s ease 0.05s both; }
+.reveal-2 { animation: fadeUp 0.55s ease 0.15s both; }
+.reveal-3 { animation: fadeUp 0.55s ease 0.25s both; }
+.reveal-4 { animation: fadeUp 0.55s ease 0.35s both; }
+
+/* ── Typewriter (rotating word + terminal cursor) ───────────────────────── */
+.type-rotate {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.type-cursor {
+    display: inline-block;
+    width: 1px;
+    background: var(--link-color);
+    margin-left: 2px;
+    box-shadow: 0 0 6px var(--link-color);
+    animation: cursorBlink 1.1s step-end infinite;
+}
+
+@keyframes cursorBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
 
 .about-shortcut {

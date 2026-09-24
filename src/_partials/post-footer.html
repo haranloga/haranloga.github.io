@@ -1,41 +1,33 @@
-<% const _shareUrl = encodeURIComponent(typeof url !== 'undefined' ? url : ''); %>
-<% const _shareTitle = encodeURIComponent(typeof title !== 'undefined' ? title : ''); %>
-
-<div class="post-share">
-    <span class="post-share__label">Share</span>
-    <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=<%= _shareUrl %>" target="_blank" rel="noopener">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
-        LinkedIn
-    </a>
-    <a class="share-btn" href="https://twitter.com/intent/tweet?url=<%= _shareUrl %>&text=<%= _shareTitle %>" target="_blank" rel="noopener">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.734l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        Twitter
-    </a>
+<%
+    const _shareUrl = encodeURIComponent(typeof url !== 'undefined' ? url : '');
+    const _shareTitle = encodeURIComponent(typeof title !== 'undefined' ? title : '');
+    const _tags = (typeof tags !== 'undefined' && Array.isArray(tags)) ? tags : [];
+    const _older = typeof prevPost !== 'undefined' && prevPost ? prevPost : null;
+    const _newer = typeof nextPost !== 'undefined' && nextPost ? nextPost : null;
+%></div>
+<footer class="post-footer">
+<div class="post-footer__row"><% if (_tags.length) { %>
+<div class="chips" aria-label="Topics"><% for (const tag of _tags) { %><a class="chip" href="/tags/#<%= String(tag).toLowerCase().replace(/[\s/]+/g, '-') %>">#<%= tag %></a><% } %></div><% } else { %>
+<span></span><% } %>
+<div class="share">
+<span class="share__label">Share</span>
+<button class="share__btn" type="button" data-share="linkedin" data-share-url="<%= _shareUrl %>" aria-label="Share on LinkedIn" title="Share on LinkedIn"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg></button>
+<button class="share__btn" type="button" data-share="x" data-share-url="<%= _shareUrl %>" data-share-text="<%= _shareTitle %>" aria-label="Share on X" title="Share on X"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.734l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></button>
+<button class="share__btn" type="button" data-copy-link aria-label="Copy link" title="Copy link"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
 </div>
-
-<% const _hasPrev = typeof prevPost !== 'undefined' && prevPost; %>
-<% const _hasNext = typeof nextPost !== 'undefined' && nextPost; %>
-<% if (_hasPrev || _hasNext) { %>
-<nav class="post-nav">
-    <% if (_hasNext) { %>
-    <div class="post-nav__prev">
-        <span class="post-nav__label">← Older</span>
-        <a href="/posts/<%= nextPost.directory %>/" class="post-nav__title"><%= nextPost.meta.title %></a>
-    </div>
-    <% } %>
-    <% if (_hasPrev) { %>
-    <div class="post-nav__next">
-        <span class="post-nav__label">Newer →</span>
-        <a href="/posts/<%= prevPost.directory %>/" class="post-nav__title"><%= prevPost.meta.title %></a>
-    </div>
-    <% } %>
-</nav>
-<% } %>
-
-<div class="mt-8 text-xs text-center text-muted">
-    This page respects your privacy by not using cookies or similar technologies and by not collecting any personally identifiable information.
 </div>
-
+<div class="card author-card">
+<span class="avatar avatar--lg" aria-hidden="true">AL</span>
+<div>
+<p class="author-card__name">Araharan Loganayagam</p>
+<p class="author-card__bio">Backend, AI, and security engineer. I build AI-powered systems end to end and secure every layer.</p>
+</div>
+<a href="/about/" class="text-link">About me <span class="arrow" aria-hidden="true">&rarr;</span></a>
+</div><% if (_older || _newer) { %>
+<nav class="post-nav" aria-label="More posts"><% if (_older) { %>
+<a href="/posts/<%= _older.directory %>/" class="card post-nav__link"><span class="post-nav__label">&larr; Older</span><span class="post-nav__title"><%= _older.meta.title %></span></a><% } %><% if (_newer) { %>
+<a href="/posts/<%= _newer.directory %>/" class="card post-nav__link post-nav__link--next"><span class="post-nav__label">Newer &rarr;</span><span class="post-nav__title"><%= _newer.meta.title %></span></a><% } %>
+</nav><% } %>
+</footer>
 </article>
-</body>
-</html>
+<%= render("./footer.html") %>

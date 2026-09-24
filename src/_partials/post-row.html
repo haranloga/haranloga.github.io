@@ -1,0 +1,16 @@
+<%
+    const _m = post.meta;
+    const _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const [_y, _mo, _d] = String(_m.date || '').split('-');
+    const _dateLabel = _mo ? (_months[+_mo - 1] + ' ' + (+_d) + (typeof short !== 'undefined' && short ? '' : ', ' + _y)) : '';
+    const _tags = (Array.isArray(_m.tags) ? _m.tags : []).filter(t => String(t).toLowerCase() !== 'project');
+    const _search = [_m.title, _m.description, ...(Array.isArray(_m.tags) ? _m.tags : [])].join(' ').toLowerCase().replace(/"/g, '');
+%>
+<li><a href="/posts/<%= post.directory %>/" class="post-row" data-search="<%= _search %>">
+<time class="post-row__date" datetime="<%= _m.date %>"><%= _dateLabel %></time>
+<div>
+<h3 class="post-row__title"><% if (_m.pinned) { %><span class="post-row__pin" title="Featured">&#9733; </span><% } %><%= _m.title %></h3><% if (_m.description) { %>
+<p class="post-row__desc"><%= _m.description %></p><% } %>
+<div class="post-row__meta"><% if (_tags.length) { %><span class="post-row__tag"><%= render("./tag-label.html", { tag: _tags[0] }) %></span><% } %><% if (_tags.length && _m.reading_time) { %><span class="dot-sep"></span><% } %><% if (_m.reading_time) { %><span><%= _m.reading_time %> min read</span><% } %></div>
+</div>
+</a></li>

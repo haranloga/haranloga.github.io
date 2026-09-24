@@ -1,249 +1,41 @@
-function dom(html) {
-    const div = document.createElement(`div`);
-    div.innerHTML = html;
-    const children = [];
-    for (let i = 0; i < div.children.length; i++) {
-        children.push(div.children[i]);
-    }
-    return children;
-}
+const prefersReducedMotion = () => window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 
 class ThemeToggle extends HTMLElement {
     darkIcon = `<%= render("./_icons/moon-line.svg")%>`;
     lightIcon = `<%= render("./_icons/sun-line.svg")%>`;
 
     connectedCallback() {
+        this.style.display = "inline-flex";
         this.render();
-        this.style.cursor = "pointer";
+    }
+
+    currentTheme() {
+        return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
     }
 
     render() {
-        this.innerHTML = "";
-        const elements = dom(/*html*/ `
-        <i class="icon" style="width: 20px;">${
-            localStorage.getItem("theme") === "dark" ? this.darkIcon : this.lightIcon
-        }</i>
-      `);
-        this.append(...elements);
-
-        elements[0].addEventListener("click", () => {
-            localStorage.setItem("theme", localStorage.getItem("theme") === "dark" ? "light" : "dark");
-            document.documentElement.setAttribute("data-theme", localStorage.getItem("theme"));
+        const theme = this.currentTheme();
+        const next = theme === "dark" ? "light" : "dark";
+        this.innerHTML = `<button type="button" class="theme-toggle" aria-label="Switch to ${next} theme" title="Switch to ${next} theme"><i class="icon">${theme === "dark" ? this.darkIcon : this.lightIcon}</i></button>`;
+        this.querySelector("button").addEventListener("click", () => {
+            document.documentElement.setAttribute("data-theme", next);
+            try { localStorage.setItem("theme", next); } catch {}
             this.render();
+            this.querySelector("button").focus();
         });
     }
 }
 customElements.define("theme-toggle", ThemeToggle);
 
-class ColorBand extends HTMLElement {
-    connectedCallback() {
-        this.style.display = "block";
-        this.innerHTML = /*html*/ `<canvas class="w-full h-full"></canvas>`;
-        const canvas = this.querySelector("canvas");
-        const ctx = canvas?.getContext("2d");
-        if (!ctx) return;
-
-        const state = {
-            theme: document.documentElement.getAttribute("data-theme") ?? "dark",
-        };
-
-        const bars = Array.from({ length: 48 }, () => ({
-            offset: Math.random() * Math.PI * 2,
-            speed: 0.3 + Math.random() * 0.9,
-            variance: 0.45 + Math.random() * 0.4,
-        }));
-
-        const rainbowStops = [
-            { pos: 0, color: [20, 70, 190] },
-            { pos: 0.4, color: [23, 165, 205] },
-            { pos: 0.7, color: [60, 210, 145] },
-            { pos: 1, color: [160, 245, 130] },
-        ];
-
-        const getWidth = () => canvas.clientWidth;
-        const getHeight = () => canvas.clientHeight;
-
-        const resize = () => {
-            const dpr = window.devicePixelRatio || 1;
-            const displayWidth = canvas.clientWidth;
-            const displayHeight = canvas.clientHeight;
-            const needResize = canvas.width !== displayWidth * dpr || canvas.height !== displayHeight * dpr;
-            if (needResize) {
-                canvas.width = displayWidth * dpr;
-                canvas.height = displayHeight * dpr;
-                ctx.setTransform(1, 0, 0, 1, 0, 0);
-                ctx.scale(dpr, dpr);
-            }
-        };
-
-        const lerp = (a, b, t) => a + (b - a) * t;
-        const getRainbowColor = (t) => {
-            for (let i = 0; i < rainbowStops.length - 1; i++) {
-                const current = rainbowStops[i];
-                const next = rainbowStops[i + 1];
-                if (t >= current.pos && t <= next.pos) {
-                    const localT = (t - current.pos) / (next.pos - current.pos);
-                    const r = Math.round(lerp(current.color[0], next.color[0], localT));
-                    const g = Math.round(lerp(current.color[1], next.color[1], localT));
-                    const b = Math.round(lerp(current.color[2], next.color[2], localT));
-                    return `rgb(${r},${g},${b})`;
-                }
-            }
-            return `rgb(${rainbowStops[rainbowStops.length - 1].color.join(",")})`;
-        };
-
-        // Precompute bar colors — constant per index, no need to recompute each frame
-        const barColors = bars.map((_, index) => getRainbowColor(index / (bars.length - 1)));
-
-        const drawBackground = () => {
-            const isDark = state.theme === "dark";
-            const width = getWidth();
-            const height = getHeight();
-            const gradient = ctx.createLinearGradient(0, 0, 0, height);
-            if (isDark) {
-                gradient.addColorStop(0, "#000000");
-                gradient.addColorStop(1, "#000000");
-            } else {
-                gradient.addColorStop(0, "#eef4ff");
-                gradient.addColorStop(1, "#cfdaf5");
-            }
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, width, height);
-
-            if (isDark) {
-                ctx.fillStyle = "rgba(0,0,0,0.35)";
-                ctx.fillRect(0, height * 0.8, width, height * 0.2);
-            }
-        };
-
-        const drawParticles = (time) => {
-            const width = getWidth();
-            const height = getHeight();
-            ctx.fillStyle = state.theme === "dark" ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.08)";
-            for (let i = 0; i < 18; i++) {
-                const progress = (time * 0.00008 + i / 18) % 1;
-                const x = progress * width;
-                const y = height / 2 + Math.sin(progress * Math.PI * 2) * 70;
-                ctx.beginPath();
-                ctx.arc(x, y, 1.8, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        };
-
-        const drawBars = (time) => {
-            const width = getWidth();
-            const height = getHeight();
-            const barWidth = width / (bars.length + 2);
-            const maxBarHeight = height * 0.75;
-            const baseLineY = height * 0.9;
-            const segmentCount = 10;
-            const segmentGap = 2;
-            const segmentHeight = maxBarHeight / segmentCount;
-            ctx.save();
-            ctx.globalAlpha = state.theme === "dark" ? 0.9 : 0.85;
-            ctx.shadowBlur = 10;
-
-            bars.forEach((bar, index) => {
-                const speed = time * 0.0008 * bar.speed + bar.offset;
-                const base = (Math.sin(speed) + 1) / 2;
-                const pulse = (Math.sin(speed * 2.8) + 1) / 2;
-                const eased = Math.pow(base, 1.35) * bar.variance + pulse * 0.08;
-                const barHeight = Math.max(maxBarHeight * (0.3 + eased), maxBarHeight * 0.2);
-                const filledSegments = Math.round(barHeight / segmentHeight);
-                const x = (index + 1) * barWidth;
-                const color = barColors[index];
-                ctx.shadowColor = color;
-
-                for (let seg = 0; seg < filledSegments; seg++) {
-                    const y = baseLineY - seg * (segmentHeight + segmentGap) - segmentHeight;
-                    const gradient = ctx.createLinearGradient(x, y, x, y + segmentHeight);
-                    gradient.addColorStop(0, `rgba(255,255,255,${state.theme === "dark" ? 0.15 : 0.25})`);
-                    gradient.addColorStop(1, color);
-                    ctx.fillStyle = gradient;
-                    ctx.beginPath();
-                    ctx.roundRect(x, y, barWidth * 0.6, segmentHeight - segmentGap * 0.3, barWidth * 0.15);
-                    ctx.fill();
-                }
-
-                if (filledSegments > 0) {
-                    const capY = baseLineY - (filledSegments - 0.5) * (segmentHeight + segmentGap);
-                    ctx.fillStyle = `rgba(240,255,255,${state.theme === "dark" ? 0.9 : 0.7})`;
-                    ctx.fillRect(x, capY, barWidth * 0.6, 2);
-                }
-            });
-
-            ctx.restore();
-        };
-
-        const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
-
-        let animId = null;
-        let isVisible = false;
-        let isTabVisible = !document.hidden;
-
-        const loop = (time = 0) => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawBackground();
-            drawParticles(time);
-            drawBars(time);
-            animId = requestAnimationFrame(loop);
-        };
-
-        const drawOnce = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawBackground();
-            drawParticles(0);
-            drawBars(0);
-        };
-        const startLoop = () => {
-            if (animId || !isVisible || !isTabVisible) return;
-            if (prefersReducedMotion) { drawOnce(); return; }
-            animId = requestAnimationFrame(loop);
-        };
-        const stopLoop = () => { if (animId) { cancelAnimationFrame(animId); animId = null; } };
-
-        const handleThemeChange = () => {
-            state.theme = document.documentElement.getAttribute("data-theme") ?? "dark";
-        };
-
-        const observer = new MutationObserver(handleThemeChange);
-        observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-
-        // Only run animation when element is on screen
-        const io = new IntersectionObserver(([entry]) => {
-            isVisible = entry.isIntersecting;
-            isVisible && isTabVisible ? startLoop() : stopLoop();
-        }, { threshold: 0 });
-        io.observe(this);
-
-        // Pause when browser tab is hidden
-        document.addEventListener("visibilitychange", () => {
-            isTabVisible = !document.hidden;
-            isVisible && isTabVisible ? startLoop() : stopLoop();
-        });
-
-        window.addEventListener("resize", resize);
-        resize();
-    }
-}
-customElements.define("color-band", ColorBand);
 class QuoteLink extends HTMLElement {
     quotesIcon = `<%= render("./_icons/double-quotes-r.svg")%>`;
-
-    constructor() {
-        super();
-        this.href = "";
-    }
 
     static get observedAttributes() {
         return ["href"];
     }
 
-    attributeChangedCallback(name, _oldValue, newValue) {
-        if (name === "href") {
-            this.href = newValue;
-            this.render();
-        }
+    attributeChangedCallback() {
+        this.render();
     }
 
     connectedCallback() {
@@ -252,207 +44,238 @@ class QuoteLink extends HTMLElement {
     }
 
     render() {
-        this.innerHTML = `
-        <a href="${this.href}" class="inline-flex items-baseline" style="color: var(--link-color); font-size: 12px; transform: translateY(-6px);">
-          <span>[</span>
-          <i class="icon" style="width: 12px;">${this.quotesIcon}</i>
-          <span>]</span>
-        </a>
-      `;
+        this.innerHTML = `<a href="${this.getAttribute("href") || ""}" class="inline-flex items-baseline" style="color: var(--accent); font-size: 12px; transform: translateY(-6px);"><span>[</span><i class="icon" style="width: 12px;">${this.quotesIcon}</i><span>]</span></a>`;
     }
 }
-
 customElements.define("q-l", QuoteLink);
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Duplicate carousel tracks so the marquee loop is seamless (-50% trick)
-    document.querySelectorAll('.brand-carousel__track, .tech-carousel__track').forEach(track => {
-        Array.from(track.children).forEach(item => {
+document.addEventListener("DOMContentLoaded", () => {
+    // Marquee: duplicate the track so translateX(-50%) loops seamlessly
+    document.querySelectorAll(".tech-carousel__track").forEach((track) => {
+        Array.from(track.children).forEach((item) => {
             const clone = item.cloneNode(true);
-            clone.setAttribute('aria-hidden', 'true');
+            clone.setAttribute("aria-hidden", "true");
+            clone.setAttribute("alt", "");
             track.appendChild(clone);
         });
     });
 
-    // Code copy buttons
-    document.querySelectorAll('pre').forEach(pre => {
-        const code = pre.querySelector('code');
+    // Copy buttons on code blocks
+    document.querySelectorAll(".prose pre").forEach((pre) => {
+        const code = pre.querySelector("code");
         if (!code) return;
-        const btn = document.createElement('button');
-        btn.className = 'code-copy-btn';
-        btn.textContent = 'copy';
-        btn.addEventListener('click', () => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "code-copy-btn";
+        btn.textContent = "Copy";
+        btn.addEventListener("click", () => {
             navigator.clipboard.writeText(code.innerText).then(() => {
-                btn.textContent = 'copied!';
-                setTimeout(() => { btn.textContent = 'copy'; }, 1500);
+                btn.textContent = "Copied";
+                setTimeout(() => { btn.textContent = "Copy"; }, 1500);
             });
         });
         pre.appendChild(btn);
     });
 
-    // Back to top button
-    const backBtn = document.createElement('button');
-    backBtn.className = 'back-to-top';
-    backBtn.setAttribute('aria-label', 'Back to top');
-    backBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>';
-    document.body.appendChild(backBtn);
-    window.addEventListener('scroll', () => {
-        backBtn.classList.toggle('visible', window.scrollY > 300);
-    }, { passive: true });
-    backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    // Copy-link share button
+    document.querySelectorAll("[data-copy-link]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            navigator.clipboard.writeText(window.location.href.split("#")[0]).then(() => {
+                btn.classList.add("is-copied");
+                btn.setAttribute("aria-label", "Link copied");
+                setTimeout(() => {
+                    btn.classList.remove("is-copied");
+                    btn.setAttribute("aria-label", "Copy link");
+                }, 1600);
+            });
+        });
+    });
 
-    // Reading progress bar (post pages only)
-    const article = document.querySelector('article');
-    if (article) {
-        const bar = document.createElement('div');
-        bar.className = 'reading-progress';
-        document.body.appendChild(bar);
-        const update = () => {
-            const start = article.offsetTop;
-            const total = article.offsetHeight - window.innerHeight + start;
-            const progress = Math.min(1, Math.max(0, (window.scrollY - start) / Math.max(1, total - start)));
-            bar.style.transform = `scaleX(${progress})`;
-        };
-        window.addEventListener('scroll', update, { passive: true });
-        window.addEventListener('resize', update, { passive: true });
-        update();
+    // Share buttons are <button>s so URL-based content blockers don't hide them
+    const shareTargets = {
+        linkedin: (u) => `https://www.linkedin.com/sharing/share-offsite/?url=${u}`,
+        x: (u, t) => `https://x.com/intent/post?url=${u}&text=${t}`,
+    };
+    document.querySelectorAll("[data-share]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const build = shareTargets[btn.dataset.share];
+            if (!build) return;
+            window.open(build(btn.dataset.shareUrl || "", btn.dataset.shareText || ""), "_blank", "noopener,width=600,height=640");
+        });
+    });
+
+    // Back to top
+    const backBtn = document.createElement("button");
+    backBtn.type = "button";
+    backBtn.className = "back-to-top";
+    backBtn.setAttribute("aria-label", "Back to top");
+    backBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>';
+    document.body.appendChild(backBtn);
+    backBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" }));
+
+    // Reading progress for long-form pages
+    const progressRoot = document.querySelector("[data-progress]");
+    let progressBar = null;
+    if (progressRoot) {
+        progressBar = document.createElement("div");
+        progressBar.className = "reading-progress";
+        progressBar.setAttribute("aria-hidden", "true");
+        document.body.appendChild(progressBar);
     }
 
-    // Typewriter: rotate words inside .type-rotate with a terminal cursor
-    document.querySelectorAll('.type-rotate').forEach(el => {
+    const onScroll = () => {
+        backBtn.classList.toggle("visible", window.scrollY > 600);
+        if (progressBar) {
+            const top = progressRoot.getBoundingClientRect().top + window.scrollY;
+            const span = Math.max(1, progressRoot.offsetHeight - window.innerHeight);
+            const progress = Math.min(1, Math.max(0, (window.scrollY - top) / span));
+            progressBar.style.transform = `scaleX(${progress})`;
+        }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    onScroll();
+
+    // Typewriter: rotate the words listed in data-words
+    document.querySelectorAll(".type-rotate").forEach((el) => {
         let words;
         try { words = JSON.parse(el.dataset.words); } catch { return; }
-        if (!Array.isArray(words) || words.length < 2) return;
+        if (!Array.isArray(words) || words.length < 2 || prefersReducedMotion()) return;
 
-        if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) {
-            el.textContent = words[0];
-            return;
-        }
-
-        const cursor = document.createElement('span');
-        cursor.className = 'type-cursor';
-        el.textContent = words[0];
+        const cursor = document.createElement("span");
+        cursor.className = "type-cursor";
+        cursor.setAttribute("aria-hidden", "true");
         el.after(cursor);
-        const syncCursor = () => { cursor.style.height = '1em'; };
-        syncCursor();
+        el.setAttribute("aria-label", words.join(", "));
 
-        let wordIdx = 0, charIdx = words[0].length, deleting = false;
-        const TYPE_MS = 55, DELETE_MS = 30, HOLD_MS = 2200, GAP_MS = 350;
+        let wordIdx = 0;
+        let charIdx = words[0].length;
+        let deleting = true;
+        const TYPE_MS = 60, DELETE_MS = 32, HOLD_MS = 2400, GAP_MS = 300;
 
         const tick = () => {
             const word = words[wordIdx];
-            if (!deleting) {
-                charIdx++;
-                el.textContent = word.slice(0, charIdx);
-                if (charIdx >= word.length) {
-                    deleting = true;
-                    setTimeout(tick, HOLD_MS);
-                    return;
-                }
-                setTimeout(tick, TYPE_MS);
-            } else {
-                charIdx--;
-                el.textContent = word.slice(0, charIdx);
-                if (charIdx <= 0) {
-                    deleting = false;
-                    wordIdx = (wordIdx + 1) % words.length;
-                    setTimeout(tick, GAP_MS);
-                    return;
-                }
-                setTimeout(tick, DELETE_MS);
+            charIdx += deleting ? -1 : 1;
+            el.textContent = word.slice(0, charIdx);
+            if (deleting && charIdx <= 0) {
+                deleting = false;
+                wordIdx = (wordIdx + 1) % words.length;
+                return setTimeout(tick, GAP_MS);
             }
+            if (!deleting && charIdx >= words[wordIdx].length) {
+                deleting = true;
+                return setTimeout(tick, HOLD_MS);
+            }
+            setTimeout(tick, deleting ? DELETE_MS : TYPE_MS);
         };
-        setTimeout(() => { deleting = true; tick(); }, HOLD_MS);
+        setTimeout(tick, HOLD_MS);
     });
 
-    // "/" keyboard shortcut → focus the page's search input
-    document.addEventListener('keydown', (e) => {
-        if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
-        const tag = document.activeElement?.tagName;
-        if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement?.isContentEditable) return;
-        const search = document.querySelector('input[id^="search-"]');
+    // Client-side filtering for any list marked with data-search-input
+    document.querySelectorAll("[data-search-input]").forEach((input) => {
+        const root = document.querySelector(input.dataset.searchTarget);
+        if (!root) return;
+        const items = Array.from(root.querySelectorAll("[data-search]"));
+        const groups = Array.from(root.querySelectorAll("[data-search-group]"));
+        const countEl = document.querySelector("[data-search-count]");
+        const emptyEl = document.querySelector("[data-search-empty]");
+
+        input.addEventListener("input", () => {
+            const terms = input.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+            let visible = 0;
+            items.forEach((item) => {
+                const haystack = item.dataset.search || "";
+                const match = terms.every((t) => haystack.includes(t));
+                (item.closest("li") || item).hidden = !match;
+                if (match) visible++;
+            });
+            groups.forEach((g) => {
+                g.hidden = !g.querySelector("li:not([hidden])");
+            });
+            if (countEl) {
+                countEl.hidden = terms.length === 0;
+                countEl.textContent = `${visible} of ${items.length} ${items.length === 1 ? "post" : "posts"}`;
+            }
+            if (emptyEl) emptyEl.hidden = visible !== 0;
+        });
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                input.value = "";
+                input.dispatchEvent(new Event("input"));
+                input.blur();
+            }
+        });
+    });
+
+    // "/" focuses the page's search box
+    document.addEventListener("keydown", (e) => {
+        if (e.key !== "/" || e.metaKey || e.ctrlKey || e.altKey) return;
+        const active = document.activeElement;
+        if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA" || active.isContentEditable)) return;
+        const search = document.querySelector("[data-search-input]");
         if (search) {
             e.preventDefault();
             search.focus();
-            search.select();
         }
     });
 
-    // Auto-generated floating TOC for post pages (desktop only)
-    // Skips pages that already have a manual TOC (.about-toc)
-    if (window.innerWidth >= 1100 && article && !document.querySelector('.about-toc')) {
-        // Collect from ALL article blocks — pages like /about/ split content
-        // across several <article> elements with carousels in between
-        const headings = document.querySelectorAll('article h2, article h3');
+    // Floating table of contents with scroll-spy (wide screens only)
+    const tocRoot = document.querySelector("[data-toc]");
+    if (tocRoot && window.innerWidth >= 1200) {
+        const headings = Array.from(tocRoot.querySelectorAll(tocRoot.dataset.toc || "h2, h3"))
+            .filter((h) => !h.closest(".post-header, .post-footer, [data-toc-skip]"));
         if (headings.length >= 3) {
-            // Ensure all headings have IDs
+            const used = new Set();
             headings.forEach((h, i) => {
-                if (!h.id) {
-                    h.id = 'section-' + h.textContent.trim()
-                        .toLowerCase()
-                        .replace(/[^a-z0-9]+/g, '-')
-                        .replace(/^-|-$/g, '')
-                        .substring(0, 50) || ('heading-' + i);
-                }
+                if (h.id) { used.add(h.id); return; }
+                let id = h.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || `section-${i}`;
+                while (used.has(id)) id += "-" + i;
+                used.add(id);
+                h.id = id;
             });
 
-            // Build the TOC nav
-            const nav = document.createElement('nav');
-            nav.className = 'about-toc';
-            nav.id = 'auto-toc';
-
-            const heading = document.createElement('p');
-            heading.className = 'about-toc__heading';
-            heading.textContent = 'On this page';
-            nav.appendChild(heading);
-
-            const list = document.createElement('ul');
-            list.className = 'about-toc__list';
-
-            let currentH2Li = null;
+            const nav = document.createElement("nav");
+            nav.className = "toc";
+            nav.setAttribute("aria-label", "On this page");
+            nav.innerHTML = '<p class="toc__heading">On this page</p>';
+            const list = document.createElement("ul");
+            let lastTopItem = null;
             let subList = null;
+            const topTag = headings[0].tagName;
 
-            headings.forEach(h => {
-                const li = document.createElement('li');
-                const a = document.createElement('a');
-                a.className = 'about-toc__link';
-                a.href = '#' + h.id;
+            headings.forEach((h) => {
+                const li = document.createElement("li");
+                const a = document.createElement("a");
+                a.className = "toc__link";
+                a.href = "#" + h.id;
                 a.textContent = h.textContent.trim();
                 li.appendChild(a);
-
-                if (h.tagName === 'H2') {
-                    list.appendChild(li);
-                    currentH2Li = li;
-                    subList = null;
-                } else if (h.tagName === 'H3' && currentH2Li) {
+                if (h.tagName !== topTag && lastTopItem) {
                     if (!subList) {
-                        subList = document.createElement('ul');
-                        currentH2Li.appendChild(subList);
+                        subList = document.createElement("ul");
+                        lastTopItem.appendChild(subList);
                     }
                     subList.appendChild(li);
                 } else {
                     list.appendChild(li);
+                    lastTopItem = li;
+                    subList = null;
                 }
             });
-
             nav.appendChild(list);
             document.body.appendChild(nav);
 
-            // Scroll-spy: highlight active section
-            const links = nav.querySelectorAll('.about-toc__link');
-            const ids = Array.from(links).map(a => a.getAttribute('href').slice(1));
-            function updateSpy() {
-                let current = '';
-                for (const id of ids) {
-                    const el = document.getElementById(id);
-                    if (el && el.getBoundingClientRect().top <= 120) current = id;
+            const links = Array.from(nav.querySelectorAll(".toc__link"));
+            const spy = () => {
+                let current = headings[0].id;
+                for (const h of headings) {
+                    if (h.getBoundingClientRect().top <= 110) current = h.id;
                 }
-                links.forEach(a => {
-                    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
-                });
-            }
-            window.addEventListener('scroll', updateSpy, { passive: true });
-            updateSpy();
+                links.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + current));
+            };
+            window.addEventListener("scroll", spy, { passive: true });
+            spy();
         }
     }
 });

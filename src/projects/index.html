@@ -1,91 +1,27 @@
-<% meta("../meta.json") %>
-<% meta() %>
-<% url = url + "/projects/"; %>
-
+<% meta("../meta.json") %><% meta() %><%
+    url = url + "/projects/";
+    const projects = metas("../posts")
+        .filter(p => p.meta.published && p.meta.listed !== false)
+        .filter(p => Array.isArray(p.meta.tags) && p.meta.tags.map(t => String(t).toLowerCase()).includes('project'));
+    projects.sort((a, b) => b.meta.date.localeCompare(a.meta.date));
+%>
 <%= render("../_partials/header.html", { title, description, url }) %>
 
-<%
-    const allPosts = metas("../posts").filter(p => p.meta.published && p.meta.listed !== false);
-    const projectPosts = allPosts.filter(p => Array.isArray(p.meta.tags) && p.meta.tags.map(t => t.toLowerCase()).includes('project'));
-    projectPosts.sort((a, b) => b.meta.date.localeCompare(a.meta.date));
-    const fmtDate = d => {
-        const [y, m, day] = d.split('-');
-        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        return months[+m-1] + ' ' + +day + ', ' + y;
-    };
-%>
-
-<div class="flex items-baseline gap-3 mb-4">
-    <h4 style="margin:0;">Projects</h4>
-    <span class="text-sm text-muted"><%= projectPosts.length %> project<%= projectPosts.length !== 1 ? 's' : '' %></span>
+<header class="page-header">
+<h1 class="page-title reveal">Projects</h1>
+<p class="page-lead reveal-1">Security tools, experiments, and products I've built. Each one comes with a write-up on how it works and what I learned building it.</p>
+</header>
+<% if (projects.length) { %><% if (projects.length > 3) { %>
+<label class="search reveal-2" for="search-projects">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+<span class="sr-only">Search projects</span>
+<input type="search" id="search-projects" placeholder="Search projects" autocomplete="off" data-search-input data-search-target="#project-grid">
+<span class="kbd-hint" aria-hidden="true">/</span>
+</label><% } %>
+<div class="proj-grid reveal-3" id="project-grid"><% let _i = 0; for (const proj of projects) { %>
+<%= render("../_partials/project-card.html", { proj, index: _i++ }) %><% } %>
 </div>
-
-<div class="search-bar mb-6" style="display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--dimmed-text-color);padding-bottom:6px;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--dimmed-text-color);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-    <input type="text" id="search-projects" placeholder="Search projects..." style="background:transparent;border:none;outline:none;color:var(--text-color);font-size:0.875rem;width:100%;font-family:inherit;" />
-    <span class="kbd-hint">/</span>
-</div>
-
-<p id="search-empty" style="display:none;font-size:0.85rem;color:var(--dimmed-text-color);font-style:italic;">No projects match your search.</p>
-
-<% if (projectPosts.length === 0) { %>
-<p style="font-size:0.9rem;color:var(--dimmed-text-color);">No projects yet - check back soon.</p>
-<% } else { %>
-<div class="proj-grid">
-    <% let _i = 0; %>
-    <% for (const proj of projectPosts) { %>
-    <a href="/posts/<%=proj.directory%>/" class="proj-card">
-        <div class="proj-card__media">
-            <% if (proj.meta.image) { %>
-            <% if (/\.(mp4|webm|ogg|mov|mkv)(\?|$)/i.test(proj.meta.image)) { %>
-            <video autoplay muted loop playsinline class="proj-card__img" style="object-fit:cover;width:100%;height:100%;">
-              <source src="/posts/<%=proj.directory%>/<%=proj.meta.image%>" type="video/<%= proj.meta.image.split('.').pop().split('?')[0] %>">
-            </video>
-            <% } else { %>
-            <img src="/posts/<%=proj.directory%>/<%=proj.meta.image%>" alt="<%=proj.meta.title%>" loading="lazy" class="proj-card__img">
-            <% } %>
-            <% } else { %>
-            <div class="proj-card__placeholder proj-card__placeholder--<%=(_i % 3) + 1%>">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.35;color:#fff"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
-            </div>
-            <% } %>
-        </div>
-        <div class="proj-card__body">
-            <% const ptags = (Array.isArray(proj.meta.tags) ? proj.meta.tags : []).filter(t => t.toLowerCase() !== 'project'); %>
-            <span class="proj-card__title"><%=proj.meta.title%></span>
-            <div class="proj-card__meta">
-                <% if (ptags.length) { %><span class="proj-card__tag"><%=ptags[0]%></span><span class="proj-card__meta-dot">·</span><% } %>
-                <span class="proj-card__date"><%=fmtDate(proj.meta.date)%></span>
-            </div>
-            <% if (proj.meta.description) { %><p class="proj-card__desc"><%=proj.meta.description%></p><% } %>
-        </div>
-    </a>
-    <% _i++; } %>
-</div>
-<% } %>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const input = document.getElementById('search-projects');
-    const grid = document.querySelector('.proj-grid');
-    const empty = document.getElementById('search-empty');
-    if (!input || !grid) return;
-    input.addEventListener('input', function() {
-        const q = this.value.toLowerCase().trim();
-        const cards = grid.querySelectorAll('.proj-card');
-        let visible = 0;
-        cards.forEach(c => {
-            const title = c.querySelector('.proj-card__title');
-            const desc = c.querySelector('.proj-card__desc');
-            const tag = c.querySelector('.proj-card__tag');
-            const text = ((title?.textContent || '') + ' ' + (desc?.textContent || '') + ' ' + (tag?.textContent || '')).toLowerCase();
-            const match = !q || text.includes(q);
-            c.style.display = match ? '' : 'none';
-            if (match) visible++;
-        });
-        if (empty) empty.style.display = visible === 0 ? '' : 'none';
-    });
-});
-</script>
+<div class="empty-state" data-search-empty hidden><strong>No projects match that search.</strong>Try a different keyword.</div><% } else { %>
+<div class="empty-state"><strong>Projects are on the way.</strong>Write-ups of the tools and experiments I'm building will land here. In the meantime, see what I'm working on over on <a href="https://github.com/haranloga">GitHub</a>.</div><% } %>
 
 <%= render("../_partials/footer.html") %>

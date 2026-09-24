@@ -1,27 +1,33 @@
-<%= render("./header.html", { title, description: description ?? "", url, image: image ? url + image : null, extras: true }) %>
-
-<article>
-
-<h1 style="margin-top: 0.5rem;"><%= title %></h1>
-<p class="text-xs italic" style="color: var(--dimmed-text-color);"><%= date %><% if (typeof reading_time !== 'undefined' && reading_time) { %> &nbsp;·&nbsp; ~<%= reading_time %> min read<% } %></p>
-
-<% if (typeof tags !== 'undefined' && Array.isArray(tags) && tags.length > 0) { %>
-<div class="post-tags">
-<% for (const tag of tags) { %>
-<a href="/tags/#<%= tag.toLowerCase().replace(/[\s/]+/g, '-') %>" class="post-tag"><%= tag %></a>
-<% } %>
+<%
+    const _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const [_y, _mo, _d] = String(date || '').split('-');
+    const _date = _mo ? _months[+_mo - 1] + ' ' + (+_d) + ', ' + _y : '';
+    const _allTags = (typeof tags !== 'undefined' && Array.isArray(tags)) ? tags : [];
+    const _isProject = _allTags.some(t => String(t).toLowerCase() === 'project');
+    const _topic = _allTags.find(t => String(t).toLowerCase() !== 'project');
+    const _eyebrow = _isProject ? 'Project' : (_topic || '');
+    const _eyebrowHref = _isProject ? '/projects/' : '/tags/#' + String(_topic || '').toLowerCase().replace(/[\s/]+/g, '-');
+    const _mins = typeof reading_time !== 'undefined' && reading_time ? reading_time : 0;
+    const _cap = typeof caption !== 'undefined' && caption ? caption : '';
+%><%= render("./header.html", { title, description: description ?? "", url, image: image ? url + image : null, extras: true, ogType: 'article' }) %>
+<article class="post" data-progress data-toc="h2, h3">
+<header class="post-header">
+<a href="/posts/" class="back-link"><span aria-hidden="true">&larr;</span> All writing</a><% if (_eyebrow) { %>
+<p class="post-eyebrow"><a href="<%= _eyebrowHref %>"><%= render("./tag-label.html", { tag: _eyebrow }) %></a></p><% } %>
+<h1 class="post-title"><%= title %></h1><% if (description) { %>
+<p class="post-dek"><%= description %></p><% } %>
+<div class="post-meta">
+<span class="post-meta__author"><span class="avatar" aria-hidden="true">AL</span>Araharan Loganayagam</span>
+<span class="dot-sep" aria-hidden="true"></span>
+<time datetime="<%= date %>"><%= _date %></time><% if (_mins) { %>
+<span class="dot-sep" aria-hidden="true"></span>
+<span><%= _mins %> min read</span><% } %>
 </div>
-<% } %>
+</header><% if (image) { %>
+<figure class="post-cover"><% if (/\.(mp4|webm|ogg|mov|mkv)(\?|$)/i.test(image)) { %>
+<video autoplay muted loop playsinline><source src="<%= image %>" type="video/<%= image.split('.').pop().split('?')[0].replace('mov', 'mp4') %>"></video><% } else { %>
+<img src="<%= image %>" alt="<%= _cap || title %>"><% } %><% if (_cap) { %>
+<figcaption><%= _cap %></figcaption><% } %>
+</figure><% } %>
+<div class="prose">
 
-<% if (image) { %>
-<figure>
-<% if (/\.(mp4|webm|ogg|mov|mkv)(\?|$)/i.test(image)) { %>
-<video autoplay muted loop playsinline style="width:100%;border-radius:0.5rem;display:block;">
-  <source src="<%= image %>" type="video/<%= image.split('.').pop().split('?')[0].replace('mov','mp4') %>">
-</video>
-<% } else { %>
-<img src="<%= image %>">
-<% } %>
-<% if (typeof caption !== 'undefined' && caption) { %><figcaption><%= caption %></figcaption><% } %>
-</figure>
-<% } %>

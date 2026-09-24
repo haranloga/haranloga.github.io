@@ -1,106 +1,90 @@
-<% meta() %>
+<% meta() %><%
+    const posts = metas("./posts").filter((p) => p.meta.published && p.meta.listed !== false);
+    posts.sort((a, b) => b.meta.date.localeCompare(a.meta.date));
+    const latest = posts.slice(0, 5);
+    const projects = posts.filter(p => Array.isArray(p.meta.tags) && p.meta.tags.map(t => String(t).toLowerCase()).includes('project')).slice(0, 3);
 
+    const channel = {
+        title: "Araharan Loganayagam",
+        description: "Building and securing AI-powered systems: backend, AI engineering, MLOps, and security.",
+        url: "https://haranloga.github.io"
+    };
+    rss("./rss.xml", channel, posts.map((p) => ({
+        title: p.meta.title,
+        description: p.meta.description,
+        pubdate: p.meta.date,
+        url: channel.url + `/posts/${p.directory}/`
+    })));
+
+    // blargh only templates .html/.md/.css/.js, so the sitemap is written from here
+    const _today = new Date().toISOString().slice(0, 10);
+    const _pages = [["/", "1.0"], ["/about/", "0.9"], ["/posts/", "0.8"], ["/projects/", "0.7"], ["/tags/", "0.5"]]
+        .map(([p, pr]) => `<url><loc>${url}${p}</loc><lastmod>${_today}</lastmod><priority>${pr}</priority></url>`);
+    const _postUrls = posts.map(p => `<url><loc>${url}/posts/${p.directory}/</loc><lastmod>${p.meta.date}</lastmod><priority>0.7</priority></url>`);
+    require("fs").writeFileSync(
+        require("path").resolve(require("path").dirname(outputPath), "sitemap.xml"),
+        `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${_pages.concat(_postUrls).join("\n")}\n</urlset>\n`
+    );
+%>
 <%= render("./_partials/header.html", { title, description, url }) %>
 
-    <p class="home-intro reveal-2">I build, break, and secure <span class="type-rotate" data-words='["modern systems","cloud estates","microservices","AI agent pipelines","CI/CD pipelines"]'>modern systems</span>.</p>
+<section class="hero">
+<p class="eyebrow reveal"><span class="status-dot" aria-hidden="true"></span>Backend &middot; AI engineering &middot; MLOps &middot; Security</p>
+<h1 class="hero-title reveal-1">I build, break,<br class="br-sm"> and secure<br><span class="hero-rotate"><span class="type-rotate" data-words='["modern systems","backend services","AI agents","ML pipelines","cloud platforms"]'>modern systems</span></span>.</h1>
+<p class="hero-lead reveal-2">I'm <strong>Araharan Loganayagam</strong>, an engineer who works across the whole stack of an AI product: the backend services, the LLM features and agents on top, the pipelines that ship them, and the security that holds it all together. Because I build these systems, I know where they break.</p>
+<div class="hero-actions reveal-3">
+<a href="/posts/" class="btn btn-primary">Read the writing</a>
+<a href="/about/" class="btn btn-ghost">About me <span class="arrow" aria-hidden="true">&rarr;</span></a>
+</div>
+</section>
 
-    <%
-        const posts = metas("./posts").filter((p) => p.meta.published && p.meta.listed !== false);
-        posts.sort((a, b) => b.meta.date.localeCompare(a.meta.date));
+<section class="section reveal-4" aria-labelledby="focus-title">
+<div class="section-head"><h2 class="section-title" id="focus-title">What I work on</h2><a href="/about/#connected" class="text-link">How it connects <span class="arrow" aria-hidden="true">&rarr;</span></a></div>
+<p class="section-lead">One connected skill set: I build the system, ship it, run it, and secure it.</p>
+<div class="focus-grid">
+<div class="card focus-card">
+<span class="focus-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6 6h.01"/><path d="M6 18h.01"/></svg></span>
+<h3>Backend engineering</h3>
+<p>Services, APIs, and microservices in Java (Spring Boot), Go, Python, and TypeScript, built to be secure and observable from day one.</p>
+</div>
+<div class="card focus-card">
+<span class="focus-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></span>
+<h3>AI engineering</h3>
+<p>LLM features, RAG, and tool-using agents, built with the teams who use them and deployed into their environments.</p>
+</div>
+<div class="card focus-card">
+<span class="focus-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></span>
+<h3>MLOps &amp; platform</h3>
+<p>Pipelines that build, evaluate, and ship models and services on containers, Kubernetes, and infrastructure as code.</p>
+</div>
+<div class="card focus-card">
+<span class="focus-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span>
+<h3>Security</h3>
+<p>AI red-teaming, application security, cloud security, and detection engineering, applied across every layer above.</p>
+</div>
+</div>
+</section>
 
-        const channel = {
-            title: "Araharan Loganayagam",
-            description: "Blogging from a security/indie dev.",
-            url: "https://haranloga.github.io"
-        }
-        const items = posts.map((p) => {
-            return {
-                title: p.meta.title,
-                description: p.meta.description,
-                pubdate: p.meta.date,
-                url: channel.url + `/posts/${p.directory}`
-            }
-        })
-        rss("./rss.xml", channel, items);
-    %>
+<section class="section" aria-labelledby="writing-title">
+<div class="section-head">
+<h2 class="section-title" id="writing-title">Latest writing</h2><% if (posts.length > latest.length) { %>
+<a href="/posts/" class="text-link">All <%= posts.length %> posts <span class="arrow" aria-hidden="true">&rarr;</span></a><% } else if (posts.length) { %>
+<a href="/tags/" class="text-link">Browse by topic <span class="arrow" aria-hidden="true">&rarr;</span></a><% } %>
+</div><% if (latest.length) { %>
+<ul class="post-rows"><% for (const post of latest) { %>
+<%= render("./_partials/post-row.html", { post }) %><% } %>
+</ul><% } else { %>
+<div class="empty-state"><strong>New writing is on the way.</strong>Build logs, research notes, and walkthroughs are coming soon. Follow along via <a href="/rss.xml">RSS</a> or <a href="https://www.linkedin.com/in/dream4ip/">LinkedIn</a>.</div><% } %>
+</section>
+<% if (projects.length) { %>
+<section class="section" aria-labelledby="projects-title">
+<div class="section-head">
+<h2 class="section-title" id="projects-title">Selected projects</h2>
+<a href="/projects/" class="text-link">All projects <span class="arrow" aria-hidden="true">&rarr;</span></a>
+</div>
+<div class="proj-grid"><% let _i = 0; for (const proj of projects) { %>
+<%= render("./_partials/project-card.html", { proj, index: _i++ }) %><% } %>
+</div>
+</section><% } %>
 
-    <div class="flex items-baseline gap-2 mb-4 reveal-3">
-        <h4>Blogging</h4>
-        <a href="/tags/" class="blog-meta-link">tags</a>
-        <a href="/rss.xml" class="blog-meta-link" title="RSS" style="display:inline-flex;align-items:center;line-height:1;">
-            <svg style="width:14px;color:var(--link-color);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
-        </a>
-    </div>
-
-    <div class="search-bar mb-4" style="display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--dimmed-text-color);padding-bottom:6px;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--dimmed-text-color);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <input type="text" id="search-posts" placeholder="Search posts..." style="background:transparent;border:none;outline:none;color:var(--text-color);font-size:0.875rem;width:100%;font-family:inherit;" />
-        <span class="kbd-hint">/</span>
-    </div>
-
-    <div class="post-list flex flex-col gap-4" id="post-list">
-        <% if (posts.length > 0) { %>
-            <% const latest = posts[0]; %>
-            <a href="/posts/<%=latest.directory%>/" class="flex gap-3 items-baseline post-link" data-slug="<%=latest.directory%>">
-                <span class="text-sm text-muted italic whitespace-nowrap"><%=latest.meta.date%><% if (latest.meta.reading_time) { %> · <%=latest.meta.reading_time%>m<% } %></span>
-                <% if (latest.meta.pinned) { %><span class="post-featured" title="Featured">★</span><% } %>
-                <span class="post-link__title"><%=latest.meta.title%></span>
-            </a>
-
-            <% const grouped = posts.slice(1).reduce((acc, post) => {
-                const year = post.meta.date.substring(0, 4);
-                if (!acc[year]) acc[year] = [];
-                acc[year].push(post);
-                return acc;
-            }, {}); %>
-
-            <% const years = Object.keys(grouped).sort((a, b) => b.localeCompare(a)); %>
-            <% for (const year of years) { %>
-                <details class="post-group mt-4" open>
-                    <summary class="year-summary">
-                        <span><%= year %></span>
-                        <span class="year-count">(<%= grouped[year].length %>)</span>
-                    </summary>
-                    <div class="flex flex-col gap-2 mt-2">
-                        <% const yearPosts = grouped[year]; %>
-                        <% for (const post of yearPosts) { %>
-                            <a href="/posts/<%=post.directory%>/" class="flex gap-3 items-baseline text-sm post-link" data-slug="<%=post.directory%>">
-                                <span class="text-muted italic whitespace-nowrap" style="min-width: 80px;"><%=post.meta.date%></span>
-                                <% if (post.meta.reading_time) { %><span class="text-muted whitespace-nowrap" style="font-size:0.7rem;">· <%=post.meta.reading_time%>m</span><% } %>
-                                <% if (post.meta.pinned) { %><span class="post-featured" title="Featured">★</span><% } %>
-                                <span class="post-link__title"><%=post.meta.title%></span>
-                            </a>
-                        <% } %>
-                    </div>
-                </details>
-            <% } %>
-        <% } %>
-    </div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.getElementById('search-posts');
-        const postList = document.getElementById('post-list');
-        if (!searchInput || !postList) return;
-
-        searchInput.addEventListener('input', function() {
-            const query = this.value.toLowerCase().trim();
-            const allLinks = postList.querySelectorAll('.post-link');
-            const allGroups = postList.querySelectorAll('.post-group');
-
-            allLinks.forEach(function(link) {
-                const title = link.querySelector('.post-link__title');
-                const text = title ? title.textContent.toLowerCase() : '';
-                link.style.display = (!query || text.includes(query)) ? '' : 'none';
-            });
-
-            allGroups.forEach(function(group) {
-                const visibleLinks = group.querySelectorAll('.post-link:not([style*="display: none"])');
-                group.style.display = visibleLinks.length === 0 ? 'none' : '';
-                if (query && visibleLinks.length > 0) group.open = true;
-            });
-        });
-    });
-    </script>
-
-    <%= render("./_partials/footer.html") %>
+<%= render("./_partials/footer.html") %>

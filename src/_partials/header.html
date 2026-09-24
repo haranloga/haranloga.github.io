@@ -1,75 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset='utf-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-    <link rel='stylesheet' type='text/css' href='/style.css'>
-    <% if (typeof extras !== 'undefined' && extras) { %><link rel='stylesheet' type='text/css' href='/extras.css'><% } %>
-    <link rel='canonical' href='<%= url %>'>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000000'/%3E%3Ctext x='50%25' y='54%25' font-family='ui-monospace,monospace' font-size='18' font-weight='800' fill='%2365a0ff' text-anchor='middle' dominant-baseline='middle'%3E/%3E%3C/text%3E%3C/svg%3E">
-
-    <title>
-        <%= title %>
-    </title>
-    <meta name="description" content="<%= description %>" />
-    <meta property="og:title" content="<%= title %>" />
-    <meta property="og:type" content="article" />
-    <meta property="og:description" content="<%= description %>" />
-    <meta property="og:image"
-        content="<%= typeof image !== 'undefined' && image ? image : 'https://haranloga.github.io/img/band.png' %>" />
-    <meta property="og:url" content="<%= url %>" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta property="twitter:domain" content="haranloga.github.io" />
-    <meta property="twitter:url" content="<%= url %>" />
-    <meta name="twitter:title" content="<%= title %>" />
-    <meta name="twitter:description" content="<%= description %>" />
-    <meta name="twitter:image"
-        content="<%= typeof image !== 'undefined' && image ? image : 'https://haranloga.github.io/img/band.png' %>" />
-    <!-- Inline theme init: runs sync before first paint to prevent flash -->
-    <script>!function () { var t = localStorage.getItem('theme') || 'dark'; document.documentElement.setAttribute('data-theme', t); localStorage.getItem('theme') || localStorage.setItem('theme', 'dark') }();</script>
-    <script src="/components.js" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css"><% if (typeof extras !== 'undefined' && extras) { %>
+<link rel="stylesheet" href="/extras.css"><% } %>
+<link rel="canonical" href="<%= url %>">
+<link rel="alternate" type="application/rss+xml" title="Araharan Loganayagam" href="/rss.xml">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23000000'/%3E%3Ctext x='50%25' y='54%25' font-family='ui-monospace,monospace' font-size='17' font-weight='800' fill='%236ea8ff' text-anchor='middle' dominant-baseline='middle'%3E/%3E%3C/text%3E%3C/svg%3E">
+<title><%= title %></title>
+<meta name="description" content="<%= description %>">
+<meta name="author" content="Araharan Loganayagam">
+<meta property="og:site_name" content="Araharan Loganayagam">
+<meta property="og:title" content="<%= title %>">
+<meta property="og:type" content="<%= typeof ogType !== 'undefined' && ogType ? ogType : 'website' %>">
+<meta property="og:description" content="<%= description %>">
+<meta property="og:image" content="<%= typeof image !== 'undefined' && image ? image : 'https://haranloga.github.io/img/band.png' %>">
+<meta property="og:url" content="<%= url %>">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= title %>">
+<meta name="twitter:description" content="<%= description %>">
+<meta name="twitter:image" content="<%= typeof image !== 'undefined' && image ? image : 'https://haranloga.github.io/img/band.png' %>">
+<script>!function(){try{var t=localStorage.getItem("theme")||"dark";document.documentElement.setAttribute("data-theme",t)}catch(e){document.documentElement.setAttribute("data-theme","dark")}}();</script>
+<script src="/components.js" defer></script>
 </head>
-
-<body>
-    <div class="mx-auto p-6" style="max-width: 640px; width: 100%">
-        <div class="flex flex-col pb-4">
-            <div class="flex flex-row reveal" style="justify-content:space-between;align-items:center;">
-                <a href="/" style="color: var(--text-color); text-decoration: none;">
-                    <h2 style="margin:0;">/&gt; Araharan Loganayagam</h2>
-                </a>
-                <div class="flex gap-3" style="align-items:center;">
-                    <a href="/projects/" class="nav-link">Projects</a>
-                    <a href="/about/" class="nav-link">About</a>
-                    <theme-toggle style="display:inline-flex;align-items:center;"></theme-toggle>
-                </div>
-            </div>
-            <a href="/" class="reveal-1" style="color: var(--text-color); text-decoration: none;">
-                <span class="text-sm">Product building • AI Safety • Cybersecurity</span>
-            </a>
-            <div class="flex gap-2 mt-1 reveal-1" style="align-items:center;">
-                <a href="https://www.linkedin.com/in/dream4ip/" title="LinkedIn" aria-label="LinkedIn"
-                    style="color: var(--link-color);">
-                    <i class="icon" style="width: 18px; height: 18px;">
-                        <%=render("../_icons/linkedin-line.svg")%>
-                    </i>
-                </a>
-                <a href="https://twitter.com/haran_loga" title="Twitter" aria-label="Twitter"
-                    style="color: var(--link-color);">
-                    <i class="icon" style="width: 18px; height: 18px;">
-                        <%=render("../_icons/twitter-line.svg")%>
-                    </i>
-                </a>
-                <a href="https://github.com/haranloga" title="GitHub" aria-label="GitHub"
-                    style="color: var(--link-color);">
-                    <i class="icon" style="width: 18px; height: 18px;">
-                        <%=render("../_icons/github-line.svg")%>
-                    </i>
-                </a>
-            </div>
-        </div>
+<body><%
+    const _path = String(typeof url !== 'undefined' ? url : '').replace(/^https?:\/\/[^/]+/, '');
+    const _nav = [
+        { href: '/posts/', label: 'Writing', active: _path.startsWith('/posts') || _path.startsWith('/tags') },
+        { href: '/projects/', label: 'Projects', active: _path.startsWith('/projects') },
+        { href: '/about/', label: 'About', active: _path.startsWith('/about') },
+    ];
+%>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+<div class="container site-header__inner">
+<a href="/" class="brand" aria-label="Araharan Loganayagam, home"><span class="brand__mark">/&gt;</span><span>Araharan<span class="brand__last"> Loganayagam</span></span></a>
+<nav class="site-nav" aria-label="Main"><% for (const item of _nav) { %>
+<a href="<%= item.href %>" class="site-nav__link"<%= item.active ? ' aria-current="page"' : '' %>><%= item.label %></a><% } %>
+<theme-toggle></theme-toggle>
+</nav>
+</div>
+</header>
+<main id="main" class="site-main">
+<div class="container">

@@ -6,7 +6,7 @@
 
     const channel = {
         title: "Araharan Loganayagam",
-        description: "Building and securing AI-powered systems: backend, AI engineering, MLOps, and security.",
+        description: "Security engineer for software and AI systems, from code to cloud.",
         url: "https://haranloga.github.io"
     };
     rss("./rss.xml", channel, posts.map((p) => ({
@@ -29,40 +29,24 @@
 <%= render("./_partials/header.html", { title, description, url }) %>
 
 <section class="hero">
-<p class="eyebrow reveal"><span class="status-dot" aria-hidden="true"></span>Backend &middot; AI engineering &middot; MLOps &middot; Security</p>
-<h1 class="hero-title reveal-1">I build, break,<br class="br-sm"> and secure<br><span class="hero-rotate"><span class="type-rotate" data-words='["modern systems","backend services","AI agents","ML pipelines","cloud platforms"]'>modern systems</span></span>.</h1>
-<p class="hero-lead reveal-2">I'm <strong>Araharan Loganayagam</strong>, an engineer who works across the whole stack of an AI product: the backend services, the LLM features and agents on top, the pipelines that ship them, and the security that holds it all together. Because I build these systems, I know where they break.</p>
+<p class="eyebrow reveal">Application, cloud &amp; AI security</p>
+<h1 class="hero-title reveal-1">Security engineer for software and AI systems, from code to cloud.</h1>
+<p class="hero-lead reveal-2">I'm <strong>Araharan Loganayagam</strong>. I started in backend engineering, and now I secure the whole path: the application, the CI/CD and ML pipelines, the cloud it runs on, and the AI features on top.</p>
 <div class="hero-actions reveal-3">
-<a href="/posts/" class="btn btn-primary">Read the writing</a>
-<a href="/about/" class="btn btn-ghost">About me <span class="arrow" aria-hidden="true">&rarr;</span></a>
+<% if (posts.length) { %><a href="/posts/" class="btn btn-primary">Read the writing</a>
+<a href="/about/" class="btn btn-ghost">About me <span class="arrow" aria-hidden="true">&rarr;</span></a><% } else { %><a href="/about/" class="btn btn-primary">About me</a>
+<a href="https://github.com/haranloga" class="btn btn-ghost" rel="me noopener">GitHub <span class="arrow" aria-hidden="true">&rarr;</span></a><% } %>
 </div>
 </section>
 
 <section class="section reveal-4" aria-labelledby="focus-title">
 <div class="section-head"><h2 class="section-title" id="focus-title">What I work on</h2><a href="/about/#connected" class="text-link">How it connects <span class="arrow" aria-hidden="true">&rarr;</span></a></div>
-<p class="section-lead">One connected skill set: I build the system, ship it, run it, and secure it.</p>
-<div class="focus-grid">
-<div class="card focus-card">
-<span class="focus-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6 6h.01"/><path d="M6 18h.01"/></svg></span>
-<h3>Backend engineering</h3>
-<p>Services, APIs, and microservices in Java (Spring Boot), Go, Python, and TypeScript, built to be secure and observable from day one.</p>
-</div>
-<div class="card focus-card">
-<span class="focus-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></span>
-<h3>AI engineering</h3>
-<p>LLM features, RAG, and tool-using agents, built with the teams who use them and deployed into their environments.</p>
-</div>
-<div class="card focus-card">
-<span class="focus-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></span>
-<h3>MLOps &amp; platform</h3>
-<p>Pipelines that build, evaluate, and ship models and services on containers, Kubernetes, and infrastructure as code.</p>
-</div>
-<div class="card focus-card">
-<span class="focus-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span>
-<h3>Security</h3>
-<p>AI red-teaming, application security, cloud security, and detection engineering, applied across every layer above.</p>
-</div>
-</div>
+<ul class="feature-list">
+<li><span class="feature-list__title">Application security</span><span class="feature-list__desc">Code review, API security, and threat modelling, from the point of view of someone who has written the backend services being reviewed.</span></li>
+<li><span class="feature-list__title">DevSecOps &amp; MLOps security</span><span class="feature-list__desc">Security checks in the CI/CD and ML pipelines: dependencies, secrets, containers, infrastructure as code, and where models come from.</span></li>
+<li><span class="feature-list__title">Cloud security</span><span class="feature-list__desc">IAM, posture, and the platforms' own security services on AWS, Azure, and GCP, with monitoring in Microsoft Sentinel and Splunk.</span></li>
+<li><span class="feature-list__title">AI security</span><span class="feature-list__desc">Testing LLM apps, RAG systems, and agents for prompt injection, tool misuse, and data leaks.</span></li>
+</ul>
 </section>
 
 <section class="section" aria-labelledby="writing-title">
@@ -74,7 +58,7 @@
 <ul class="post-rows"><% for (const post of latest) { %>
 <%= render("./_partials/post-row.html", { post }) %><% } %>
 </ul><% } else { %>
-<div class="empty-state"><strong>New writing is on the way.</strong>Build logs, research notes, and walkthroughs are coming soon. Follow along via <a href="/rss.xml">RSS</a> or <a href="https://www.linkedin.com/in/dream4ip/">LinkedIn</a>.</div><% } %>
+<div class="empty-state"><strong>Nothing here yet.</strong>My first posts are in progress. You can follow along via <a href="/rss.xml">RSS</a> or <a href="https://www.linkedin.com/in/dream4ip/">LinkedIn</a>.</div><% } %>
 </section>
 <% if (projects.length) { %>
 <section class="section" aria-labelledby="projects-title">

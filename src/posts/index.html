@@ -1,6 +1,6 @@
 <% meta("../meta.json") %><%
     title = "Writing - Araharan Loganayagam";
-    description = "Research notes, build logs, and walkthroughs on building and securing AI-powered systems: backend, AI engineering, MLOps, and security.";
+    description = "Notes, write-ups, and walkthroughs on application, cloud, and AI security.";
     url = url + "/posts/";
     const posts = metas("./").filter(p => p.meta.published && p.meta.listed !== false);
     posts.sort((a, b) => b.meta.date.localeCompare(a.meta.date));
@@ -15,7 +15,7 @@
 
 <header class="page-header">
 <h1 class="page-title reveal">Writing</h1>
-<p class="page-lead reveal-1">Research notes, build logs, and walkthroughs from the field, on building AI-powered systems and keeping them secure: backend, AI engineering, MLOps, and security.</p>
+<p class="page-lead reveal-1">Notes, write-ups, and walkthroughs on application, cloud, and AI security.</p>
 </header>
 <% if (posts.length) { %>
 <label class="search reveal-2" for="search-posts">

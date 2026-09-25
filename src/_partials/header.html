@@ -62,8 +62,12 @@
 <meta name="twitter:image" content="<%= typeof image !== 'undefined' && image ? image : 'https://haranloga.github.io/img/band.png' %>">
 <script>!function(){try{var t=localStorage.getItem("theme")||"dark";document.documentElement.setAttribute("data-theme",t)}catch(e){document.documentElement.setAttribute("data-theme","dark")}}();</script>
 <script src="/components.js" defer></script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-GPTRZ14YZS"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-GPTRZ14YZS');</script>
+<script>
+// Google Analytics only loads after the visitor accepts cookies (see the banner in footer.html)
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+window.loadAnalytics=function(){if(window._gaLoaded)return;window._gaLoaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-GPTRZ14YZS';document.head.appendChild(s);gtag('js',new Date());gtag('config','G-GPTRZ14YZS');};
+try{if(localStorage.getItem('cookie-consent')==='granted')window.loadAnalytics();}catch(e){}
+</script>
 </head>
 <body><%
     const _path = String(typeof url !== 'undefined' ? url : '').replace(/^https?:\/\/[^/]+/, '');

@@ -30,8 +30,48 @@
 </div>
 <div class="site-footer__bottom">
 <span>&copy; <%= new Date().getFullYear() %> Araharan Loganayagam</span>
+<button type="button" class="cookie-link" data-cookie-settings>Cookie settings</button>
 </div>
 </div>
 </footer>
+<div class="cookie-banner" id="cookie-banner" role="region" aria-label="Cookie consent" hidden>
+<p>I use Google Analytics cookies to see how many people visit and from where. Nothing is shared for ads.</p>
+<div class="cookie-banner__actions">
+<button type="button" class="cookie-banner__btn cookie-banner__btn--primary" data-consent="granted">Accept</button>
+<button type="button" class="cookie-banner__btn" data-consent="denied">Decline</button>
+</div>
+</div>
+<script>
+(function () {
+    var banner = document.getElementById('cookie-banner');
+    if (!banner) return;
+    var choice = null;
+    try { choice = localStorage.getItem('cookie-consent'); } catch (e) {}
+    if (!choice) banner.hidden = false;
+
+    function clearAnalyticsCookies() {
+        document.cookie.split(';').forEach(function (c) {
+            var name = c.split('=')[0].trim();
+            if (name.indexOf('_ga') !== 0) return;
+            document.cookie = name + '=; Max-Age=0; path=/';
+            document.cookie = name + '=; Max-Age=0; path=/; domain=' + location.hostname;
+            document.cookie = name + '=; Max-Age=0; path=/; domain=.' + location.hostname;
+        });
+    }
+
+    banner.addEventListener('click', function (e) {
+        var value = e.target.getAttribute('data-consent');
+        if (!value) return;
+        try { localStorage.setItem('cookie-consent', value); } catch (err) {}
+        banner.hidden = true;
+        if (value === 'granted') window.loadAnalytics();
+        else clearAnalyticsCookies();
+    });
+
+    document.querySelectorAll('[data-cookie-settings]').forEach(function (el) {
+        el.addEventListener('click', function () { banner.hidden = false; });
+    });
+})();
+</script>
 </body>
 </html>

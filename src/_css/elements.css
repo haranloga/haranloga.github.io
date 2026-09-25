@@ -1944,3 +1944,80 @@ a.chip:hover {
         bottom: 1rem;
     }
 }
+
+/* ==========================================================================
+   Cookie banner: small, bottom corner, never blocks the page
+   ========================================================================== */
+.cookie-banner {
+    position: fixed;
+    left: 1rem;
+    bottom: 1rem;
+    z-index: 60;
+    max-width: 340px;
+    padding: 0.85rem 1rem;
+    background: var(--bg-elev);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--fg-muted);
+}
+
+.cookie-banner[hidden] {
+    display: none;
+}
+
+.cookie-banner p {
+    margin: 0;
+}
+
+.cookie-banner__actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.7rem;
+}
+
+.cookie-banner__btn {
+    height: 30px;
+    padding: 0 0.9rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: var(--fg);
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.cookie-banner__btn--primary {
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--bg);
+}
+
+.cookie-banner__btn:hover {
+    opacity: 0.85;
+}
+
+.cookie-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.cookie-link:hover {
+    color: var(--fg);
+}
+
+@media (max-width: 600px) {
+    .cookie-banner {
+        left: 0.75rem;
+        right: 0.75rem;
+        bottom: 0.75rem;
+        max-width: none;
+    }
+}

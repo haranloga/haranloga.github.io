@@ -9,7 +9,7 @@
     const _eyebrowHref = _isProject ? '/projects/' : '/tags/#' + String(_topic || '').toLowerCase().replace(/[\s/]+/g, '-');
     const _mins = typeof reading_time !== 'undefined' && reading_time ? reading_time : 0;
     const _cap = typeof caption !== 'undefined' && caption ? caption : '';
-%><%= render("./header.html", { title, description: description ?? "", url, image: image ? url + image : null, extras: true, ogType: 'article' }) %>
+%><%= render("./header.html", { title, description: description ?? "", url, image: image ? url + image : null, extras: true, ogType: 'article', datePublished: date }) %>
 <article class="post" data-progress data-toc="h2, h3">
 <header class="post-header">
 <a href="/posts/" class="back-link"><span aria-hidden="true">&larr;</span> All writing</a><% if (_eyebrow) { %>

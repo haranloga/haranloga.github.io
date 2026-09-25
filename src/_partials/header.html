@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/extras.css"><% } %>
 <link rel="canonical" href="<%= url %>">
 <link rel="alternate" type="application/rss+xml" title="Araharan Loganayagam" href="/rss.xml">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23000000'/%3E%3Ctext x='50%25' y='54%25' font-family='ui-monospace,monospace' font-size='17' font-weight='800' fill='%236ea8ff' text-anchor='middle' dominant-baseline='middle'%3E/%3E%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23000000'/%3E%3Ctext x='50%25' y='54%25' font-family='system-ui,sans-serif' font-size='14' font-weight='700' fill='%23ffffff' text-anchor='middle' dominant-baseline='middle'%3EAL%3C/text%3E%3C/svg%3E">
 <title><%= title %></title>
 <meta name="description" content="<%= description %>">
 <meta name="author" content="Araharan Loganayagam">
@@ -40,7 +40,7 @@
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
 <div class="container site-header__inner">
-<a href="/" class="brand" aria-label="Araharan Loganayagam, home"><span class="brand__mark">/&gt;</span><span>Araharan<span class="brand__last"> Loganayagam</span></span></a>
+<a href="/" class="brand" aria-label="Araharan Loganayagam, home"><span>Araharan<span class="brand__last"> Loganayagam</span></span></a>
 <nav class="site-nav" aria-label="Main"><% for (const item of _nav) { %>
 <a href="<%= item.href %>" class="site-nav__link"<%= item.active ? ' aria-current="page"' : '' %>><%= item.label %></a><% } %>
 <theme-toggle></theme-toggle>

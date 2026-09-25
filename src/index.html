@@ -1,8 +1,11 @@
 <% meta() %><%
     const posts = metas("./posts").filter((p) => p.meta.published && p.meta.listed !== false);
     posts.sort((a, b) => b.meta.date.localeCompare(a.meta.date));
-    const latest = posts.slice(0, 5);
-    const projects = posts.filter(p => Array.isArray(p.meta.tags) && p.meta.tags.map(t => String(t).toLowerCase()).includes('project')).slice(0, 3);
+    const isProject = (p) => Array.isArray(p.meta.tags) && p.meta.tags.map(t => String(t).toLowerCase()).includes('project');
+    // Projects get their own section, so the writing list only shows everything else
+    const writing = posts.filter(p => !isProject(p));
+    const latest = writing.slice(0, 5);
+    const projects = posts.filter(isProject).slice(0, 3);
 
     const channel = {
         title: "Araharan Loganayagam",
@@ -29,11 +32,11 @@
 <%= render("./_partials/header.html", { title, description, url }) %>
 
 <section class="hero">
-<p class="eyebrow reveal">Application, cloud &amp; AI security</p>
 <h1 class="hero-title reveal-1">Security engineer for software and AI systems, from code to cloud.</h1>
 <p class="hero-lead reveal-2">I'm <strong>Araharan Loganayagam</strong>. I started in backend engineering, and now I secure the whole path: the application, the CI/CD and ML pipelines, the cloud it runs on, and the AI features on top.</p>
 <div class="hero-actions reveal-3">
-<% if (posts.length) { %><a href="/posts/" class="btn btn-primary">Read the writing</a>
+<% if (latest.length) { %><a href="/posts/" class="btn btn-primary">Read the writing</a>
+<a href="/about/" class="btn btn-ghost">About me <span class="arrow" aria-hidden="true">&rarr;</span></a><% } else if (projects.length) { %><a href="/projects/" class="btn btn-primary">See my projects</a>
 <a href="/about/" class="btn btn-ghost">About me <span class="arrow" aria-hidden="true">&rarr;</span></a><% } else { %><a href="/about/" class="btn btn-primary">About me</a>
 <a href="https://github.com/haranloga" class="btn btn-ghost" rel="me noopener">GitHub <span class="arrow" aria-hidden="true">&rarr;</span></a><% } %>
 </div>
@@ -50,17 +53,6 @@
 </ul>
 </section>
 
-<section class="section" aria-labelledby="writing-title">
-<div class="section-head">
-<h2 class="section-title" id="writing-title">Latest writing</h2><% if (posts.length > latest.length) { %>
-<a href="/posts/" class="text-link">All <%= posts.length %> posts <span class="arrow" aria-hidden="true">&rarr;</span></a><% } else if (posts.length) { %>
-<a href="/tags/" class="text-link">Browse by topic <span class="arrow" aria-hidden="true">&rarr;</span></a><% } %>
-</div><% if (latest.length) { %>
-<ul class="post-rows"><% for (const post of latest) { %>
-<%= render("./_partials/post-row.html", { post }) %><% } %>
-</ul><% } else { %>
-<div class="empty-state"><strong>Nothing here yet.</strong>My first posts are in progress. You can follow along via <a href="/rss.xml">RSS</a> or <a href="https://www.linkedin.com/in/dream4ip/">LinkedIn</a>.</div><% } %>
-</section>
 <% if (projects.length) { %>
 <section class="section" aria-labelledby="projects-title">
 <div class="section-head">
@@ -70,6 +62,19 @@
 <div class="proj-grid"><% let _i = 0; for (const proj of projects) { %>
 <%= render("./_partials/project-card.html", { proj, index: _i++ }) %><% } %>
 </div>
+</section><% } %>
+
+<% if (latest.length || !posts.length) { %>
+<section class="section" aria-labelledby="writing-title">
+<div class="section-head">
+<h2 class="section-title" id="writing-title">Latest writing</h2><% if (writing.length > latest.length) { %>
+<a href="/posts/" class="text-link">All <%= writing.length %> posts <span class="arrow" aria-hidden="true">&rarr;</span></a><% } else if (latest.length) { %>
+<a href="/tags/" class="text-link">Browse by topic <span class="arrow" aria-hidden="true">&rarr;</span></a><% } %>
+</div><% if (latest.length) { %>
+<ul class="post-rows"><% for (const post of latest) { %>
+<%= render("./_partials/post-row.html", { post }) %><% } %>
+</ul><% } else { %>
+<div class="empty-state"><strong>Nothing here yet.</strong>My first posts are in progress. You can follow along via <a href="/rss.xml">RSS</a> or <a href="https://www.linkedin.com/in/dream4ip/">LinkedIn</a>.</div><% } %>
 </section><% } %>
 
 <%= render("./_partials/footer.html") %>

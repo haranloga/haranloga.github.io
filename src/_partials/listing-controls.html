@@ -1,0 +1,66 @@
+<%
+    // Filter controls for a list of posts or projects: search, category tabs,
+    // a tag picker that scales to any number of tags, active filters and sort.
+    // Expects: items (metas), noun ("post"), nounPlural ("posts"), placeholder
+    const _slug = (s) => String(s).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const _catOrder = (typeof categories !== 'undefined' && Array.isArray(categories) ? categories : []).map(c => c.name);
+    const _catCounts = {};
+    const _tagCounts = {};
+    const _tagNames = {};
+    for (const it of items) {
+        if (it.meta.category) _catCounts[it.meta.category] = (_catCounts[it.meta.category] || 0) + 1;
+        for (const t of (Array.isArray(it.meta.tags) ? it.meta.tags : [])) {
+            if (String(t).toLowerCase() === 'project') continue;
+            const key = _slug(t);
+            _tagCounts[key] = (_tagCounts[key] || 0) + 1;
+            _tagNames[key] = t;
+        }
+    }
+    const _cats = Object.keys(_catCounts).sort((a, b) => {
+        const ia = _catOrder.indexOf(a), ib = _catOrder.indexOf(b);
+        return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b);
+    });
+    const _tagKeys = Object.keys(_tagCounts).sort((a, b) => String(_tagNames[a]).localeCompare(String(_tagNames[b]), undefined, { sensitivity: 'base' }));
+    const _n = items.length;
+%>
+<div class="listing-controls reveal-2" data-listing-controls data-noun="<%= noun %>" data-noun-plural="<%= nounPlural %>">
+<label class="search" for="search-<%= nounPlural %>">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+<span class="sr-only">Search <%= nounPlural %></span>
+<input type="search" id="search-<%= nounPlural %>" placeholder="<%= placeholder %>" autocomplete="off" data-search-input data-filter-search>
+<span class="kbd-hint" aria-hidden="true">/</span>
+</label><% if (_cats.length) { %>
+<div class="cat-tabs" role="group" aria-label="Filter by category" data-filter-categories>
+<button type="button" class="cat-tab" data-category="" aria-pressed="true">All <span class="cat-tab__count"><%= _n %></span></button><% for (const c of _cats) { %>
+<button type="button" class="cat-tab" data-category="<%= _slug(c) %>" data-label="<%= c %>" aria-pressed="false"><%= c %> <span class="cat-tab__count"><%= _catCounts[c] %></span></button><% } %>
+</div><% } %>
+<div class="filter-bar">
+<div class="filter-bar__left"><% if (_tagKeys.length) { %>
+<details class="tag-picker" data-tag-picker>
+<summary class="tag-picker__toggle">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+Tags <span class="tag-picker__count"><%= _tagKeys.length %></span>
+<svg class="tag-picker__chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+</summary>
+<div class="tag-picker__panel">
+<input type="search" class="tag-picker__search" placeholder="Find a tag" autocomplete="off" aria-label="Find a tag" data-tag-search>
+<div class="tag-picker__list" role="group" aria-label="Filter by tag"><% for (const key of _tagKeys) { %>
+<button type="button" class="tag-option" data-tag="<%= key %>" data-label="<%= _tagNames[key] %>" aria-pressed="false"><%= render("./tag-label.html", { tag: _tagNames[key] }) %> <span class="tag-option__count"><%= _tagCounts[key] %></span></button><% } %>
+</div>
+<p class="tag-picker__none" data-tag-none hidden>No tags match.</p>
+</div>
+</details><% } %>
+<span class="result-count" data-result-count aria-live="polite"><%= _n %> <%= _n === 1 ? noun : nounPlural %></span>
+</div>
+<div class="filter-bar__right">
+<label class="sort">
+<span class="sr-only">Sort</span>
+<select data-sort>
+<option value="new">Newest first</option>
+<option value="old">Oldest first</option>
+</select>
+</label>
+</div>
+</div>
+<div class="active-filters" data-active-filters hidden></div>
+</div>

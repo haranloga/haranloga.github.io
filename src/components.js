@@ -171,57 +171,209 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(tick, HOLD_MS);
     });
 
-    // Client-side filtering for any list marked with data-search-input
-    document.querySelectorAll("[data-search-input]").forEach((input) => {
-        const root = document.querySelector(input.dataset.searchTarget);
-        if (!root) return;
-        const items = Array.from(root.querySelectorAll("[data-search]"));
-        const groups = Array.from(root.querySelectorAll("[data-search-group]"));
-        const countEl = document.querySelector("[data-search-count]");
-        const emptyEl = document.querySelector("[data-search-empty]");
-        const chipsEl = document.querySelector(`[data-tag-filters="${input.dataset.searchTarget}"]`);
-        const noun = input.dataset.searchTarget === "#project-grid" ? ["project", "projects"] : ["post", "posts"];
-        let activeTag = "";
+    // Filterable lists (Writing, Projects): search + category + tag + sort,
+    // mirrored in the URL (?q=&category=&tag=&sort=) so filtered views can be linked
+    document.querySelectorAll("[data-listing]").forEach((listing) => {
+        const controls = listing.querySelector("[data-listing-controls]");
+        const root = listing.querySelector("[data-listing-items]");
+        if (!controls || !root) return;
+        const items = Array.from(root.querySelectorAll("[data-item]"));
+        const groups = Array.from(root.querySelectorAll("[data-group]"));
+        const search = controls.querySelector("[data-filter-search]");
+        const catButtons = Array.from(controls.querySelectorAll("[data-category]"));
+        const picker = controls.querySelector("[data-tag-picker]");
+        const tagButtons = Array.from(controls.querySelectorAll("[data-tag]"));
+        const tagSearch = controls.querySelector("[data-tag-search]");
+        const tagNone = controls.querySelector("[data-tag-none]");
+        const activeBar = controls.querySelector("[data-active-filters]");
+        const countEl = controls.querySelector("[data-result-count]");
+        const sortEl = controls.querySelector("[data-sort]");
+        const emptyEl = listing.querySelector("[data-listing-empty]");
+        const noun = [controls.dataset.noun || "item", controls.dataset.nounPlural || "items"];
+
+        const params = new URLSearchParams(location.search);
+        const state = {
+            q: params.get("q") || "",
+            category: params.get("category") || "",
+            tag: params.get("tag") || "",
+            sort: params.get("sort") === "old" ? "old" : "new",
+        };
+        // Ignore values that don't exist on this page (e.g. an old link)
+        if (!catButtons.some((b) => b.dataset.category === state.category)) state.category = "";
+        if (!tagButtons.some((b) => b.dataset.tag === state.tag)) state.tag = "";
+
+        const labelFor = (buttons, attr, value) => {
+            const b = buttons.find((x) => x.dataset[attr] === value);
+            return b ? b.dataset.label || value : value;
+        };
+
+        const syncUrl = () => {
+            const p = new URLSearchParams();
+            if (state.q) p.set("q", state.q);
+            if (state.category) p.set("category", state.category);
+            if (state.tag) p.set("tag", state.tag);
+            if (state.sort === "old") p.set("sort", "old");
+            const qs = p.toString();
+            history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+        };
+
+        const renderActive = () => {
+            const chips = [];
+            if (state.category) chips.push(["category", "Category", labelFor(catButtons, "category", state.category)]);
+            if (state.tag) chips.push(["tag", "Tag", labelFor(tagButtons, "tag", state.tag)]);
+            if (state.q) chips.push(["q", "Search", "“" + state.q + "”"]);
+            activeBar.hidden = chips.length === 0;
+            activeBar.innerHTML = "";
+            chips.forEach(([key, kind, label]) => {
+                const b = document.createElement("button");
+                b.type = "button";
+                b.className = "active-chip";
+                b.dataset.remove = key;
+                b.setAttribute("aria-label", "Remove " + kind.toLowerCase() + " filter " + label);
+                b.innerHTML = '<span class="active-chip__kind"></span><span class="active-chip__label"></span><span aria-hidden="true">×</span>';
+                b.querySelector(".active-chip__kind").textContent = kind;
+                b.querySelector(".active-chip__label").textContent = label;
+                activeBar.appendChild(b);
+            });
+            if (chips.length > 1) {
+                const clear = document.createElement("button");
+                clear.type = "button";
+                clear.className = "text-button";
+                clear.dataset.clearFilters = "";
+                clear.textContent = "Clear all";
+                activeBar.appendChild(clear);
+            }
+        };
+
+        const applySort = () => {
+            const dir = state.sort === "old" ? 1 : -1;
+            const byDate = (a, b) => dir * String(a.dataset.date || a.querySelector("[data-date]")?.dataset.date || "").localeCompare(String(b.dataset.date || b.querySelector("[data-date]")?.dataset.date || ""));
+            if (groups.length) {
+                groups.forEach((g) => {
+                    const ul = g.querySelector("ul");
+                    Array.from(ul.children).sort(byDate).forEach((li) => ul.appendChild(li));
+                });
+                groups.sort(byDate).forEach((g) => root.appendChild(g));
+            } else {
+                items.slice().sort(byDate).forEach((el) => root.appendChild(el.closest("li") || el));
+            }
+        };
 
         const apply = () => {
-            const terms = input.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+            const terms = state.q.toLowerCase().trim().split(/\s+/).filter(Boolean);
             let visible = 0;
             items.forEach((item) => {
                 const haystack = item.dataset.search || "";
                 const tags = (item.dataset.tags || "").split("|");
-                const match = terms.every((t) => haystack.includes(t)) && (!activeTag || tags.includes(activeTag));
+                const match =
+                    terms.every((t) => haystack.includes(t)) &&
+                    (!state.category || item.dataset.category === state.category) &&
+                    (!state.tag || tags.includes(state.tag));
                 (item.closest("li") || item).hidden = !match;
                 if (match) visible++;
             });
             groups.forEach((g) => {
                 g.hidden = !g.querySelector("li:not([hidden])");
             });
-            if (countEl) {
-                countEl.hidden = terms.length === 0 && !activeTag;
-                countEl.textContent = `${visible} of ${items.length} ${items.length === 1 ? noun[0] : noun[1]}`;
-            }
+            const filtered = terms.length || state.category || state.tag;
+            countEl.textContent = filtered
+                ? `${visible} of ${items.length} ${items.length === 1 ? noun[0] : noun[1]}`
+                : `${items.length} ${items.length === 1 ? noun[0] : noun[1]}`;
             if (emptyEl) emptyEl.hidden = visible !== 0;
+            catButtons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.category === state.category)));
+            tagButtons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tag === state.tag)));
+            if (picker) picker.classList.toggle("is-active", !!state.tag);
+            renderActive();
+            syncUrl();
         };
 
-        input.addEventListener("input", apply);
+        const clearAll = () => {
+            state.q = state.category = state.tag = "";
+            search.value = "";
+            apply();
+        };
 
-        if (chipsEl) {
-            chipsEl.addEventListener("click", (e) => {
-                const btn = e.target.closest("[data-tag]");
-                if (!btn) return;
-                activeTag = btn.dataset.tag;
-                chipsEl.querySelectorAll("[data-tag]").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+        search.value = state.q;
+        if (sortEl) sortEl.value = state.sort;
+
+        search.addEventListener("input", () => {
+            state.q = search.value.trim();
+            apply();
+        });
+        search.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                search.value = "";
+                state.q = "";
                 apply();
+                search.blur();
+            }
+        });
+
+        catButtons.forEach((b) =>
+            b.addEventListener("click", () => {
+                state.category = b.dataset.category;
+                apply();
+            })
+        );
+
+        tagButtons.forEach((b) =>
+            b.addEventListener("click", () => {
+                state.tag = state.tag === b.dataset.tag ? "" : b.dataset.tag;
+                if (picker) picker.open = false;
+                apply();
+            })
+        );
+
+        if (tagSearch) {
+            tagSearch.addEventListener("input", () => {
+                const q = tagSearch.value.toLowerCase().trim();
+                let shown = 0;
+                tagButtons.forEach((b) => {
+                    const hit = !q || (b.dataset.label || "").toLowerCase().includes(q);
+                    b.hidden = !hit;
+                    if (hit) shown++;
+                });
+                if (tagNone) tagNone.hidden = shown !== 0;
             });
         }
 
-        input.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") {
-                input.value = "";
+        if (picker) {
+            picker.addEventListener("toggle", () => {
+                if (picker.open && tagSearch && window.matchMedia("(pointer: fine)").matches) tagSearch.focus();
+            });
+            document.addEventListener("click", (e) => {
+                if (picker.open && !picker.contains(e.target)) picker.open = false;
+            });
+            picker.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") {
+                    picker.open = false;
+                    picker.querySelector("summary").focus();
+                }
+            });
+        }
+
+        if (sortEl) {
+            sortEl.addEventListener("change", () => {
+                state.sort = sortEl.value === "old" ? "old" : "new";
+                applySort();
+                syncUrl();
+            });
+        }
+
+        listing.addEventListener("click", (e) => {
+            const remove = e.target.closest("[data-remove]");
+            if (remove) {
+                const key = remove.dataset.remove;
+                state[key] = "";
+                if (key === "q") search.value = "";
                 apply();
-                input.blur();
+                return;
             }
+            if (e.target.closest("[data-clear-filters]")) clearAll();
         });
+
+        if (state.sort === "old") applySort();
+        apply();
     });
 
     // "/" focuses the page's search box

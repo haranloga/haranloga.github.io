@@ -4,10 +4,12 @@
     "image": "media/cover.png",
     "caption": "The DistilBERT fine-tuning loop from the project, as it appears in the report.",
     "description": "My part of a 2021 final year group project: find the sentence that answers a question with InferSent features and a random forest (67.6%), then extract the exact answer with DistilBERT (62.5% exact match).",
+    "category": "Machine Learning",
     "tags": [
         "project",
-        "Machine Learning",
         "NLP",
+        "DistilBERT",
+        "PyTorch",
         "Python"
     ],
     "reading_time": 6,

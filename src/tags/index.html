@@ -1,34 +1,71 @@
 <% meta("../meta.json") %><% meta() %><%
     url = url + "/tags/";
+    const _slug = (s) => String(s).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
     const posts = metas("../posts").filter(p => p.meta.published && p.meta.listed !== false);
-    const tagMap = {};
-    for (const p of posts) {
-        for (const tag of (Array.isArray(p.meta.tags) ? p.meta.tags : [])) {
-            const key = String(tag).toLowerCase();
-            (tagMap[key] = tagMap[key] || []).push(p);
-        }
+    posts.sort((a, b) => b.meta.date.localeCompare(a.meta.date));
+
+    // Categories: the fixed list from the site meta, in its order, only where posts exist
+    const catDefs = Array.isArray(categories) ? categories : [];
+    const byCat = {};
+    for (const p of posts) if (p.meta.category) (byCat[p.meta.category] = byCat[p.meta.category] || []).push(p);
+    const cats = catDefs.filter(c => byCat[c.name]).concat(
+        Object.keys(byCat).filter(n => !catDefs.some(c => c.name === n)).map(n => ({ name: n, description: '' }))
+    );
+
+    // Tags: every tag except the "project" marker, A to Z, grouped by first letter
+    const tagCounts = {}, tagNames = {};
+    for (const p of posts) for (const t of (Array.isArray(p.meta.tags) ? p.meta.tags : [])) {
+        if (String(t).toLowerCase() === 'project') continue;
+        const k = _slug(t);
+        tagCounts[k] = (tagCounts[k] || 0) + 1;
+        tagNames[k] = t;
     }
-    const tags = Object.keys(tagMap).sort((a, b) => tagMap[b].length - tagMap[a].length || a.localeCompare(b));
-    const slug = t => t.replace(/[\s/]+/g, '-');
+    const tagKeys = Object.keys(tagCounts).sort((a, b) => String(tagNames[a]).localeCompare(String(tagNames[b]), undefined, { sensitivity: 'base' }));
+    const byLetter = {};
+    for (const k of tagKeys) {
+        const ch = String(tagNames[k]).charAt(0).toUpperCase();
+        const letter = /[A-Z]/.test(ch) ? ch : '#';
+        (byLetter[letter] = byLetter[letter] || []).push(k);
+    }
+    const letters = Object.keys(byLetter).sort();
+    const _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const _fmt = (d) => { const [y, m] = String(d).split('-'); return m ? _months[+m - 1] + ' ' + y : ''; };
 %>
 <%= render("../_partials/header.html", { title, description, url }) %>
 
 <header class="page-header">
 <h1 class="page-title reveal">Topics</h1>
-<p class="page-lead reveal-1">Every post, grouped by what it covers. Pick a topic to jump straight to it.</p>
+<p class="page-lead reveal-1">Browse by subject, or pick a tag to see every post that uses it.</p>
 </header>
-<% if (tags.length) { %>
-<nav class="chips tag-cloud reveal-2" aria-label="Topics"><% for (const tag of tags) { %>
-<a href="#<%= slug(tag) %>" class="chip">#<%= tag %> <span class="chip__count"><%= tagMap[tag].length %></span></a><% } %>
-</nav>
-<div class="reveal-3"><% for (const tag of tags) { %>
-<section class="tag-group" id="<%= slug(tag) %>">
-<h2 class="tag-group__title"><%= render("../_partials/tag-label.html", { tag }) %> <span><%= tagMap[tag].length %> post<%= tagMap[tag].length === 1 ? '' : 's' %></span></h2>
-<ul class="post-rows"><% for (const post of tagMap[tag].sort((a, b) => b.meta.date.localeCompare(a.meta.date))) { %>
-<%= render("../_partials/post-row.html", { post }) %><% } %>
-</ul>
-</section><% } %>
-</div><% } else { %>
+<% if (posts.length) { %>
+<section class="topics-section reveal-2" aria-labelledby="cat-title">
+<h2 class="section-title" id="cat-title">Categories</h2>
+<div class="topic-grid"><% for (const c of cats) { const list = byCat[c.name]; const latest = list[0]; %>
+<a class="card topic-card" href="/posts/?category=<%= _slug(c.name) %>">
+<div class="topic-card__head">
+<h3 class="topic-card__name"><%= c.name %></h3>
+<span class="topic-card__count"><%= list.length %> <%= list.length === 1 ? 'post' : 'posts' %></span>
+</div><% if (c.description) { %>
+<p class="topic-card__desc"><%= c.description %></p><% } %>
+<p class="topic-card__latest"><span>Latest</span><%= latest.meta.title %><time datetime="<%= latest.meta.date %>"><%= _fmt(latest.meta.date) %></time></p>
+</a><% } %>
+</div>
+</section><% if (tagKeys.length) { %>
+
+<section class="topics-section reveal-3" aria-labelledby="tag-title">
+<div class="section-head">
+<h2 class="section-title" id="tag-title">Tags</h2>
+<span class="section-head__meta"><%= tagKeys.length %> tags</span>
+</div>
+<div class="tag-index"><% for (const letter of letters) { %>
+<div class="tag-index__group">
+<span class="tag-index__letter" aria-hidden="true"><%= letter %></span>
+<div class="chips"><% for (const k of byLetter[letter]) { %>
+<a class="chip" href="/posts/?tag=<%= k %>"><%= render("../_partials/tag-label.html", { tag: tagNames[k] }) %> <span class="chip__count"><%= tagCounts[k] %></span></a><% } %>
+</div>
+</div><% } %>
+</div>
+</section><% } %><% } else { %>
 <div class="empty-state"><strong>No topics yet.</strong>Topics appear here once posts are published.</div><% } %>
 
 <%= render("../_partials/footer.html") %>

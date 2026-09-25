@@ -18,23 +18,18 @@
 <p class="page-lead reveal-1">Notes, write-ups, and walkthroughs on application, cloud, and AI security.</p>
 </header>
 <% if (posts.length) { %>
-<label class="search reveal-2" for="search-posts">
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-<span class="sr-only">Search posts</span>
-<input type="search" id="search-posts" placeholder="Search <%= posts.length %> posts by title, topic, or keyword" autocomplete="off" data-search-input data-search-target="#archive">
-<span class="kbd-hint" aria-hidden="true">/</span>
-</label>
-<%= render("../_partials/tag-filters.html", { items: posts, target: "#archive" }) %>
-<p class="search-count" data-search-count hidden></p>
-<div id="archive" class="reveal-3"><% for (const year of years) { %>
-<section class="year-group" data-search-group>
+<div data-listing>
+<%= render("../_partials/listing-controls.html", { items: posts, noun: "post", nounPlural: "posts", placeholder: "Search posts by title, topic or keyword" }) %>
+<div id="archive" class="reveal-3" data-listing-items><% for (const year of years) { %>
+<section class="year-group" data-group>
 <h2 class="year-group__label"><%= year %></h2>
 <ul class="post-rows"><% for (const post of byYear[year]) { %>
 <%= render("../_partials/post-row.html", { post, short: true }) %><% } %>
 </ul>
 </section><% } %>
 </div>
-<div class="empty-state" data-search-empty hidden><strong>No posts match that search.</strong>Try a broader term, or <a href="/tags/">browse by topic</a>.</div><% } else { %>
+<div class="empty-state" data-listing-empty hidden><strong>No posts match these filters.</strong><button type="button" class="text-button" data-clear-filters>Clear all filters</button> or <a href="/tags/">browse topics</a>.</div>
+</div><% } else { %>
 <div class="empty-state"><strong>Nothing published yet.</strong>The first posts are on the way. Follow along via <a href="/rss.xml">RSS</a> or <a href="https://www.linkedin.com/in/dream4ip/">LinkedIn</a>.</div><% } %>
 
 <%= render("../_partials/footer.html") %>

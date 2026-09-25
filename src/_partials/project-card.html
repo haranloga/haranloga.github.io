@@ -6,10 +6,12 @@
     const _tags = (Array.isArray(_p.tags) ? _p.tags : []).filter(t => String(t).toLowerCase() !== 'project');
     const _src = _p.image ? '/posts/' + proj.directory + '/' + _p.image : '';
     const _isVideo = /\.(mp4|webm|ogg|mov|mkv)(\?|$)/i.test(_p.image || '');
-    const _search = [_p.title, _p.description, ..._tags].join(' ').toLowerCase().replace(/"/g, '');
-    const _tagKeys = _tags.map(t => String(t).toLowerCase()).join('|');
+    const _slug = (s) => String(s).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const _search = [_p.title, _p.description, _p.category || '', ..._tags].join(' ').toLowerCase().replace(/"/g, '');
+    const _tagKeys = _tags.map(_slug).join('|');
+    const _label = _p.category || _tags[0] || '';
 %>
-<a href="/posts/<%= proj.directory %>/" class="proj-card" data-search="<%= _search %>" data-tags="<%= _tagKeys %>">
+<a href="/posts/<%= proj.directory %>/" class="proj-card" data-item data-date="<%= _p.date %>" data-category="<%= _p.category ? _slug(_p.category) : '' %>" data-tags="<%= _tagKeys %>" data-search="<%= _search %>">
 <div class="proj-card__media"><% if (_src && _isVideo) { %>
 <video autoplay muted loop playsinline class="proj-card__img"><source src="<%= _src %>" type="video/<%= _p.image.split('.').pop().split('?')[0].replace('mov', 'mp4') %>"></video><% } else if (_src) { %>
 <img src="<%= _src %>" alt="" loading="lazy" class="proj-card__img"><% } else { %>
@@ -17,7 +19,7 @@
 </div>
 <div class="proj-card__body">
 <h3 class="proj-card__title"><%= _p.title %></h3>
-<div class="proj-card__meta"><% if (_tags.length) { %><span class="proj-card__tag"><%= render("./tag-label.html", { tag: _tags[0] }) %></span><span class="dot-sep"></span><% } %><time datetime="<%= _p.date %>"><%= _date %></time></div><% if (_p.description) { %>
+<div class="proj-card__meta"><% if (_label) { %><span class="proj-card__tag"><%= _p.category ? _label : render("./tag-label.html", { tag: _label }) %></span><span class="dot-sep"></span><% } %><time datetime="<%= _p.date %>"><%= _date %></time></div><% if (_p.description) { %>
 <p class="proj-card__desc"><%= _p.description %></p><% } %>
 </div>
 </a>

@@ -3,17 +3,19 @@
     const [_y, _mo, _d] = String(date || '').split('-');
     const _date = _mo ? _months[+_mo - 1] + ' ' + (+_d) + ', ' + _y : '';
     const _allTags = (typeof tags !== 'undefined' && Array.isArray(tags)) ? tags : [];
+    const _slug = (s) => String(s).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
     const _isProject = _allTags.some(t => String(t).toLowerCase() === 'project');
+    const _cat = typeof category !== 'undefined' && category ? category : '';
     const _topic = _allTags.find(t => String(t).toLowerCase() !== 'project');
-    const _eyebrow = _isProject ? 'Project' : (_topic || '');
-    const _eyebrowHref = _isProject ? '/projects/' : '/tags/#' + String(_topic || '').toLowerCase().replace(/[\s/]+/g, '-');
+    const _eyebrow = _cat || (_isProject ? 'Project' : (_topic || ''));
+    const _eyebrowHref = _cat ? '/posts/?category=' + _slug(_cat) : (_isProject ? '/projects/' : '/posts/?tag=' + _slug(_topic || ''));
     const _mins = typeof reading_time !== 'undefined' && reading_time ? reading_time : 0;
     const _cap = typeof caption !== 'undefined' && caption ? caption : '';
 %><%= render("./header.html", { title, description: description ?? "", url, image: image ? url + image : null, extras: true, ogType: 'article', datePublished: date }) %>
 <article class="post" data-progress data-toc="h2, h3">
 <header class="post-header">
 <a href="/posts/" class="back-link"><span aria-hidden="true">&larr;</span> All writing</a><% if (_eyebrow) { %>
-<p class="post-eyebrow"><a href="<%= _eyebrowHref %>"><%= render("./tag-label.html", { tag: _eyebrow }) %></a></p><% } %>
+<p class="post-eyebrow"><a href="<%= _eyebrowHref %>"><%= _cat ? _cat : render("./tag-label.html", { tag: _eyebrow }) %></a><% if (_cat && _isProject) { %><span class="post-eyebrow__sep" aria-hidden="true">/</span><a href="/projects/">Project</a><% } %></p><% } %>
 <h1 class="post-title"><%= title %></h1><% if (description) { %>
 <p class="post-dek"><%= description %></p><% } %>
 <div class="post-meta">

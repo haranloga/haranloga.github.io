@@ -2022,33 +2022,6 @@ a.chip:hover {
     }
 }
 
-/* Tag filter chips on the Writing and Projects pages */
-.tag-filters {
-    margin: -0.75rem 0 1.75rem;
-}
-
-button.chip {
-    font: inherit;
-    font-size: 0.8rem;
-    cursor: pointer;
-}
-
-button.chip:hover {
-    color: var(--fg);
-    border-color: var(--border-strong);
-}
-
-button.chip[aria-pressed="true"] {
-    background: var(--fg);
-    border-color: var(--fg);
-    color: var(--bg);
-}
-
-button.chip[aria-pressed="true"] .chip__count {
-    color: inherit;
-    opacity: 0.7;
-}
-
 /* Four menu links don't fit next to the name on small phones; Topics is
    still reachable from the Writing page chips and the footer */
 @media (max-width: 480px) {
@@ -2065,4 +2038,428 @@ button.chip[aria-pressed="true"] .chip__count {
     .site-nav__link {
         padding: 0.4rem 0.35rem;
     }
+}
+
+/* ==========================================================================
+   Filterable lists: search, category tabs, tag picker, active filters, sort
+   ========================================================================== */
+.listing-controls {
+    margin-bottom: 2rem;
+}
+
+.listing-controls .search {
+    margin-bottom: 1rem;
+}
+
+[data-listing-items] li[hidden],
+[data-listing-items] [data-item][hidden],
+[data-group][hidden],
+.tag-option[hidden],
+.active-filters[hidden] {
+    display: none !important;
+}
+
+.cat-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+/* On phones the tabs stay on one line and scroll sideways; the fade shows there is more */
+@media (max-width: 600px) {
+    .cat-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+        margin-right: calc(-1 * var(--gutter));
+        padding-right: var(--gutter);
+        -webkit-mask-image: linear-gradient(to right, #000 85%, transparent);
+        mask-image: linear-gradient(to right, #000 85%, transparent);
+    }
+}
+
+.cat-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.cat-tab {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    height: 34px;
+    padding: 0 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--fg-muted);
+    font: inherit;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.cat-tab:hover {
+    color: var(--fg);
+    border-color: var(--border-strong);
+}
+
+.cat-tab[aria-pressed="true"] {
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--bg);
+}
+
+.cat-tab__count {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    font-variant-numeric: tabular-nums;
+}
+
+.filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
+    margin-top: 0.9rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--border);
+}
+
+.filter-bar__left {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    min-width: 0;
+}
+
+.filter-bar__right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: var(--fg-subtle);
+}
+
+.result-count {
+    margin-left: 0.35rem;
+    font-size: 0.8rem;
+    color: var(--fg-subtle);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* Tag picker: a dropdown with its own search, so any number of tags fits */
+.tag-picker {
+    position: relative;
+}
+
+.tag-picker__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    height: 32px;
+    padding: 0 0.75rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    font-size: 0.82rem;
+    color: var(--fg-muted);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+}
+
+.tag-picker__toggle::-webkit-details-marker {
+    display: none;
+}
+
+.tag-picker__toggle:hover,
+.tag-picker[open] .tag-picker__toggle,
+.tag-picker.is-active .tag-picker__toggle {
+    color: var(--fg);
+    border-color: var(--fg-muted);
+}
+
+.tag-picker__count {
+    font-size: 0.72rem;
+    color: var(--fg-subtle);
+    font-variant-numeric: tabular-nums;
+}
+
+.tag-picker__chevron {
+    transition: transform 0.15s ease;
+}
+
+.tag-picker[open] .tag-picker__chevron {
+    transform: rotate(180deg);
+}
+
+.tag-picker__panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 30;
+    width: min(300px, calc(100vw - 2 * var(--gutter, 20px)));
+    padding: 0.5rem;
+    background: var(--bg-elev);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+}
+
+.tag-picker__search {
+    width: 100%;
+    height: 34px;
+    margin-bottom: 0.4rem;
+    padding: 0 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--fg);
+    font: inherit;
+    font-size: 0.85rem;
+    outline: 0;
+}
+
+.tag-picker__search:focus {
+    border-color: var(--border-strong);
+}
+
+.tag-picker__list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    max-height: 264px;
+    overflow-y: auto;
+}
+
+.tag-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.45rem 0.6rem;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--fg-muted);
+    font: inherit;
+    font-size: 0.85rem;
+    text-align: left;
+    cursor: pointer;
+}
+
+.tag-option:hover {
+    background: var(--bg-hover);
+    color: var(--fg);
+}
+
+.tag-option[aria-pressed="true"] {
+    background: var(--bg-hover);
+    color: var(--fg);
+    font-weight: 600;
+}
+
+.tag-option__count {
+    font-size: 0.75rem;
+    color: var(--fg-subtle);
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+}
+
+.tag-picker__none {
+    margin: 0.4rem 0.6rem;
+    font-size: 0.82rem;
+    color: var(--fg-subtle);
+}
+
+/* Applied filters, each removable */
+.active-filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+}
+
+.active-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    height: 28px;
+    padding: 0 0.6rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--bg-elev);
+    color: var(--fg);
+    font: inherit;
+    font-size: 0.78rem;
+    cursor: pointer;
+}
+
+.active-chip:hover {
+    border-color: var(--fg-muted);
+}
+
+.active-chip__kind {
+    color: var(--fg-subtle);
+}
+
+.text-button {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--accent);
+    font: inherit;
+    font-size: inherit;
+    cursor: pointer;
+}
+
+.text-button:hover {
+    text-decoration: underline;
+}
+
+.empty-state .text-button {
+    font-size: 0.925rem;
+}
+
+.sort select {
+    appearance: none;
+    -webkit-appearance: none;
+    height: 32px;
+    padding: 0 1.8rem 0 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8a93' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.65rem center;
+    color: var(--fg-muted);
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.sort select:hover {
+    border-color: var(--border-strong);
+    color: var(--fg);
+}
+
+.sort select option {
+    background: var(--bg-elev);
+    color: var(--fg);
+}
+
+/* Post eyebrow: "Category / Project" */
+.post-eyebrow__sep {
+    margin: 0 0.45rem;
+    color: var(--fg-subtle);
+}
+
+/* ==========================================================================
+   Topics page: category cards and an A to Z tag index
+   ========================================================================== */
+.topics-section {
+    margin-bottom: 3.5rem;
+}
+
+.section-head__meta {
+    font-size: 0.8rem;
+    color: var(--fg-subtle);
+}
+
+.topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+
+.topic-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.2rem 1.25rem;
+    background: var(--bg-elev);
+    transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.topic-card:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+}
+
+.topic-card__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.topic-card__name {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: var(--fg);
+}
+
+.topic-card__count {
+    flex-shrink: 0;
+    font-size: 0.78rem;
+    color: var(--fg-subtle);
+}
+
+.topic-card__desc {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--fg-muted);
+}
+
+.topic-card__latest {
+    margin: auto 0 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--fg-muted);
+}
+
+.topic-card__latest span {
+    display: block;
+    margin-bottom: 0.15rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+}
+
+.topic-card__latest time {
+    margin-left: 0.4rem;
+    color: var(--fg-subtle);
+}
+
+.tag-index {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 1.25rem 1.5rem;
+    margin-top: 1.25rem;
+}
+
+.tag-index__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.tag-index__letter {
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--fg-subtle);
 }

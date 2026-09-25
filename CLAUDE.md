@@ -36,9 +36,13 @@ A minimalist personal blog and portfolio website built with **blargh**, a custom
        "image": "media/header.png",
        "caption": "Header image caption",
        "description": "SEO description",
+       "category": "AI Security",
+       "tags": ["LangGraph", "Python"],
        "published": true
    }
    ```
+   - `category`: exactly one, from the `categories` list in `src/meta.json` (add a new entry there only for a genuinely new subject)
+   - `tags`: tools and techniques, free-form. Add `"project"` to also list the post on the Projects page
 4. Write content in `index.md` with EJS front matter:
    ```ejs
    <%

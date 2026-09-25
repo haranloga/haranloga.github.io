@@ -4,14 +4,16 @@
     const [_y, _mo, _d] = String(_m.date || '').split('-');
     const _dateLabel = _mo ? (_months[+_mo - 1] + ' ' + (+_d) + (typeof short !== 'undefined' && short ? '' : ', ' + _y)) : '';
     const _tags = (Array.isArray(_m.tags) ? _m.tags : []).filter(t => String(t).toLowerCase() !== 'project');
-    const _search = [_m.title, _m.description, ...(Array.isArray(_m.tags) ? _m.tags : [])].join(' ').toLowerCase().replace(/"/g, '');
-    const _tagKeys = (Array.isArray(_m.tags) ? _m.tags : []).map(t => String(t).toLowerCase()).join('|');
+    const _slug = (s) => String(s).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const _search = [_m.title, _m.description, _m.category || '', ..._tags].join(' ').toLowerCase().replace(/"/g, '');
+    const _tagKeys = _tags.map(_slug).join('|');
+    const _label = _m.category || _tags[0] || '';
 %>
-<li><a href="/posts/<%= post.directory %>/" class="post-row" data-search="<%= _search %>" data-tags="<%= _tagKeys %>">
+<li><a href="/posts/<%= post.directory %>/" class="post-row" data-item data-date="<%= _m.date %>" data-category="<%= _m.category ? _slug(_m.category) : '' %>" data-tags="<%= _tagKeys %>" data-search="<%= _search %>">
 <time class="post-row__date" datetime="<%= _m.date %>"><%= _dateLabel %></time>
 <div>
 <h3 class="post-row__title"><% if (_m.pinned) { %><span class="post-row__pin" title="Featured">&#9733; </span><% } %><%= _m.title %></h3><% if (_m.description) { %>
 <p class="post-row__desc"><%= _m.description %></p><% } %>
-<div class="post-row__meta"><% if (_tags.length) { %><span class="post-row__tag"><%= render("./tag-label.html", { tag: _tags[0] }) %></span><% } %><% if (_tags.length && _m.reading_time) { %><span class="dot-sep"></span><% } %><% if (_m.reading_time) { %><span><%= _m.reading_time %> min read</span><% } %></div>
+<div class="post-row__meta"><% if (_label) { %><span class="post-row__tag"><%= _m.category ? _label : render("./tag-label.html", { tag: _label }) %></span><% } %><% if (_label && _m.reading_time) { %><span class="dot-sep"></span><% } %><% if (_m.reading_time) { %><span><%= _m.reading_time %> min read</span><% } %></div>
 </div>
 </a></li>

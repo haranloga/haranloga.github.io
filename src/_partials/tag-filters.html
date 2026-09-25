@@ -1,0 +1,17 @@
+<%
+    const _counts = {};
+    const _labels = {};
+    for (const it of items) {
+        for (const t of (Array.isArray(it.meta.tags) ? it.meta.tags : [])) {
+            const key = String(t).toLowerCase();
+            if (key === 'project') continue;
+            _counts[key] = (_counts[key] || 0) + 1;
+            _labels[key] = t;
+        }
+    }
+    const _keys = Object.keys(_counts).sort((a, b) => _counts[b] - _counts[a] || a.localeCompare(b));
+%><% if (_keys.length) { %>
+<div class="chips tag-filters" data-tag-filters="<%= target %>" role="group" aria-label="Filter by topic">
+<button type="button" class="chip" data-tag="" aria-pressed="true">All <span class="chip__count"><%= items.length %></span></button><% for (const key of _keys) { %>
+<button type="button" class="chip" data-tag="<%= key %>" aria-pressed="false"><%= render("./tag-label.html", { tag: _labels[key] }) %> <span class="chip__count"><%= _counts[key] %></span></button><% } %>
+</div><% } %>

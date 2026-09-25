@@ -2021,3 +2021,48 @@ a.chip:hover {
         max-width: none;
     }
 }
+
+/* Tag filter chips on the Writing and Projects pages */
+.tag-filters {
+    margin: -0.75rem 0 1.75rem;
+}
+
+button.chip {
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+button.chip:hover {
+    color: var(--fg);
+    border-color: var(--border-strong);
+}
+
+button.chip[aria-pressed="true"] {
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--bg);
+}
+
+button.chip[aria-pressed="true"] .chip__count {
+    color: inherit;
+    opacity: 0.7;
+}
+
+/* Four menu links don't fit next to the name on small phones; Topics is
+   still reachable from the Writing page chips and the footer */
+@media (max-width: 480px) {
+    .site-nav__link--wide {
+        display: none;
+    }
+}
+
+@media (max-width: 380px) {
+    .site-header__inner {
+        gap: 0.5rem;
+    }
+
+    .site-nav__link {
+        padding: 0.4rem 0.35rem;
+    }
+}

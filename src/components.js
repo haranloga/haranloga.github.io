@@ -179,13 +179,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const groups = Array.from(root.querySelectorAll("[data-search-group]"));
         const countEl = document.querySelector("[data-search-count]");
         const emptyEl = document.querySelector("[data-search-empty]");
+        const chipsEl = document.querySelector(`[data-tag-filters="${input.dataset.searchTarget}"]`);
+        const noun = input.dataset.searchTarget === "#project-grid" ? ["project", "projects"] : ["post", "posts"];
+        let activeTag = "";
 
-        input.addEventListener("input", () => {
+        const apply = () => {
             const terms = input.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
             let visible = 0;
             items.forEach((item) => {
                 const haystack = item.dataset.search || "";
-                const match = terms.every((t) => haystack.includes(t));
+                const tags = (item.dataset.tags || "").split("|");
+                const match = terms.every((t) => haystack.includes(t)) && (!activeTag || tags.includes(activeTag));
                 (item.closest("li") || item).hidden = !match;
                 if (match) visible++;
             });
@@ -193,16 +197,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 g.hidden = !g.querySelector("li:not([hidden])");
             });
             if (countEl) {
-                countEl.hidden = terms.length === 0;
-                countEl.textContent = `${visible} of ${items.length} ${items.length === 1 ? "post" : "posts"}`;
+                countEl.hidden = terms.length === 0 && !activeTag;
+                countEl.textContent = `${visible} of ${items.length} ${items.length === 1 ? noun[0] : noun[1]}`;
             }
             if (emptyEl) emptyEl.hidden = visible !== 0;
-        });
+        };
+
+        input.addEventListener("input", apply);
+
+        if (chipsEl) {
+            chipsEl.addEventListener("click", (e) => {
+                const btn = e.target.closest("[data-tag]");
+                if (!btn) return;
+                activeTag = btn.dataset.tag;
+                chipsEl.querySelectorAll("[data-tag]").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+                apply();
+            });
+        }
 
         input.addEventListener("keydown", (e) => {
             if (e.key === "Escape") {
                 input.value = "";
-                input.dispatchEvent(new Event("input"));
+                apply();
                 input.blur();
             }
         });

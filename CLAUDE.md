@@ -19,8 +19,7 @@ A minimalist personal blog and portfolio website built with **blargh**, a custom
 │   ├── index.html         # Homepage template
 │   └── style.css          # Main stylesheet (imports _css files)
 ├── html/                  # Generated output (git-ignored)
-├── publish.sh             # Build & deployment script
-└── docker/                # Server-side Docker configuration
+└── .github/workflows/deploy.yml  # Builds and deploys to GitHub Pages on push to main
 ```
 
 ## Common Tasks
@@ -93,10 +92,7 @@ blargh --in src --out html
 ```
 
 ### Deploy to Production
-```bash
-./publish.sh         # Client only
-./publish.sh server  # Client + restart server. Only use this if things in docker/ changed
-```
+Push to `main` on GitHub — `.github/workflows/deploy.yml` builds with `blargh` and deploys to GitHub Pages automatically. No manual deploy step.
 
 ## Key Features
 

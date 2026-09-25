@@ -1,0 +1,16 @@
+{
+    "title": "AgentGuard: Securing an LLM Agent from the Inside",
+    "date": "2026-06-25",
+    "image": "media/cover.png",
+    "caption": "The ShopGuard demo after a request to read /etc/passwd: injection flagged, tool call blocked, session marked BLOCKED.",
+    "description": "Security built into a LangGraph agent as graph nodes: YAML access control, PII redaction before the model sees tool results, encoding-aware injection checks, session correlation and an ML risk score. 54 red-team attacks, one gap found and fixed.",
+    "tags": [
+        "project",
+        "AI Security",
+        "LangGraph",
+        "MLOps",
+        "Python"
+    ],
+    "reading_time": 9,
+    "published": true
+}

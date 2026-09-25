@@ -17,14 +17,14 @@
 <h1 class="page-title reveal">Writing</h1>
 <p class="page-lead reveal-1">Notes, write-ups, and walkthroughs on application, cloud, and AI security.</p>
 </header>
-<% if (posts.length) { %>
+<% if (posts.length) { %><% if (posts.length > 8) { %>
 <label class="search reveal-2" for="search-posts">
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
 <span class="sr-only">Search posts</span>
 <input type="search" id="search-posts" placeholder="Search <%= posts.length %> posts by title, topic, or keyword" autocomplete="off" data-search-input data-search-target="#archive">
 <span class="kbd-hint" aria-hidden="true">/</span>
 </label>
-<p class="search-count" data-search-count hidden></p>
+<p class="search-count" data-search-count hidden></p><% } %>
 <div id="archive" class="reveal-3"><% for (const year of years) { %>
 <section class="year-group" data-search-group>
 <h2 class="year-group__label"><%= year %></h2>

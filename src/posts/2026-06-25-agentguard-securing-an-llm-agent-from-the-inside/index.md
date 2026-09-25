@@ -187,8 +187,6 @@ Two people also tried the app in short demo sessions, with four scenarios: a nor
 
 ## Read the full report
 
-The system is written up and evaluated in a CO6008 coursework report submitted by Subothini Sivakumar, who assessed what I built here. It's published with her consent.
-
 <%= render("../../_partials/pdf-viewer.html", { src: "media/report.bin", outputPath, filename: "AgentGuard-Final-Report.pdf", note: "AgentGuard: A Multi-Layer Security Framework for LLM Based AI Agents" }) %>
 
 The code, tests and policy files are on [GitHub](https://github.com/haranloga/AgentGuard).

@@ -1,0 +1,15 @@
+{
+    "title": "Question Answering for Children: Sentence Similarity and a Fine-Tuned DistilBERT",
+    "date": "2021-06-15",
+    "image": "media/cover.png",
+    "caption": "The DistilBERT fine-tuning loop from the project, as it appears in the report.",
+    "description": "My part of a 2021 final year group project: find the sentence that answers a question with InferSent features and a random forest (67.6%), then extract the exact answer with DistilBERT (62.5% exact match).",
+    "tags": [
+        "project",
+        "Machine Learning",
+        "NLP",
+        "Python"
+    ],
+    "reading_time": 6,
+    "published": true
+}

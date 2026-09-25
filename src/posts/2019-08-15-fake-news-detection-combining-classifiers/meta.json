@@ -1,0 +1,15 @@
+{
+    "title": "Fake News Detection: Combining Three Classifiers to Catch Spammer Accounts",
+    "date": "2019-08-15",
+    "image": "media/cover.png",
+    "caption": "The comparison chart from the original report: overall accuracy, genuine accounts identified and spammers identified for each method.",
+    "description": "Naive Bayes, Clustering and Decision Trees voting on whether a Twitter account is a spammer. My 2019 independent study at the University of Moratuwa, and what the vote traded away.",
+    "tags": [
+        "project",
+        "Machine Learning",
+        "NLP",
+        "Python"
+    ],
+    "reading_time": 5,
+    "published": true
+}

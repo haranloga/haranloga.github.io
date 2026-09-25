@@ -525,7 +525,7 @@ a.chip:hover {
 
 .hero-title {
     margin-top: 1.25rem;
-    font-size: clamp(2.15rem, 6.2vw, 3.1rem);
+    font-size: clamp(1.85rem, 5vw, 2.6rem);
     font-weight: 600;
     letter-spacing: -0.04em;
     line-height: 1.08;
@@ -1794,11 +1794,6 @@ a.chip:hover {
     to { opacity: 1; transform: translateY(0); }
 }
 
-.reveal { animation: fadeUp 0.5s ease both; }
-.reveal-1 { animation: fadeUp 0.5s ease 0.06s both; }
-.reveal-2 { animation: fadeUp 0.5s ease 0.12s both; }
-.reveal-3 { animation: fadeUp 0.5s ease 0.18s both; }
-.reveal-4 { animation: fadeUp 0.5s ease 0.24s both; }
 
 @view-transition {
     navigation: auto;

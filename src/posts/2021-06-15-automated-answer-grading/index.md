@@ -12,7 +12,7 @@
 %>
 <%= render("../../_partials/post-header.html", { title, image, url, description, caption, date, tags, reading_time }) %>
 
-My final year project at the University of Moratuwa (2021) was a group project called "Digital Video Making and Smart Answering System". The idea: take a piece of educational text, turn it into a short video for children, and let them ask questions about it afterwards. There were three of us, and each took one module. Dhushanthini simplified the text for children, with summarisation and lexical simplification. Jeevahasan did sentiment and age-group analysis and built the videos from images. My part was the question answering.
+My final year project at the University of Moratuwa (2021) was a group project called "Digital Video Making and Smart Answering System". The idea: take a piece of educational text, turn it into a short video for children, and let them ask questions about it afterwards. There were three of us, and each took one module. One teammate simplified the text for children, with summarisation and lexical simplification. Another did sentiment and age-group analysis and built the videos from images. My part was the question answering.
 
 That module had two jobs. First, given a paragraph and a question, find the sentence that contains the answer. Second, find the exact words of the answer inside the paragraph. The code is on GitHub as **[automated-answer-grading](https://github.com/haranloga/automated-answer-grading)**.
 

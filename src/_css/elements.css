@@ -2463,3 +2463,29 @@ a.chip:hover {
     letter-spacing: 0.06em;
     color: var(--fg-subtle);
 }
+
+/* "Popular" and "All tags" headings in the tag picker (only shown with many tags) */
+.tag-picker__heading {
+    margin: 0.35rem 0.6rem 0.2rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+}
+
+.tag-picker__section {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.tag-picker__section[hidden] {
+    display: none;
+}
+
+[data-tag-all] {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}

@@ -21,6 +21,10 @@
         return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b);
     });
     const _tagKeys = Object.keys(_tagCounts).sort((a, b) => String(_tagNames[a]).localeCompare(String(_tagNames[b]), undefined, { sensitivity: 'base' }));
+    // With many tags, the most-used ones are listed first so they aren't lost in A to Z
+    const _popular = _tagKeys.length > 12
+        ? _tagKeys.filter(k => _tagCounts[k] >= 2).sort((a, b) => _tagCounts[b] - _tagCounts[a] || String(_tagNames[a]).localeCompare(String(_tagNames[b]))).slice(0, 5)
+        : [];
     const _n = items.length;
 %>
 <div class="listing-controls reveal-2" data-listing-controls data-noun="<%= noun %>" data-noun-plural="<%= nounPlural %>">
@@ -44,8 +48,15 @@ Tags <span class="tag-picker__count"><%= _tagKeys.length %></span>
 </summary>
 <div class="tag-picker__panel">
 <input type="search" class="tag-picker__search" placeholder="Find a tag" autocomplete="off" aria-label="Find a tag" data-tag-search>
-<div class="tag-picker__list" role="group" aria-label="Filter by tag"><% for (const key of _tagKeys) { %>
+<div class="tag-picker__list"><% if (_popular.length) { %>
+<div class="tag-picker__section" role="group" aria-label="Popular tags" data-tag-popular>
+<p class="tag-picker__heading">Popular</p><% for (const key of _popular) { %>
 <button type="button" class="tag-option" data-tag="<%= key %>" data-label="<%= _tagNames[key] %>" aria-pressed="false"><%= render("./tag-label.html", { tag: _tagNames[key] }) %> <span class="tag-option__count"><%= _tagCounts[key] %></span></button><% } %>
+<p class="tag-picker__heading">All tags</p>
+</div><% } %>
+<div role="group" aria-label="All tags" data-tag-all><% for (const key of _tagKeys) { %>
+<button type="button" class="tag-option" data-tag="<%= key %>" data-label="<%= _tagNames[key] %>" aria-pressed="false"><%= render("./tag-label.html", { tag: _tagNames[key] }) %> <span class="tag-option__count"><%= _tagCounts[key] %></span></button><% } %>
+</div>
 </div>
 <p class="tag-picker__none" data-tag-none hidden>No tags match.</p>
 </div>

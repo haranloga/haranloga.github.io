@@ -185,6 +185,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const tagButtons = Array.from(controls.querySelectorAll("[data-tag]"));
         const tagSearch = controls.querySelector("[data-tag-search]");
         const tagNone = controls.querySelector("[data-tag-none]");
+        const tagPopular = controls.querySelector("[data-tag-popular]");
+        const tagAll = Array.from(controls.querySelectorAll("[data-tag-all] [data-tag]"));
         const activeBar = controls.querySelector("[data-active-filters]");
         const countEl = controls.querySelector("[data-result-count]");
         const sortEl = controls.querySelector("[data-sort]");
@@ -325,10 +327,12 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         if (tagSearch) {
+            // While searching, hide "Popular" and filter the full list only
             tagSearch.addEventListener("input", () => {
                 const q = tagSearch.value.toLowerCase().trim();
+                if (tagPopular) tagPopular.hidden = !!q;
                 let shown = 0;
-                tagButtons.forEach((b) => {
+                tagAll.forEach((b) => {
                     const hit = !q || (b.dataset.label || "").toLowerCase().includes(q);
                     b.hidden = !hit;
                     if (hit) shown++;

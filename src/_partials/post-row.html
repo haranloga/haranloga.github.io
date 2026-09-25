@@ -5,8 +5,9 @@
     const _dateLabel = _mo ? (_months[+_mo - 1] + ' ' + (+_d) + (typeof short !== 'undefined' && short ? '' : ', ' + _y)) : '';
     const _tags = (Array.isArray(_m.tags) ? _m.tags : []).filter(t => String(t).toLowerCase() !== 'project');
     const _search = [_m.title, _m.description, ...(Array.isArray(_m.tags) ? _m.tags : [])].join(' ').toLowerCase().replace(/"/g, '');
+    const _tagKeys = (Array.isArray(_m.tags) ? _m.tags : []).map(t => String(t).toLowerCase()).join('|');
 %>
-<li><a href="/posts/<%= post.directory %>/" class="post-row" data-search="<%= _search %>">
+<li><a href="/posts/<%= post.directory %>/" class="post-row" data-search="<%= _search %>" data-tags="<%= _tagKeys %>">
 <time class="post-row__date" datetime="<%= _m.date %>"><%= _dateLabel %></time>
 <div>
 <h3 class="post-row__title"><% if (_m.pinned) { %><span class="post-row__pin" title="Featured">&#9733; </span><% } %><%= _m.title %></h3><% if (_m.description) { %>

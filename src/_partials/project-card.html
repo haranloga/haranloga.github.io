@@ -7,8 +7,9 @@
     const _src = _p.image ? '/posts/' + proj.directory + '/' + _p.image : '';
     const _isVideo = /\.(mp4|webm|ogg|mov|mkv)(\?|$)/i.test(_p.image || '');
     const _search = [_p.title, _p.description, ..._tags].join(' ').toLowerCase().replace(/"/g, '');
+    const _tagKeys = _tags.map(t => String(t).toLowerCase()).join('|');
 %>
-<a href="/posts/<%= proj.directory %>/" class="proj-card" data-search="<%= _search %>">
+<a href="/posts/<%= proj.directory %>/" class="proj-card" data-search="<%= _search %>" data-tags="<%= _tagKeys %>">
 <div class="proj-card__media"><% if (_src && _isVideo) { %>
 <video autoplay muted loop playsinline class="proj-card__img"><source src="<%= _src %>" type="video/<%= _p.image.split('.').pop().split('?')[0].replace('mov', 'mp4') %>"></video><% } else if (_src) { %>
 <img src="<%= _src %>" alt="" loading="lazy" class="proj-card__img"><% } else { %>

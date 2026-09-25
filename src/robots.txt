@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://haranloga.github.io/sitemap.xml

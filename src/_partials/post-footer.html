@@ -7,7 +7,7 @@
 %></div>
 <footer class="post-footer">
 <div class="post-footer__row"><% if (_tags.length) { %>
-<div class="chips" aria-label="Topics"><% for (const tag of _tags) { %><a class="chip" href="/tags/#<%= String(tag).toLowerCase().replace(/[\s/]+/g, '-') %>">#<%= tag %></a><% } %></div><% } else { %>
+<div class="chips" aria-label="Tags"><% for (const tag of _tags.filter(t => String(t).toLowerCase() !== 'project')) { %><a class="chip" href="/posts/?tag=<%= String(tag).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') %>">#<%= render("./tag-label.html", { tag }) %></a><% } %></div><% } else { %>
 <span></span><% } %>
 <div class="share">
 <span class="share__label">Share</span>

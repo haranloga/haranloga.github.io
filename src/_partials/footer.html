@@ -41,6 +41,7 @@
 <button type="button" class="cookie-banner__btn" data-consent="denied">Decline</button>
 </div>
 </div>
+<!-- No blank lines inside this script: on Markdown pages a blank line ends the HTML block and breaks it -->
 <script>
 (function () {
     var banner = document.getElementById('cookie-banner');
@@ -48,7 +49,6 @@
     var choice = null;
     try { choice = localStorage.getItem('cookie-consent'); } catch (e) {}
     if (!choice) banner.hidden = false;
-
     function clearAnalyticsCookies() {
         document.cookie.split(';').forEach(function (c) {
             var name = c.split('=')[0].trim();
@@ -58,7 +58,6 @@
             document.cookie = name + '=; Max-Age=0; path=/; domain=.' + location.hostname;
         });
     }
-
     banner.addEventListener('click', function (e) {
         var value = e.target.getAttribute('data-consent');
         if (!value) return;
@@ -67,11 +66,9 @@
         if (value === 'granted') window.loadAnalytics();
         else clearAnalyticsCookies();
     });
-
     document.querySelectorAll('[data-cookie-settings]').forEach(function (el) {
         el.addEventListener('click', function () { banner.hidden = false; });
     });
-})();
-</script>
+})();</script>
 </body>
 </html>

@@ -1,5 +1,35 @@
 {
     "title": "Araharan Loganayagam - Security engineer for software and AI systems",
     "description": "Security engineer for software and AI systems, from code to cloud: application security, DevSecOps and MLOps security, cloud security, and AI security.",
-    "url": "https://haranloga.github.io"
+    "url": "https://haranloga.github.io",
+    "categories": [
+        {
+            "name": "AI Security",
+            "description": "Attacking and defending LLM apps, agents and RAG systems."
+        },
+        {
+            "name": "Application Security",
+            "description": "Code review, threat modelling and API security."
+        },
+        {
+            "name": "Cloud Security",
+            "description": "IAM, posture and cloud security architecture."
+        },
+        {
+            "name": "DevSecOps & MLOps",
+            "description": "Security checks in CI/CD and ML pipelines."
+        },
+        {
+            "name": "Backend Engineering",
+            "description": "Services, APIs and distributed systems."
+        },
+        {
+            "name": "Malware & Integrity",
+            "description": "Detecting malicious files and proving files haven't changed."
+        },
+        {
+            "name": "Machine Learning",
+            "description": "Machine learning and NLP projects."
+        }
+    ]
 }

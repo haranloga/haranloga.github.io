@@ -1,5 +1,5 @@
 (function () {
-	var containers = document.querySelectorAll('.pdf-viewer[data-pdf-data-id]');
+	var containers = document.querySelectorAll('.pdf-viewer[data-pdf-src]');
 	if (!containers.length) return;
 
 	function base64ToUint8Array(b64) {
@@ -32,27 +32,16 @@
 		var pdfjsLib = window['pdfjs-dist/build/pdf'] || window.pdfjsLib;
 		pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.min.mjs';
 		containers.forEach(function (container) {
-			var dataId = container.getAttribute('data-pdf-data-id');
-			var dataEl = document.getElementById(dataId);
 			var pagesEl = container.querySelector('.pdf-viewer__pages');
 			var statusEl = container.querySelector('.pdf-viewer__status');
 			var containerWidth = pagesEl.clientWidth || 700;
 
-			if (!dataEl) {
-				if (statusEl) statusEl.textContent = 'Could not load the PDF preview.';
-				return;
-			}
-
-			var bytes;
-			try {
-				bytes = base64ToUint8Array(dataEl.textContent.trim());
-			} catch (err) {
-				if (statusEl) statusEl.textContent = 'Could not load the PDF preview.';
-				console.error(err);
-				return;
-			}
-
-			pdfjsLib.getDocument({ data: bytes }).promise.then(function (pdf) {
+			fetch(container.getAttribute('data-pdf-src')).then(function (res) {
+				if (!res.ok) throw new Error('PDF data request failed: ' + res.status);
+				return res.text();
+			}).then(function (b64) {
+				return pdfjsLib.getDocument({ data: base64ToUint8Array(b64.trim()) }).promise;
+			}).then(function (pdf) {
 				if (statusEl) statusEl.remove();
 				var observer = new IntersectionObserver(
 					function (entries) {
@@ -82,12 +71,23 @@
 		});
 	}
 
-	if (window.pdfjsLib || window['pdfjs-dist/build/pdf']) {
-		init();
-	} else {
-		var script = document.createElement('script');
-		script.src = '/pdfjs/pdf.min.mjs';
-		script.onload = init;
-		document.head.appendChild(script);
+	function load() {
+		if (window.pdfjsLib || window['pdfjs-dist/build/pdf']) {
+			init();
+		} else {
+			var script = document.createElement('script');
+			script.src = '/pdfjs/pdf.min.mjs';
+			script.onload = init;
+			document.head.appendChild(script);
+		}
 	}
+
+	// The report data is several MB, so wait until a viewer is near the screen
+	var nearObserver = new IntersectionObserver(function (entries) {
+		if (entries.some(function (e) { return e.isIntersecting; })) {
+			nearObserver.disconnect();
+			load();
+		}
+	}, { rootMargin: '1200px 0px' });
+	containers.forEach(function (c) { nearObserver.observe(c); });
 })();

@@ -1,0 +1,30 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AgentGuard cover art: a shield with a padlock at the center of concentric defense rings">
+<defs>
+<linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stop-color="#0a1a45"></stop>
+<stop offset="55%" stop-color="#12408f"></stop>
+<stop offset="100%" stop-color="#1a6fd1"></stop>
+</linearGradient>
+<linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+<stop offset="0%" stop-color="#eaf2ff"></stop>
+<stop offset="100%" stop-color="#a9c9ff"></stop>
+</linearGradient>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+<path d="M40,0 L0,0 0,40" fill="none" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"></path>
+</pattern>
+</defs>
+<rect width="1200" height="630" fill="url(#bgGrad)"></rect>
+<rect width="1200" height="630" fill="url(#grid)"></rect>
+<circle cx="600" cy="315" r="260" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.5"></circle>
+<circle cx="600" cy="315" r="205" fill="none" stroke="#ffffff" stroke-opacity="0.11" stroke-width="1.5" stroke-dasharray="3 7"></circle>
+<circle cx="600" cy="315" r="150" fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.5"></circle>
+<circle cx="600" cy="315" r="98" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.28" stroke-width="1.5"></circle>
+<path d="M600,238 C623,238 646,231 666,219 L666,272 C666,321 638,358 600,392 C562,358 534,321 534,272 L534,219 C554,231 577,238 600,238 Z" fill="url(#shieldGrad)" stroke="#ffffff" stroke-width="2" stroke-opacity="0.9"></path>
+<rect x="578" y="298" width="44" height="34" rx="5" fill="#12408f"></rect>
+<path d="M587,298 L587,282 a13,13 0 0 1 26,0 L613,298" fill="none" stroke="#12408f" stroke-width="7" stroke-linecap="round"></path>
+<circle cx="600" cy="313" r="4.5" fill="#eaf2ff"></circle>
+<rect x="597" y="313" width="6" height="12" rx="2" fill="#eaf2ff"></rect>
+<text x="70" y="72" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="30" font-weight="700" fill="#ffffff" fill-opacity="0.92">/&gt;</text>
+<text x="600" y="540" text-anchor="middle" font-family="Inter, ui-sans-serif, sans-serif" font-size="42" font-weight="700" fill="#ffffff" letter-spacing="0.01em">AgentGuard</text>
+<text x="600" y="574" text-anchor="middle" font-family="Inter, ui-sans-serif, sans-serif" font-size="19" fill="#ffffff" fill-opacity="0.72" letter-spacing="0.02em">Defense-in-depth security for LLM agents</text>
+</svg>

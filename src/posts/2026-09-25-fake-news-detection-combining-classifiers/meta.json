@@ -1,0 +1,15 @@
+{
+    "title": "Fake News Detection: Combining Three Classifiers to Catch Spammer Accounts",
+    "date": "2026-09-25",
+    "image": "media/cover.png",
+    "caption": "",
+    "description": "Naive Bayes, Clustering, and Decision Trees voting together to tell spammer Twitter accounts from genuine ones - and why the combination beat every algorithm on its own.",
+    "tags": [
+        "project",
+        "Machine Learning",
+        "NLP",
+        "Python"
+    ],
+    "reading_time": 5,
+    "published": true
+}

@@ -1,0 +1,21 @@
+<%
+	const fs = require('fs');
+	const path = require('path');
+	const _srcDir = path.dirname(outputPath).split(path.sep + 'html' + path.sep).join(path.sep + 'src' + path.sep);
+	const _pdfPath = path.join(_srcDir, src);
+	const _b64 = fs.readFileSync(_pdfPath).toString('base64');
+	const _id = 'pdfdata-' + Math.random().toString(36).slice(2);
+%>
+<style>
+.pdf-viewer{margin:2.25rem 0;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-elev);overflow:hidden;}
+.pdf-viewer__pages{max-height:800px;overflow-y:auto;overflow-x:auto;padding:1.25rem;display:flex;flex-direction:column;align-items:center;gap:14px;background:var(--bg);}
+.pdf-viewer__status{font-size:0.85rem;color:var(--fg-subtle);padding:2.5rem 0;}
+.pdf-viewer__page{box-shadow:0 1px 4px rgba(0,0,0,0.25);border:1px solid var(--border);max-width:100%;}
+.pdf-viewer__foot{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:0.6rem 1.25rem;border-top:1px solid var(--border);font-size:0.82rem;color:var(--fg-subtle);flex-wrap:wrap;}
+</style>
+<div class="pdf-viewer" data-pdf-data-id="<%= _id %>">
+<div class="pdf-viewer__pages"><p class="pdf-viewer__status">Loading preview&hellip;</p></div>
+<div class="pdf-viewer__foot"><span><%= note || 'Scroll to read. View only - not available for download.' %></span></div>
+</div>
+<script type="text/plain" id="<%= _id %>"><%= _b64 %></script>
+<script src="/pdf-viewer.js"></script>

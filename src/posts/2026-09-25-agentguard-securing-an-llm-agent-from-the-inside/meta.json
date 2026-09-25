@@ -1,0 +1,16 @@
+{
+    "title": "AgentGuard: Securing an LLM Agent from the Inside",
+    "date": "2026-09-25",
+    "image": "media/cover.png",
+    "caption": "",
+    "description": "A defense-in-depth security framework for LangGraph agents, where every check is a node in the agent's own execution graph, not a wrapper bolted on top.",
+    "tags": [
+        "project",
+        "AI Security",
+        "LangGraph",
+        "MLOps",
+        "Python"
+    ],
+    "reading_time": 7,
+    "published": true
+}

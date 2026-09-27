@@ -42,6 +42,7 @@ A minimalist personal blog and portfolio website built with **blargh**, a custom
    ```
    - `category`: exactly one, from the `categories` list in `src/meta.json` (add a new entry there only for a genuinely new subject)
    - `tags`: tools and techniques, free-form. Add `"project"` to also list the post on the Projects page
+   - After adding a PNG/JPG cover, run `python scripts/optimize-images.py` to generate `cover.webp` and the square `cover-card.webp`. The templates serve those when present and fall back to the original (which stays as the social preview image).
 4. Write content in `index.md` with EJS front matter:
    ```ejs
    <%

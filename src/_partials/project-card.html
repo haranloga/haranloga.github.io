@@ -10,11 +10,14 @@
     const _search = [_p.title, _p.description, _p.category || '', ..._tags].join(' ').toLowerCase().replace(/"/g, '');
     const _tagKeys = _tags.map(_slug).join('|');
     const _label = _p.category || _tags[0] || '';
+    const _cardWebp = _src && !_isVideo ? _src.replace(/\.(png|jpe?g)$/i, '-card.webp') : '';
+    const _hasWebp = _cardWebp && _cardWebp !== _src && require('fs').existsSync(require('path').resolve(inputPath, '../..', _cardWebp.slice(1)));
+    const _vtName = 'cover-' + proj.directory.replace(/[^a-zA-Z0-9_-]/g, '');
 %>
 <a href="/posts/<%= proj.directory %>/" class="proj-card" data-item data-date="<%= _p.date %>" data-category="<%= _p.category ? _slug(_p.category) : '' %>" data-tags="<%= _tagKeys %>" data-search="<%= _search %>">
 <div class="proj-card__media"><% if (_src && _isVideo) { %>
 <video autoplay muted loop playsinline class="proj-card__img"><source src="<%= _src %>" type="video/<%= _p.image.split('.').pop().split('?')[0].replace('mov', 'mp4') %>"></video><% } else if (_src) { %>
-<img src="<%= _src %>" alt="" loading="lazy" class="proj-card__img"><% } else { %>
+<picture><% if (_hasWebp) { %><source srcset="<%= _cardWebp %>" type="image/webp"><% } %><img src="<%= _src %>" alt="" loading="lazy" decoding="async" width="640" height="640" class="proj-card__img" style="view-transition-name: <%= _vtName %>"></picture><% } else { %>
 <div class="proj-card__placeholder proj-card__placeholder--<%= (index % 3) + 1 %>" aria-hidden="true">/&gt;</div><% } %>
 </div>
 <div class="proj-card__body">

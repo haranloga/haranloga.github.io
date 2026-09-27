@@ -89,5 +89,8 @@
 			load();
 		}
 	}, { rootMargin: '1200px 0px' });
-	containers.forEach(function (c) { nearObserver.observe(c); });
+	var watch = function () { containers.forEach(function (c) { nearObserver.observe(c); }); };
+	// Hover-prerendered pages shouldn't download reports nobody opened
+	if (document.prerendering) document.addEventListener('prerenderingchange', watch, { once: true });
+	else watch();
 })();

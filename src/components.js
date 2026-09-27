@@ -49,16 +49,72 @@ class QuoteLink extends HTMLElement {
 }
 customElements.define("q-l", QuoteLink);
 
-document.addEventListener("DOMContentLoaded", () => {
-    // Marquee: duplicate the track so translateX(-50%) loops seamlessly
-    document.querySelectorAll(".tech-carousel__track").forEach((track) => {
-        Array.from(track.children).forEach((item) => {
-            const clone = item.cloneNode(true);
-            clone.setAttribute("aria-hidden", "true");
-            clone.setAttribute("alt", "");
-            track.appendChild(clone);
-        });
+// Images still downloading fade in when ready (already-loaded ones are left alone),
+// and blocks that start below the fold ease in once as they scroll into view.
+// Anything visible on first paint is never hidden, so there's no flash.
+const REVEAL = [
+    ".proj-card",
+    ".post-row",
+    ".feature-list > li",
+    ".section-head",
+    ".topic-grid > *",
+    ".tag-index > *",
+    ".about-section",
+    ".prose > figure",
+    ".prose > pre",
+    ".prose > table",
+    ".prose > .pdf-viewer",
+    ".post-footer",
+].join(",");
+
+function initMotion() {
+    document.querySelectorAll(".proj-card__img, .prose img, .about img").forEach((img) => {
+        if (img.complete && img.naturalWidth) return;
+        img.classList.add("img-pending");
+        const done = () => {
+            img.classList.remove("img-pending");
+            img.classList.add("img-loaded");
+        };
+        img.addEventListener("load", done, { once: true });
+        img.addEventListener("error", done, { once: true });
     });
+
+    if (!prefersReducedMotion() && "IntersectionObserver" in window) {
+        const fold = window.innerHeight;
+        const targets = Array.from(document.querySelectorAll(REVEAL)).filter(
+            (el) => !el.parentElement.closest(REVEAL) && el.getBoundingClientRect().top > fold
+        );
+        const io = new IntersectionObserver(
+            (entries) => {
+                let i = 0;
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    const el = entry.target;
+                    io.unobserve(el);
+                    const delay = Math.min(i++, 4) * 70;
+                    el.style.setProperty("--reveal-delay", delay + "ms");
+                    el.classList.add("revealed");
+                    // Hand the element back its own transitions once it has settled
+                    setTimeout(() => {
+                        el.classList.remove("will-reveal", "revealed");
+                        el.style.removeProperty("--reveal-delay");
+                    }, delay + 700);
+                });
+            },
+            { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
+        );
+        targets.forEach((el) => {
+            el.classList.add("will-reveal");
+            io.observe(el);
+        });
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Load-in motion only runs while someone is watching: prerendered pages start it
+    // on activation, and pages opened in a background tab skip it entirely
+    if (document.prerendering) document.addEventListener("prerenderingchange", initMotion, { once: true });
+    else if (document.visibilityState === "visible") initMotion();
 
     // Copy buttons on code blocks
     document.querySelectorAll(".prose pre").forEach((pre) => {

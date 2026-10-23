@@ -1,0 +1,17 @@
+{
+    "title": "Kubernetes Enumeration: A Read-Only Cheat Sheet",
+    "date": "2026-10-23",
+    "image": "media/cover.jpg",
+    "caption": "Kubernetes Enumeration: a visual walkthrough of every control-plane and node service, what runs, where it listens, and how to check it safely.",
+    "description": "A seven-step, read-only loop for enumerating a Kubernetes cluster: scope, discover, inventory, confirm config, read-only checks, record and correlate. Every command, why it is run, and the port quick reference.",
+    "category": "Cloud Security",
+    "tags": [
+        "Kubernetes",
+        "Enumeration",
+        "Cheat sheet",
+        "nmap",
+        "kubectl"
+    ],
+    "reading_time": 12,
+    "published": true
+}

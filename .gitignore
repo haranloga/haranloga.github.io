@@ -3,3 +3,8 @@ html/
 report.html
 .DS_Store.claude/
 %USERPROFILE%/
+
+# Local secrets (Notion API key). Never commit.
+.env
+scripts/notion-*.py
+scripts/NOTION-PIPELINE.md

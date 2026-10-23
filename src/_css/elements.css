@@ -2561,25 +2561,3 @@ img.img-loaded {
     flex-direction: column;
     gap: 1px;
 }
-
-/* Slide deck thumbnails inside a post */
-.slide-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 0.75rem;
-    margin: 1.5rem 0;
-}
-
-.slide-gallery a {
-    display: block;
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    overflow: hidden;
-    line-height: 0;
-}
-
-.slide-gallery img {
-    width: 100%;
-    height: auto;
-    margin: 0;
-}

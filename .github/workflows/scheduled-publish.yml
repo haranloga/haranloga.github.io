@@ -1,0 +1,98 @@
+name: Scheduled Publish
+
+# Publishes an encrypted draft post at a set time. The draft lives in
+# drafts/ as an AES-256 bundle, so the post can't be read from this public
+# repo before it goes live. The key is the DRAFT_KEY repo secret.
+#
+# Current draft: HTB MakeSense, live when the box retires at
+# 2026-10-31 19:00 UTC (Nov 1, 00:30 Sri Lanka time).
+
+on:
+  schedule:
+    # Cron is UTC. GitHub can delay or drop scheduled runs, so the later
+    # entries are retries; once the draft is published they do nothing.
+    - cron: "3 19 31 10 *"
+    - cron: "33 19-23 31 10 *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Decrypt and build only, don't publish"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  actions: write
+
+env:
+  BUNDLE: drafts/htb-makesense.tar.gz.enc
+  SLUG: 2026-11-01-htb-makesense
+  PUBLISH_AT: "2026-10-31T19:00:00Z"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Check whether to run
+        id: gate
+        run: |
+          DRY="${{ inputs.dry_run }}"
+          [ -z "$DRY" ] && DRY=false
+          echo "dry=$DRY" >> "$GITHUB_OUTPUT"
+          if [ ! -f "$BUNDLE" ]; then
+            echo "No bundle at $BUNDLE, already published. Nothing to do."
+            echo "go=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          if [ "$DRY" != "true" ] && [ "$(date -u +%s)" -lt "$(date -u -d "$PUBLISH_AT" +%s)" ]; then
+            echo "Too early: publishes at $PUBLISH_AT. Refusing to publish."
+            echo "go=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          echo "go=true" >> "$GITHUB_OUTPUT"
+
+      - name: Decrypt draft
+        if: steps.gate.outputs.go == 'true'
+        env:
+          DRAFT_KEY: ${{ secrets.DRAFT_KEY }}
+        run: |
+          [ -n "$DRAFT_KEY" ] || { echo "DRAFT_KEY secret is not set"; exit 1; }
+          printf '%s' "$DRAFT_KEY" > "$RUNNER_TEMP/key"
+          openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -pass file:"$RUNNER_TEMP/key" \
+            -in "$BUNDLE" | tar -xzf - -C src/posts
+          rm "$RUNNER_TEMP/key"
+          node -e '
+            const fs = require("fs");
+            const postMeta = `src/posts/${process.env.SLUG}/meta.json`;
+            const m = JSON.parse(fs.readFileSync(postMeta));
+            m.published = true;
+            fs.writeFileSync(postMeta, JSON.stringify(m, null, 4) + "\n");
+            const site = JSON.parse(fs.readFileSync("src/meta.json"));
+            if (!site.categories.some(c => c.name === "CTF Writeups")) {
+              site.categories.push({ name: "CTF Writeups",
+                description: "HackTheBox machine walkthroughs, from first scan to root." });
+              fs.writeFileSync("src/meta.json", JSON.stringify(site, null, 4) + "\n");
+            }'
+
+      - name: Test build
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          npx --yes @mariozechner/blargh --in src --out html
+          test -s "html/posts/$SLUG/index.html"
+          echo "Built html/posts/$SLUG/index.html"
+
+      - name: Commit and trigger deploy
+        if: steps.gate.outputs.go == 'true' && steps.gate.outputs.dry != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898+github-actions[bot]@users.noreply.github.com"
+          git rm -q "$BUNDLE"
+          git add "src/posts/$SLUG" src/meta.json
+          git commit -m "Publish: HTB MakeSense"
+          git push
+          # Pushes made with GITHUB_TOKEN don't trigger other workflows,
+          # so start the deploy explicitly.
+          gh workflow run deploy.yml --ref main

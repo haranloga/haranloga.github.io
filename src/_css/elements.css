@@ -1147,6 +1147,21 @@ a.chip:hover {
     color: inherit;
 }
 
+/* Terminal sessions (```terminal, see _partials/hljs-terminal.js):
+   prompt stands out, command reads normally, output recedes */
+.prose pre code.language-terminal {
+    color: #8b8b94;
+}
+
+.prose pre code.language-terminal .hljs-meta.prompt_ {
+    color: #61afef;
+    font-weight: 600;
+}
+
+.prose pre code.language-terminal .language-bash {
+    color: #e4e4e7;
+}
+
 /* Tables */
 .prose table {
     width: 100%;

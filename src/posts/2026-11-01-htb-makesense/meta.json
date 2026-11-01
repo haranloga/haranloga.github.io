@@ -1,0 +1,22 @@
+{
+    "title": "HTB: MakeSense",
+    "date": "2026-11-01",
+    "image": "media/cover.png",
+    "caption": "The WebAgency site on makesense.htb.",
+    "description": "MakeSense starts with a WordPress agency site whose voice-message widget encrypts submissions with a key shipped in its own JavaScript. Forging a payload gives stored XSS in wp-admin, a rogue administrator and a plugin webshell. Reused credentials give SSH, and a root-owned OCR app turns a picture of PHP into root.",
+    "category": "CTF Writeups",
+    "tags": [
+        "HackTheBox",
+        "Linux",
+        "WordPress",
+        "Stored XSS",
+        "Hardcoded secrets",
+        "AES-GCM",
+        "Credential reuse",
+        "Privilege escalation",
+        "SUID",
+        "OCR"
+    ],
+    "reading_time": 8,
+    "published": true
+}

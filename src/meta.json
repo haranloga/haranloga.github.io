@@ -30,6 +30,10 @@
         {
             "name": "Machine Learning",
             "description": "Machine learning and NLP projects."
+        },
+        {
+            "name": "CTF Writeups",
+            "description": "HackTheBox machine walkthroughs, from first scan to root."
         }
     ]
 }

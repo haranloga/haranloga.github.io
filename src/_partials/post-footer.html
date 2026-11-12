@@ -4,6 +4,34 @@
     const _tags = (typeof tags !== 'undefined' && Array.isArray(tags)) ? tags : [];
     const _older = typeof prevPost !== 'undefined' && prevPost ? prevPost : null;
     const _newer = typeof nextPost !== 'undefined' && nextPost ? nextPost : null;
+    // Related posts: score every other published post by shared tags (plus a point
+    // for the same category), newest first as the tiebreak. Empty when nothing overlaps.
+    const _curSlug = String(url || '').replace(/\/+$/, '').split('/').pop();
+    let _related = [];
+    try {
+        const _all = metas('../posts').filter(p => p.meta.published && p.meta.listed !== false);
+        const _me = _all.find(p => p.directory === _curSlug);
+        const _norm = (arr) => (Array.isArray(arr) ? arr : []).map(t => String(t).toLowerCase()).filter(t => t !== 'project');
+        const _myTags = _norm(_me ? _me.meta.tags : _tags);
+        const _myCat = _me && _me.meta.category ? _me.meta.category : '';
+        _related = _all
+            .filter(p => p.directory !== _curSlug)
+            .map(p => {
+                const pt = _norm(p.meta.tags);
+                const shared = pt.filter(t => _myTags.includes(t)).length + (_myCat && p.meta.category === _myCat ? 1 : 0);
+                return { p, shared };
+            })
+            .filter(x => x.shared > 0)
+            .sort((a, b) => b.shared - a.shared || String(b.p.meta.date).localeCompare(String(a.p.meta.date)))
+            .slice(0, 3)
+            .map(x => x.p);
+    } catch (e) { _related = []; }
+    const _relMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const _relDate = (d) => { const [_y, _m, _dd] = String(d).split('-'); return _m ? _relMonths[+_m - 1] + ' ' + (+_dd) + ', ' + _y : ''; };
+    // Don't repeat a post in the Older/Newer nav if it's already a Related card
+    const _relDirs = new Set(_related.map(p => p.directory));
+    const _olderNav = _older && !_relDirs.has(_older.directory) ? _older : null;
+    const _newerNav = _newer && !_relDirs.has(_newer.directory) ? _newer : null;
 %></div>
 <footer class="post-footer">
 <div class="post-footer__row"><% if (_tags.length) { %>
@@ -15,7 +43,17 @@
 <button class="share__btn" type="button" data-share="x" data-share-url="<%= _shareUrl %>" data-share-text="<%= _shareTitle %>" aria-label="Share on X" title="Share on X"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.734l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></button>
 <button class="share__btn" type="button" data-copy-link aria-label="Copy link" title="Copy link"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
 </div>
+</div><% if (_related.length) { %>
+<section class="related" aria-labelledby="related-heading">
+<h2 class="related__heading" id="related-heading">Related posts</h2>
+<div class="related__grid" data-count="<%= _related.length %>"><% for (const rp of _related) { const _rt = (Array.isArray(rp.meta.tags) ? rp.meta.tags : []).filter(t => String(t).toLowerCase() !== 'project'); const _rl = rp.meta.category || _rt[0] || ''; %>
+<a class="card related-card" href="/posts/<%= rp.directory %>/"><% if (_rl) { %>
+<span class="related-card__eyebrow"><%= rp.meta.category ? _rl : render("./tag-label.html", { tag: _rl }) %></span><% } %>
+<span class="related-card__title"><%= rp.meta.title %></span>
+<span class="related-card__meta"><time datetime="<%= rp.meta.date %>"><%= _relDate(rp.meta.date) %></time><% if (rp.meta.reading_time) { %><span class="dot-sep" aria-hidden="true"></span><span><%= rp.meta.reading_time %> min</span><% } %></span>
+</a><% } %>
 </div>
+</section><% } %>
 <div class="card author-card">
 <span class="avatar avatar--lg" aria-hidden="true">AL</span>
 <div>
@@ -23,10 +61,10 @@
 <p class="author-card__bio">Security engineer for software and AI systems, from code to cloud.</p>
 </div>
 <a href="/about/" class="text-link">About me <span class="arrow" aria-hidden="true">&rarr;</span></a>
-</div><% if (_older || _newer) { %>
-<nav class="post-nav" aria-label="More posts"><% if (_older) { %>
-<a href="/posts/<%= _older.directory %>/" class="card post-nav__link"><span class="post-nav__label">&larr; Older</span><span class="post-nav__title"><%= _older.meta.title %></span></a><% } %><% if (_newer) { %>
-<a href="/posts/<%= _newer.directory %>/" class="card post-nav__link post-nav__link--next"><span class="post-nav__label">Newer &rarr;</span><span class="post-nav__title"><%= _newer.meta.title %></span></a><% } %>
+</div><% if (_olderNav || _newerNav) { %>
+<nav class="post-nav" aria-label="More posts"><% if (_olderNav) { %>
+<a href="/posts/<%= _olderNav.directory %>/" class="card post-nav__link"><span class="post-nav__label">&larr; Older</span><span class="post-nav__title"><%= _olderNav.meta.title %></span></a><% } %><% if (_newerNav) { %>
+<a href="/posts/<%= _newerNav.directory %>/" class="card post-nav__link post-nav__link--next"><span class="post-nav__label">Newer &rarr;</span><span class="post-nav__title"><%= _newerNav.meta.title %></span></a><% } %>
 </nav><% } %>
 </footer>
 </article>

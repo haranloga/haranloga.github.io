@@ -1,0 +1,22 @@
+{
+    "title": "HTB: Garfield",
+    "date": "2026-11-12",
+    "image": "media/cover.png",
+    "caption": "The path from j.arbuckle to Administrator.",
+    "description": "Garfield is a Hard Windows AD box. A writable scriptPath and SYSVOL logon script give a shell as l.wilson, ForceChangePassword gives l.wilson_adm, and AddSelf into RODC Administrators leads to RBCD and SYSTEM on a Read-Only DC behind a Hyper-V switch. Its krbtgt key, an opened replication policy and a Key List request give the Administrator hash.",
+    "category": "CTF Writeups",
+    "tags": [
+        "HackTheBox",
+        "Windows",
+        "Active Directory",
+        "Kerberos",
+        "RODC",
+        "RBCD",
+        "BloodHound",
+        "Pivoting",
+        "Golden ticket",
+        "Privilege escalation"
+    ],
+    "reading_time": 11,
+    "published": true
+}

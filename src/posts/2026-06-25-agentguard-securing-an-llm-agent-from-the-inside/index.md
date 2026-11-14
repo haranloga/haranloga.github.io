@@ -187,7 +187,7 @@ Two people also tried the app in short demo sessions, with four scenarios: a nor
 
 ## Read the full report
 
-<%= render("../../_partials/pdf-viewer.html", { src: "media/report.bin", outputPath, filename: "AgentGuard-Final-Report.pdf", note: "AgentGuard: A Multi-Layer Security Framework for LLM Based AI Agents" }) %>
+<%= render("../../_partials/pdf-viewer.html", { src: "media/key-pages.bin", outputPath, filename: "AgentGuard-Final-Report.pdf", note: "Key pages only: AgentGuard: A Multi-Layer Security Framework for LLM Based AI Agents" }) %>
 
 The code, tests and policy files are on [GitHub](https://github.com/haranloga/AgentGuard).
 

@@ -83,7 +83,7 @@ The original project folder was about 14 GB, and almost none of that was code. T
 
 The report covers all three modules. My part is the question answering system in chapters 5 to 7, and Appendix A lists who did what.
 
-<%= render("../../_partials/pdf-viewer.html", { src: "media/report.bin", outputPath, filename: "Digital-Video-Making-and-Smart-Answering-System-Report.pdf", note: "Digital Video Making and Smart Answering System" }) %>
+<%= render("../../_partials/pdf-viewer.html", { src: "media/key-pages.bin", outputPath, filename: "Digital-Video-Making-and-Smart-Answering-System-Report.pdf", note: "Key pages only: Digital Video Making and Smart Answering System" }) %>
 
 Code and setup instructions are on [GitHub](https://github.com/haranloga/automated-answer-grading).
 

@@ -36,7 +36,10 @@ def write_cover_variants(cover: Path) -> list[str]:
     done = []
     full = cover.with_suffix(".webp")
     card = cover.with_name(cover.stem + "-card.webp")
-    if stale(cover, full) or stale(cover, card):
+    # Optional card-source.png: a tight crop of the key figure, used only for the square project card
+    card_src = cover.with_name("card-source.png")
+    card_from = card_src if card_src.exists() else cover
+    if stale(cover, full) or stale(card_from, card):
         im = load_rgb(cover)
         if stale(cover, full):
             f = im.copy()
@@ -44,8 +47,8 @@ def write_cover_variants(cover: Path) -> list[str]:
                 f = f.resize((1400, round(f.height * 1400 / f.width)), Image.LANCZOS)
             f.save(full, "WEBP", quality=82, method=6)
             done.append(str(full.relative_to(ROOT)))
-        if stale(cover, card):
-            ImageOps.fit(im, (640, 640), Image.LANCZOS).save(card, "WEBP", quality=70, method=6)
+        if stale(card_from, card):
+            ImageOps.fit(load_rgb(card_from), (640, 640), Image.LANCZOS).save(card, "WEBP", quality=70, method=6)
             done.append(str(card.relative_to(ROOT)))
     return done
 

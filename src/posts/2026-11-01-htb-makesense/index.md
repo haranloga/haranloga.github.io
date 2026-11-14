@@ -80,6 +80,8 @@ The homepage loads two theme scripts, `main.js` and `whisper/whisper-wrapper.js`
 
 `whisper-wrapper.js` runs a Whisper model and a summarisation model in the browser with Transformers.js. Before the result goes to the server, it's encrypted with AES-GCM, using a key defined right at the top of the file:
 
+<div class="code-file">whisper-wrapper.js</div>
+
 ```javascript
 const ENCRYPTION_KEY = 'bLs6z8iv3gWpsvyeabFosDjb4YQe7jdU13rI';
 
@@ -122,6 +124,8 @@ The contact form gives me a `post_id` without needing a microphone:
 
 To fill in the transcription myself, I re-implemented `encryptPayload` in Python:
 
+<div class="code-file">forge_payload.py</div>
+
 ```python
 #!/usr/bin/env python3
 import base64, hashlib, json, os, sys
@@ -151,6 +155,8 @@ OwwCLUXtuNEmWmzqL9M9djm14pml9SWMgS5HNR3HUcmnfMgJ0ssPemxop0Hqck2vo0aHcAFRuMpx7iS4
 `--data-urlencode` matters here. Base64 contains `+`, and PHP decodes a raw `+` in a form body as a space, which breaks the ciphertext.
 
 About a minute later, the admin views the submission and the browser requests `x.js` from my Python web server. The script runs as the admin, on the admin's own origin. It can load the Add New User page, read the CSRF nonce out of it, and submit the form:
+
+<div class="code-file">x.js</div>
 
 ```javascript
 (async () => {
@@ -184,6 +190,8 @@ The next time the admin checks submissions, vador exists, and I can log in as an
 ### Plugin webshell
 
 An administrator can upload plugins, and a plugin is just PHP that WordPress runs. A minimal one with a command parameter:
+
+<div class="code-file">evilplugin.php</div>
 
 ```php
 <?php
@@ -290,6 +298,8 @@ Drawing `<?php` by hand with a mouse goes about as well as you'd expect:
 </figure>
 
 Drawing isn't required, though. The page just converts the canvas to a PNG data URI and posts it as `canvas_image`:
+
+<div class="code-file">ocr page (inline script)</div>
 
 ```javascript
 function sendCanvas() {

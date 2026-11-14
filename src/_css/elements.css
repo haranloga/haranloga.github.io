@@ -1108,6 +1108,20 @@ a.chip:hover {
     color: var(--fg-subtle) !important;
 }
 
+/* Filename label sitting on top of a code block: <div class="code-file">forge_payload.py</div> */
+.prose .code-file {
+    display: inline-block;
+    margin: 0.25rem 0 -0.4rem;
+    padding: 0.2rem 0.7rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    color: var(--fg-subtle);
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-bottom: 0;
+    border-radius: var(--radius) var(--radius) 0 0;
+}
+
 .prose figure[style*="float"] + * {
     margin-top: 0;
 }

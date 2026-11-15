@@ -98,7 +98,7 @@ The report's own ideas for next steps were more training data, and cleaning the 
 
 ## Read the original report
 
-<%= render("../../_partials/pdf-viewer.html", { src: "media/report.bin", outputPath, filename: "Fake-News-Detection-Report.pdf", note: "Fake News Detection" }) %>
+<%= render("../../_partials/pdf-viewer.html", { src: "media/key-pages.bin", outputPath, filename: "Fake-News-Detection-Report.pdf", note: "Key pages only: Fake News Detection" }) %>
 
 The report and a text version of it are on [GitHub](https://github.com/haranloga/fake-news-detection).
 

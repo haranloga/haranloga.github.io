@@ -11,7 +11,7 @@
 	const prevPost = _myIdx < _allPosts.length - 1 ? _allPosts[_myIdx + 1] : null;
 	const nextPost = _myIdx > 0 ? _allPosts[_myIdx - 1] : null;
 %>
-<%= render("../../_partials/post-header.html", { title, image: null, url, description, caption: "", date, tags, reading_time }) %>
+<%= render("../../_partials/post-header.html", { title, image, url, description, caption, date, tags, reading_time }) %>
 
 Nimbus is a Hard Linux box where the interesting part is a fake AWS. The web app has a job preview feature that fetches a URL server-side, and an octal-encoded IP gets that SSRF past the blocklist to the cloud metadata service. The stolen role can only write to one SQS queue, but a worker on the other end of that queue runs a `script` field from the job YAML with `exec()`, which gives code execution inside a privileged CodeBuild container. The container's entrypoint is supposed to drop root, and a bash function-export trick stops it. From root in a privileged container, the host falls three different ways, and the simplest is mounting the host disk.
 

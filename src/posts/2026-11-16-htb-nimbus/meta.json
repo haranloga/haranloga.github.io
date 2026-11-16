@@ -1,0 +1,18 @@
+{
+    "title": "HTB: Nimbus",
+    "date": "2026-11-16",
+    "description": "Nimbus is a Hard Linux box built around a fake AWS. An SSRF with an octal-IP bypass reaches the metadata service, the stolen role can only write to an SQS queue, and a worker that exec()s the job YAML turns that into code execution inside a privileged CodeBuild container. A function-export trick keeps root, and mounting the host disk escapes to the real machine.",
+    "category": "CTF Writeups",
+    "tags": [
+        "HackTheBox",
+        "Linux",
+        "AWS",
+        "SSRF",
+        "SQS",
+        "Deserialization",
+        "Container escape",
+        "Privilege escalation"
+    ],
+    "reading_time": 10,
+    "published": true
+}

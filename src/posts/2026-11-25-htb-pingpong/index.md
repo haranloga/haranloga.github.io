@@ -120,6 +120,8 @@ Certificate Templates
 
 ESC13 is a certificate template whose issuance policy is linked to a group through an OID extension. Enrolling in the template and authenticating with the resulting certificate gets a Kerberos PAC carrying membership in that linked group, `TempWinRMAccess`, regardless of whether c.roberts is actually in it. `TempWinRMAccess` happens to be exactly the group DC1's WinRM service checks for, which is the whole reason a plain password-based TGT was never going to get a shell here.
 
+<img src="media/diagram-esc13.webp" alt="ESC13: a low-privilege user enrolls in a certificate template whose issuance policy carries an OID group-link to a privileged group; the CA stamps that OID into the issued certificate, and the KDC inserts the linked group into the Kerberos PAC at logon, granting membership without ever touching the group itself" loading="lazy">
+
 Requesting a certificate from the template needs a bit of fixing: the default RPC transport tries a dynamic endpoint-mapper port and times out, so I pin it to the named-pipe transport with `-dc-host` and `-target-ip` together:
 
 ```terminal
@@ -279,7 +281,11 @@ resp = lsat.hLsarLookupSids(dce, policyHandle, [sid], lsat.LSAP_LOOKUP_LEVEL.Lsa
 # -> pong\R.Martinelli
 ```
 
-That SID belongs to `pong\R.Martinelli`, a real account in the other forest. This is the eventual bridge back into `ping.htb`, but I don't have any way to use it yet. I keep going on `pong.htb`'s own side first.
+That SID belongs to `pong\R.Martinelli`, a real account in the other forest. BloodHound's own graph shows the same thing visually: two solid, resolved `ping.htb` users on `CA Managers`, and a plain "?" node for the one it never collected data on, since the collection only ran against `ping.htb`:
+
+<img src="media/bh-ca-managers.webp" alt="BloodHound graph: P.Paul and M.Wallace are MemberOf CA MANAGERS@PING.HTB with solid resolved user nodes; a third member shows as an unresolved '?' node, the foreign security principal that later resolves to pong\R.Martinelli" loading="lazy">
+
+This is the eventual bridge back into `ping.htb`, but I don't have any way to use it yet. I keep going on `pong.htb`'s own side first.
 
 ## Taking over gMSA Managers for Pong_gMSA$'s credentials
 
@@ -337,6 +343,8 @@ key = string_to_key(Enctype.AES256, password_material, b'PONG.HTBhostpong_gmsa.p
 
 With that key, `impacket-getTGT -aesKey` gets a real ticket for `Pong_gMSA$@PONG.HTB` on the first try.
 
+<img src="media/diagram-gmsa-takeover.webp" alt="Diagram: c.roberts owns IT@ping.htb, which owns gMSA Managers@pong.htb; ownership grants GenericAll; the group's scope is flipped from Global to Domain Local so it can hold a foreign member; c.roberts joins it and reads Pong_gMSA$'s msDS-ManagedPassword, which is then converted from a UTF-16LE blob into a usable AES Kerberos key" loading="lazy">
+
 ## A JEA bypass and a leaked password
 
 `Pong_gMSA$` is a `pong.htb` account, but the next target, a restricted WinRM endpoint, lives back on DC1 in `ping.htb`. Reaching it with a tool that relies on the OS's own GSSAPI stack (not a Python library doing its own crypto) needs four separate fixes together, and missing any one of them produces a different, unrelated-looking GSSAPI error: a `[capaths]` block in `krb5.conf` so MIT Kerberos follows the cross-realm referral automatically, the right SPN (`WSMAN/dc1.ping.htb`, confirmed by reading DC1's own `servicePrincipalName` attribute, not `http/...`), a genuine MIT-standard ccache built with a real `kinit -k -t <keytab>` (real GSSAPI tools reject a hand-built impacket ccache even though `klist` reads it fine), and the right alias order in `/etc/hosts` (GSSAPI picks the *first* alias listed for an IP when building its SPN, so `ping.htb dc1.ping.htb` in that order silently targets `WSMAN/ping.htb` instead).
@@ -382,6 +390,8 @@ JEA's command-visibility filter is evidently enforced at the point a bare comman
 pong\c.carlssen : <redacted>
 ```
 
+<img src="media/diagram-jea-bypass.webp" alt="Diagram of Phase 7: four Kerberos/GSSAPI plumbing fixes get a connection to the restricted JEA endpoint on DC1; an XXE attempt and a bare powershell.exe call both fail, but wrapping the same call inside the call operator's script block, & { powershell.exe ... }, spawns an unrestricted process; reading ConsoleHost_history.txt from Pong_gMSA$'s profile then leaks a plaintext PSCredential for pong\c.carlssen" loading="lazy">
+
 A `getTGT` against `dc2.pong.htb` with that password confirms it's real.
 
 ## RBCD, S4U, and GodPotato on DC2
@@ -419,6 +429,8 @@ CurrentUser: NT AUTHORITY\SYSTEM
 ```
 
 Two real gotchas here. Any file write performed by a process spawned through GodPotato's impersonation chain silently reports success but the file is gone moments later, because that token's logon session is transient; persistent writes have to happen from the outer `svc_sql` process instead, with GodPotato used only to capture command output. And spawning a second full `powershell.exe` host process nested *under* a GodPotato-impersonated process reliably kills the `xp_cmdshell`/TDS connection it's running through, across every invocation style tried, so each GodPotato call needs to stay single-level: one command or one pre-compiled binary, never another PowerShell host nested inside it. `user.txt`, on C.Carlssen's desktop, is read this way.
+
+<img src="media/diagram-rbcd-godpotato.webp" alt="Diagram of Phase 8: the leaked c.carlssen credential becomes a TGT, bloodyAD writes RBCD rights for Pong_gMSA$ onto svc_sql, S4U2Self/S4U2Proxy impersonates c.adam to get a service ticket, impacket-mssqlclient and xp_cmdshell get OS command execution as pong\svc_sql, and GodPotato.exe escalates that to NT AUTHORITY\SYSTEM" loading="lazy">
 
 ## DCSync, and the real cross-forest bridge
 
@@ -505,8 +517,11 @@ With the template ESC1-exploitable, a certificate request naming `administrator@
 
 ## Takeaways
 
-The two domain controllers are dual-homed across a Hyper-V internal switch that isn't visible from outside, so the second forest never shows up in a port scan, only after there's already a shell on the first DC. A group's name is not proof of what it actually grants: `CA Managers` reads like ESC7 CA-management rights, but the real, working primitive is a direct WriteDacl on one certificate template object, reachable over plain LDAP even when the CA's own DCOM interface breaks cross-realm. Forest trusts are SID-filtered by default, so a forged cross-forest ticket with an injected SID gets through authentication but not authorization, while a genuine foreign security principal sitting in a privileged group is the real, unforged bridge the box wants. And object ownership in AD is itself a privilege escalation primitive: owning `gMSA Managers` through a group's membership was enough to grant full control over it with no ACE ever naming c.roberts directly.
-
-Most of the actual difficulty on this box wasn't the exploit logic, it was getting the Kerberos tooling to cooperate across two realms: a referral has to be built by hand for anything that only knows how to authenticate inside one domain, a hand-built impacket ccache gets rejected by anything using the system's own GSSAPI stack, SPNs and `/etc/hosts` alias order both matter in ways that fail silently, and the clock has to stay in sync the entire time. None of that shows up in a typical single-domain AD box, and almost every "it should just work" step here needed one of these fixed first.
+- The two domain controllers are dual-homed across a Hyper-V internal switch that isn't visible from outside, so the second forest never shows up in a port scan, only after there's already a shell on the first DC.
+- A group's name is not proof of what it actually grants: `CA Managers` reads like ESC7 CA-management rights, but the real, working primitive is a direct WriteDacl on one certificate template object, reachable over plain LDAP even when the CA's own DCOM interface breaks cross-realm.
+- Forest trusts are SID-filtered by default, so a forged cross-forest ticket with an injected SID gets through authentication but not authorization, while a genuine foreign security principal sitting in a privileged group is the real, unforged bridge the box wants.
+- Object ownership in AD is itself a privilege escalation primitive: owning `gMSA Managers` through a group's membership was enough to grant full control over it with no ACE ever naming c.roberts directly.
+- Most of the actual difficulty on this box wasn't the exploit logic, it was getting the Kerberos tooling to cooperate across two realms: a referral has to be built by hand for anything that only knows how to authenticate inside one domain, a hand-built impacket ccache gets rejected by anything using the system's own GSSAPI stack, SPNs and `/etc/hosts` alias order both matter in ways that fail silently, and the clock has to stay in sync the entire time.
+- None of that Kerberos plumbing shows up on a typical single-domain AD box, and almost every "it should just work" step here needed one of these fixed first.
 
 <%= render("../../_partials/post-footer.html", { url, title, tags, prevPost, nextPost }) %>

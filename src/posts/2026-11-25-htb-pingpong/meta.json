@@ -1,0 +1,24 @@
+{
+    "title": "HTB: PingPong",
+    "date": "2026-11-25",
+    "image": "media/cover.png",
+    "caption": "Two forests, one WriteDacl: the path from c.roberts to Administrator on both DCs.",
+    "description": "PingPong is an Insane Windows AD box built around a cross-forest trust. ESC13 gives WinRM on DC1, which turns out to be dual-homed onto a second, internal forest. Taking over a group by ownership alone leaks a gMSA's credentials, a JEA command-visibility bypass leaks a plaintext password, and RBCD plus GodPotato gets SYSTEM on DC2. DCSync there hands over the real, unforged cross-forest bridge, an ESC4-to-ESC1 flip on a certificate template, and PKINIT finishes both domains.",
+    "category": "CTF Writeups",
+    "tags": [
+        "HackTheBox",
+        "Windows",
+        "Active Directory",
+        "Kerberos",
+        "ADCS",
+        "ESC13",
+        "ESC4",
+        "gMSA",
+        "RBCD",
+        "Pivoting",
+        "BloodHound",
+        "Privilege escalation"
+    ],
+    "reading_time": 14,
+    "published": true
+}

@@ -515,6 +515,8 @@ With the template ESC1-exploitable, a certificate request naming `administrator@
 
 `root.txt` is on the Administrator desktop on DC1. Full compromise of both forests: `ping.htb` through this certificate chain, `pong.htb` earlier through RBCD and GodPotato.
 
+<img src="media/htb-solved.webp" alt="HTB PingPong machine marked as solved and retired" loading="lazy">
+
 ## Takeaways
 
 - The two domain controllers are dual-homed across a Hyper-V internal switch that isn't visible from outside, so the second forest never shows up in a port scan, only after there's already a shell on the first DC.

